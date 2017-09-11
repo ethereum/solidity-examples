@@ -20,7 +20,7 @@ jobs:
             - ./node_modules
       - run:
           name: fetch-external-deps
-          command: ./.circleci/fetch_deps.sh
+          command: 'sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh'
       - run:
           name: test
           command: npm test
