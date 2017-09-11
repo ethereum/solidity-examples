@@ -1,7 +1,8 @@
 version: 2
 jobs:
   build:
-    docker: ubuntu:latest
+    docker:
+      -image: ubuntu:latest
     working_directory: ~/solidity-examples
     steps:
       - checkout
