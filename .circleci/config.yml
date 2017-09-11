@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    machine:
-      enabled: true
+    docker:
+      - image: holiman/testeth:latest
     working_directory: ~/solidity-examples
     steps:
       - checkout
