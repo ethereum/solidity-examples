@@ -3,6 +3,7 @@ const path = require('path');
 const child = require('child_process');
 const execSync = child.execSync;
 const fillerUtils = require('./script/fillerUtils');
+const mkdirp = require('mkdirp');
 
 const bitsGenerators = require('./test/bits/generators');
 const rlpGenerators = require('./test/rlp/generators');
@@ -43,10 +44,10 @@ function testAll(optAndUnopt) {
     registerTests();
     rmrf(TESTS_PATH);
     rmrf(FILLERS_PATH);
-    fs.mkdirSync(FILLERS_PATH);
+    mkdirp.sync(FILLERS_PATH);
 
     rmrf(TEST_BIN);
-    fs.mkdirSync(TEST_BIN);
+    mkdirp.sync(TEST_BIN);
     compileAndGenerateFillers(true);
     if (optAndUnopt) {
         rmrf(TEST_BIN);
