@@ -1,11 +1,13 @@
 version: 2
 jobs:
   build:
+    docker: ubuntu:latest
     working_directory: ~/solidity-examples
-    docker:
-      - image: circleci/node:4.8.2
     steps:
       - checkout
+      - run:
+          name: fetch-external-deps
+          command: 'sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh'
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
@@ -18,9 +20,6 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - run:
-          name: fetch-external-deps
-          command: 'sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh'
       - run:
           name: test
           command: npm test
