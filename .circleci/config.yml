@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/ubuntu-server:latest
+    machine:
+      enabled: true
     working_directory: ~/solidity-examples
     steps:
       - checkout
