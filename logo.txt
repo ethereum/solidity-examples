@@ -1,0 +1,24 @@
+
+                          #dddddddddddY          #dddddddddddY     #YYYYY
+                         ###dddddddddYYY        ###dddddddddYYY    ##YYYY
+                        #####dddddddYYYYY      #####dddddddYYYYY   ###YYY
+        =E             #######dddddYYYYYYY    #######dddddYYYYYYY  ####YY                      =E
+       ==EE           #########dddYYYYYYYYY  #########dddYYYYYYYYY #####Y                     ==EE
+      ===EEE         ###########dYYYYYYYYYYY###########dYYYYYYYYYYY######                    ===EEE
+     ====EEEE        bbbbbbbbbbb            bbbbbbbbbbb            bbbbbb                   ====EEEE
+    =====EEEEE        bbbbbbbbb              bbbbbbbbb              bbbbb                  =====EEEEE
+   ====88##EEEE        bbbbbbb                bbbbbbb                bbbb                 ====88##EEEE
+  ==88888#####EE        bbbbb         b        bbbbb         b        bbb                ==88888#####EE
+ 88888888########        bbb         bbb        bbb         bbb        bb               88888888########
+     8888####             b         bbbbb        b         bbbbb        b                   8888####
+  ===   8#   EEE                    bbbbbbb                bbbbbbb                       ===   8#   EEE
+    =====EEEEE                     bbbbbbbbb              bbbbbbbbb                        =====EEEEE
+     .===EEE~                     bbbbbbbbbbb            bbbbbbbbbbb                        .===EEE~
+       ==EE           YYYYYYYYYYYd###########YYYYYYYYYYYd###########d#####                    ==EE
+        =E             YYYYYYYYYddd#########  YYYYYYYYYddd######### dd####                     =E
+                        YYYYYYYddddd#######    YYYYYYYddddd#######  ddd###
+                         YYYYYddddddd#####      YYYYYddddddd#####   dddd#####dddddddYYYYY
+                          YYYddddddddd###        YYYddddddddd###    ddddd###dddddddddYYY
+                           Yddddddddddd#          Yddddddddddd#     dddddd#dddddddddddY
+
+                                     The Solidity Standard Library

@@ -1,0 +1,22 @@
+{
+  "name": "solidity-examples",
+  "version": "0.1.0",
+  "description": "Standard contracts",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/testall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethereum/solidity-examples.git"
+  },
+  "author": "Andreas Olofsson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ethereum/solidity-examples/issues"
+  },
+  "homepage": "https://github.com/ethereum/solidity-examples#readme",
+  "devDependencies": {
+    "z-schema": "^3.18.3"
+  }
+}
