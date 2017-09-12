@@ -20,7 +20,7 @@ Routines for making sure that code meets the required standards when it comes to
 
 #### Testing
 
-npm test. Requires `solc` and `testeth` to be installed and added to $path.
+npm test. Requires `solc` and `testeth` to be installed and added to $path. The test script compiles all contracts, auto-generates fillers and puts them in a directory with a layout similar to that of ethereum/tests - although it only contains `src/GeneralStateTestsFiller/stSolidityTest`; that directory is then used as root for the `testeth` tests.
 
 #### Style
 
@@ -175,8 +175,8 @@ Fillers has a name, and four different principal parts:
 1. `env` - Defines the execution environment.
 2. `pre` - Defines the pre-state. In default tests, STL uses a contract account for putting the code in, and an account to transact from.
 3. `transaction` - The transaction data. In default tests, this just has the function id for `test()` as data, along with some account info.
-4. `expect` - How the state is expected to be after the transaction has been executed. In default tests, this is a simple check of storage address `0x`. In more advanced tests, it could be different.
+4. `expect` - How the state is expected to be after the transaction has been executed. In default tests, this is a simple check of storage address `0x`.
 
-The STL test-framework makes it possible to modify the filler any way needed, by making it possible to set custom filler generators for individual test cases. This is used in some Patricia Tree tests for example. If no custom generator is set, it defaults to the standard (throws or does not throw) template (which is the same for all tests except for the test name and code.
+The STL test-framework makes it possible to modify the filler any way needed, by making it possible to set custom filler generators for individual test cases. This is used in some Patricia Tree tests for example. If no custom generator is set, it defaults to the standard (throws or does not throw) template, which looks the exact same for all tests except for the test name and code.
 
 More about testeth can be found at http://ethereum-tests.readthedocs.io/en/latest/.

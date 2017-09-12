@@ -18,13 +18,13 @@ library Data {
 
     /// Returns a label containing the longest common prefix of `self` and `label`
     /// and a label consisting of the remaining part of `label`.
-    function splitCommonPrefix(Label self, Label label) internal returns (Label prefix, Label labelSuffix) {
+    function splitCommonPrefix(Label self, Label label) internal constant returns (Label prefix, Label labelSuffix) {
         return splitAt(self, commonPrefix(label, self));
     }
 
     /// Splits the label at the given position and returns prefix and suffix,
     /// i.e. prefix.length == pos and prefix.data . suffix.data == l.data.
-    function splitAt(Label self, uint pos) internal returns (Label prefix, Label suffix) {
+    function splitAt(Label self, uint pos) internal constant returns (Label prefix, Label suffix) {
         require(pos <= self.length && pos <= 256);
         prefix.length = pos;
         if (pos == 0) {
@@ -37,7 +37,7 @@ library Data {
     }
 
     /// Returns the length of the longest common prefix of the two labels.
-    function commonPrefix(Label self, Label lbl) internal returns (uint prefix) {
+    function commonPrefix(Label self, Label lbl) internal constant returns (uint prefix) {
         uint length = self.length < lbl.length ? self.length : lbl.length;
         // TODO: This could actually use a "highestBitSet" helper
         uint diff = uint(self.data ^ lbl.data);
@@ -52,7 +52,7 @@ library Data {
 
     /// Returns the result of removing a prefix of length `prefix` bits from the
     /// given label (i.e. shifting its data to the left).
-    function removePrefix(Label self, uint prefix) internal returns (Label r) {
+    function removePrefix(Label self, uint prefix) internal constant returns (Label r) {
         require(prefix <= self.length);
         r.length = self.length - prefix;
         r.data = self.data << prefix;
@@ -60,7 +60,7 @@ library Data {
 
     /// Removes the first bit from a label and returns the bit and a
     /// label containing the rest of the label (i.e. shifted to the left).
-    function chopFirstBit(Label self) internal returns (uint firstBit, Label tail) {
+    function chopFirstBit(Label self) internal constant returns (uint firstBit, Label tail) {
         require(self.length > 0);
         return (uint(self.data >> 255), Label(self.data << 1, self.length - 1));
     }

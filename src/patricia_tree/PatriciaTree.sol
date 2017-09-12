@@ -31,14 +31,15 @@ contract PatriciaTree {
         return (rootEdge.label.length, rootEdge.label.data, rootEdge.node);
     }
 
-    function edgeHash(Data.Edge e) internal returns (bytes32) {
+    function edgeHash(Data.Edge e) constant internal returns (bytes32) {
         return keccak256(e.node, e.label.length, e.label.data);
     }
 
     // Returns the hash of the encoding of a node.
-    function hash(Data.Node memory n) internal returns (bytes32) {
+    function hash(Data.Node memory n) constant internal returns (bytes32) {
         return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
     }
+
 
     // Returns the Merkle-proof for the given key
     // Proof format should be:
@@ -46,6 +47,7 @@ contract PatriciaTree {
     //                    where we have branch nodes (bit in key denotes direction)
     //  - bytes32[] hashes - hashes of sibling edges
     function getProof(bytes key) constant returns (uint branchMask, bytes32[] _siblings) {
+        require(root != 0);
         Data.Label memory k = Data.Label(keccak256(key), 256);
         Data.Edge memory e = rootEdge;
         bytes32[256] memory siblings;
@@ -94,7 +96,6 @@ contract PatriciaTree {
         return true;
     }
 
-    // TODO also return the proof
     function insert(bytes key, bytes value) {
         Data.Label memory k = Data.Label(keccak256(key), 256);
         bytes32 valueHash = keccak256(value);
@@ -143,12 +144,14 @@ contract PatriciaTree {
         }
         return Data.Edge(newNodeHash, prefix);
     }
+
     function insertNode(Data.Node memory n) internal returns (bytes32 newHash) {
         bytes32 h = hash(n);
         nodes[h].children[0] = n.children[0];
         nodes[h].children[1] = n.children[1];
         return h;
     }
+
     function replaceNode(bytes32 oldHash, Data.Node memory n) internal returns (bytes32 newHash) {
         delete nodes[oldHash];
         return insertNode(n);

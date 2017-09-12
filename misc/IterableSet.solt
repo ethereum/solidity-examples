@@ -1,0 +1,105 @@
+pragma solidity ^0.4.15;
+
+import {Bits} from "../src/bits/Bits.sol";
+
+library IterableSet {
+
+    using Bits for uint;
+
+    // Last bit of index used as existence flag. This because the
+    // index may otherwise be 0.
+    struct Set {
+        mapping($(T) => uint) data;
+        $(T)[] values;
+    }
+
+    function insert(Set storage self, $(T) val) internal {
+        require(self.data[val] == 0);
+        self.data[val] = (self.values.push(val) - 1).setBit(255);
+    }
+
+    function insertArray(Set storage self, $(T)[] array) internal {
+        for(uint i = 0; i < array.length; i++) {
+            insert(self, array[i]);
+        }
+    }
+
+    function remove(Set storage self, $(T) val) internal {
+        require(self.data[val] != 0);
+        var elem = self.data[val];
+        delete self.data[val];
+        var index = elem.clearBit(255);
+        var len = self.values.length;
+        if(index != len - 1){
+            var swap = self.values[len - 1];
+            self.values[index] = swap;
+            self.data[swap] = elem;
+        }
+        self.values.length--;
+    }
+
+    function has(Set storage self, $(T) val) internal constant returns (bool) {
+        return self.data[val].bitSet(255);
+    }
+
+    function getByIndex(Set storage self, uint index) internal constant returns ($(T)) {
+        require(index < self.values.length);
+        return self.values[index];
+    }
+
+    function size(Set storage self) internal constant returns (uint size) {
+        return self.values.length;
+    }
+
+}
+
+
+contract IterableSetTest {
+
+    $(T) constant TEST_VALUE = $(TV);
+    $(T) constant TEST_VALUE_2 = $(TV2);
+    $(T) constant TEST_VALUE_3 = $(TV3);
+
+    using IterableSet for IterableSet.Set;
+
+    IterableSet.Set set;
+
+    function testHasValueForOne() returns (bool ret) {
+        ret = true;
+        set.insert(TEST_VALUE);
+        assert(set.has(TEST_VALUE));
+    }
+
+    function testHasValueForSeveral() returns (bool ret) {
+        ret = true;
+        set.insert(TEST_VALUE);
+        set.insert(TEST_VALUE_2);
+        set.insert(TEST_VALUE_3);
+        require(set.has(TEST_VALUE));
+        require(set.has(TEST_VALUE_2));
+        require(set.has(TEST_VALUE_3));
+    }
+
+    function testHasValueThrows() returns (bool ret) {
+        ret = true;
+        require(set.has(TEST_VALUE));
+    }
+
+    function testValueArray() returns (bool ret) {
+        ret = true;
+        set.insert(TEST_VALUE);
+        set.insert(TEST_VALUE_2);
+        var values = set.values;
+        require(values[0] == TEST_VALUE);
+        require(values[1] == TEST_VALUE_2);
+    }
+
+    function testSize() returns (bool ret) {
+        ret = true;
+        set.insert(TEST_VALUE);
+        set.insert(TEST_VALUE_2);
+        set.insert(TEST_VALUE_3);
+        require(set.size() == 3);
+    }
+
+}
