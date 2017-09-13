@@ -5,6 +5,8 @@ pragma solidity ^0.4.15;
 *
 * RLPReader is used to read and parse RLP encoded data in memory.
 *
+* TODO update to use Slices library.
+*
 * @author Andreas Olofsson (androlo1980@gmail.com)
 */
 library RLP {
@@ -16,7 +18,6 @@ library RLP {
 
     uint constant DATA_LONG_OFFSET = 0xB7;
     uint constant LIST_LONG_OFFSET = 0xF7;
-
 
     struct RLPItem {
         uint _unsafe_memPtr;    // Pointer to the RLP-encoded bytes.
@@ -70,13 +71,9 @@ library RLP {
     /// @return An RLPItem
     function toRLPItem(bytes memory self, bool strict) internal constant returns (RLPItem memory) {
         var item = toRLPItem(self);
-        if(strict) {
+        if (strict) {
             uint len = self.length;
-            require(
-                _payloadOffset(item) <= len
-                && _itemLength(item._unsafe_memPtr) == len
-                && _validate(item)
-            );
+            require(_payloadOffset(item) <= len && _itemLength(item._unsafe_memPtr) == len && _validate(item));
         }
         return item;
     }
@@ -131,7 +128,7 @@ library RLP {
         uint pos = memPtr + _payloadOffset(self);
         uint last = memPtr + self._unsafe_length - 1;
         uint itms;
-        while(pos <= last) {
+        while (pos <= last) {
             pos += _itemLength(pos);
             itms++;
         }
@@ -275,19 +272,23 @@ library RLP {
 
     // Get the payload offset.
     function _payloadOffset(RLPItem memory self) private constant returns (uint) {
-        if(self._unsafe_length == 0)
+        if (self._unsafe_length == 0) {
             return 0;
+        }
         uint b0;
         uint memPtr = self._unsafe_memPtr;
         assembly {
             b0 := byte(0, mload(memPtr))
         }
-        if(b0 < DATA_SHORT_START)
+        if (b0 < DATA_SHORT_START) {
             return 0;
-        if(b0 < DATA_LONG_START || (b0 >= LIST_SHORT_START && b0 < LIST_LONG_START))
+        }
+        if (b0 < DATA_LONG_START || (b0 >= LIST_SHORT_START && b0 < LIST_LONG_START)) {
             return 1;
-        if(b0 < LIST_SHORT_START)
+        }
+        if (b0 < LIST_SHORT_START) {
             return b0 - DATA_LONG_OFFSET + 1;
+        }
         return b0 - LIST_LONG_OFFSET + 1;
     }
 
@@ -307,10 +308,9 @@ library RLP {
                 let dLen := div(mload(add(memPtr, 1)), exp(256, sub(32, bLen))) // data length
                 len := add(1, add(bLen, dLen)) // total length
             }
-        }
-        else if (b0 < LIST_LONG_START)
+        } else if (b0 < LIST_LONG_START) {
             len = b0 - LIST_SHORT_START + 1;
-        else {
+        } else {
             assembly {
                 let bLen := sub(b0, 0xF7) // bytes length (LIST_LONG_OFFSET)
                 let dLen := div(mload(add(memPtr, 1)), exp(256, sub(32, bLen))) // data length
@@ -357,7 +357,7 @@ library RLP {
         assembly {
             wOffset := add(tgt, 0x20)
         }
-        while(i < words) {
+        while (i < words) {
             uint offset = 20*(i++);
             assembly {
                 mstore(add(wOffset, offset), mload(add(rOffset, offset)))
@@ -378,7 +378,7 @@ library RLP {
             b0 := byte(0, mload(memPtr))
             b1 := byte(1, mload(memPtr))
         }
-        if(b0 == DATA_SHORT_START + 1 && b1 < DATA_SHORT_START)
+        if (b0 == DATA_SHORT_START + 1 && b1 < DATA_SHORT_START)
             return false;
         return true;
     }

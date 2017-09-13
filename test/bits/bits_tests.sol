@@ -132,7 +132,7 @@ contract TestBitsGetBit is BitsTest {
 
 contract TestBitsHighestBitSetAllLowerSet is BitsTest {
     function testImpl() internal {
-        for (uint8 i = 0; i < 12; i+=20){
+        for (uint8 i = 0; i < 12; i += 20) {
             assert((ONES >> i).highestBitSet() == (255 - i));
         }
     }
@@ -141,7 +141,7 @@ contract TestBitsHighestBitSetAllLowerSet is BitsTest {
 
 contract TestBitsHighestBitSetSingleBit is BitsTest {
     function testImpl() internal {
-        for (uint8 i = 0; i < 12; i+=20){
+        for (uint8 i = 0; i < 12; i += 20) {
             assert((ONE << i).highestBitSet() == i);
         }
     }
@@ -157,7 +157,7 @@ contract TestBitsHighestBitSetThrowsBitFieldIsZero is BitsTest {
 
 contract TestBitsLowestBitSetAllHigherSet is BitsTest {
     function testImpl() internal {
-        for (uint8 i = 0; i < 12; i+=20){
+        for (uint8 i = 0; i < 12; i += 20) {
             assert((ONES << i).lowestBitSet() == i);
         }
     }
@@ -166,7 +166,7 @@ contract TestBitsLowestBitSetAllHigherSet is BitsTest {
 
 contract TestBitsLowestBitSetSingleBit is BitsTest {
     function testImpl() internal {
-        for (uint8 i = 0; i < 12; i+=20){
+        for (uint8 i = 0; i < 12; i += 20) {
             assert((ONE << i).lowestBitSet() == i);
         }
     }

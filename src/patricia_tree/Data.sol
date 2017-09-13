@@ -42,8 +42,7 @@ library Data {
         // TODO: This could actually use a "highestBitSet" helper
         uint diff = uint(self.data ^ lbl.data);
         uint mask = uint(1) << 255;
-        for (; prefix < length; prefix++)
-        {
+        for (; prefix < length; prefix++) {
             if ((mask & diff) != 0)
                 break;
             diff += diff;

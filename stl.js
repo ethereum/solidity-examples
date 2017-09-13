@@ -8,11 +8,13 @@ const mkdirp = require('mkdirp');
 const bitsGenerators = require('./test/bits/generators');
 const rlpGenerators = require('./test/rlp/generators');
 const patriciaTrieGenerators = require('./test/patricia_tree/generators');
+const unsafeGenerators = require('./test/unsafe/generators');
 
 const TESTS = [
-    ['bits', 'bits_tests.sol', bitsGenerators],
-    ['rlp', 'rlp_reader_tests.sol', rlpGenerators],
-    ['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators]
+    //['bits', 'bits_tests.sol', bitsGenerators],
+    //['rlp', 'rlp_reader_tests.sol', rlpGenerators],
+    //['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators],
+    ['unsafe', 'memory_tests.sol', unsafeGenerators]
 ];
 
 const ROOT_PATH = __dirname;

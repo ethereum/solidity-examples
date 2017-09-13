@@ -1,5 +1,6 @@
 pragma solidity ^0.4.15;
 
+
 library Bits {
 
     uint constant ONE = uint(1);
@@ -53,7 +54,7 @@ library Bits {
     function highestBitSet(uint self) internal constant returns (uint8 highest) {
         require(self != 0);
         uint val = self;
-        for(uint8 i = 128; i >= 1; i >>= 1) {
+        for (uint8 i = 128; i >= 1; i >>= 1) {
             uint v = val >> i; // Take the upper half of the bits
             if (v != 0) {
                 val = v; // If upper half is not 0, use that.
@@ -71,7 +72,7 @@ library Bits {
     function lowestBitSet(uint self) internal constant returns (uint8 lowest) {
         require(self != 0);
         uint val = self;
-        for(uint8 i = 128; i >= 1; i >>= 1) {
+        for (uint8 i = 128; i >= 1; i >>= 1) {
             uint v = val & ((ONE << i) - 1); // Take the lower half of the bits
             if (v == 0) {
                 val >>= i; // If lower half is 0 then continue with upper half.

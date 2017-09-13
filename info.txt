@@ -4,7 +4,8 @@ A collection of standard library code for Solidity.
 
 Contributors:
 
-Dr. Christian Reitwiessner (chris@ethereum.org)
+Dr. Christian Reitwiessner (chris@ethereum.org) - created solidity
+Nick Johnson (
 Andreas Olofsson (androlo@tutanota.com)
 
 Moral Support:

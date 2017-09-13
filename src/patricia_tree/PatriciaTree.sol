@@ -68,11 +68,11 @@ contract PatriciaTree {
             e = nodes[e.node].children[head];
             k = tail;
         }
-        if (numSiblings > 0)
-        {
+        if (numSiblings > 0) {
             _siblings = new bytes32[](numSiblings);
-            for (uint i = 0; i < numSiblings; i++)
+            for (uint i = 0; i < numSiblings; i++) {
                 _siblings[i] = siblings[i];
+            }
         }
     }
 
@@ -102,14 +102,11 @@ contract PatriciaTree {
         values[valueHash] = value;
         // keys.push(key);
         Data.Edge memory e;
-        if (rootEdge.node == 0 && rootEdge.label.length == 0)
-        {
+        if (rootEdge.node == 0 && rootEdge.label.length == 0) {
             // Empty Trie
             e.label = k;
             e.node = valueHash;
-        }
-        else
-        {
+        } else {
             e = insertAtEdge(rootEdge, k, valueHash);
         }
         root = edgeHash(e);
