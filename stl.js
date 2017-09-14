@@ -84,8 +84,8 @@ function compile(subDir, testName, optimize, docker) {
         throw new Error("Arguments 'subDir' and 'testName' must both be non-empty strings");
     }
     if (docker) {
-        const cmd = "docker run -v " + ROOT_PATH + ":/solidity-examples ethereum/solc:stable /solidity-examples= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o /solidity-examples/testeth/test_bin " + path.join("/solidity-examples", "test", subDir, testName);
-        const ret = execSync(cmd);
+        const dcmd = "docker run -v " + ROOT_PATH + ":/solidity-examples ethereum/solc:stable /solidity-examples= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o /solidity-examples/testeth/test_bin " + path.join("/solidity-examples", "test", subDir, testName);
+        execSync(dcmd);
     } else {
         const versionString = execSync("solc --version");
         const cmd = "solc .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o " + TEST_BIN + " " + path.join(BASE_CONTRACT_PATH, subDir, testName);
