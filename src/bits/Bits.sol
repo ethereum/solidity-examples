@@ -1,6 +1,5 @@
 pragma solidity ^0.4.15;
 
-
 library Bits {
 
     uint constant ONE = uint(1);
@@ -48,37 +47,30 @@ library Bits {
     }
 
     /// Returns the last bit set in the bitfield, where the 0th bit
-    /// is the least significant. Simple log2 by binary split (8 steps).
+    /// is the least significant.
     /// Throws if bitfield is zero.
-    /// More efficient the smaller the result is.
     function highestBitSet(uint self) internal constant returns (uint8 highest) {
         require(self != 0);
         uint val = self;
-        for (uint8 i = 128; i >= 1; i >>= 1) {
-            uint v = val >> i; // Take the upper half of the bits
-            if (v != 0) {
-                val = v; // If upper half is not 0, use that.
+        for(uint8 i = 128; i >= 1; i >>= 1) {
+
+            if (val & ((ONE << i) - 1) << i != 0) {
                 highest += i;
-            } else {
-                val &= ((ONE << i) - 1); // Otherwise use lower
+                val >> i;
             }
         }
     }
 
     /// Returns the first bit set in the bitfield, where the 0th bit
-    /// is the least significant. Process similar to 'highestBitSet'.
+    /// is the least significant.
     /// Throws if bitfield is zero.
-    /// More efficient the smaller the result is.
     function lowestBitSet(uint self) internal constant returns (uint8 lowest) {
         require(self != 0);
         uint val = self;
-        for (uint8 i = 128; i >= 1; i >>= 1) {
-            uint v = val & ((ONE << i) - 1); // Take the lower half of the bits
-            if (v == 0) {
-                val >>= i; // If lower half is 0 then continue with upper half.
+        for(uint8 i = 128; i >= 1; i >>= 1) {
+            if (val & ((ONE << i) - 1) == 0) {
                 lowest += i;
-            } else {
-                val = v;
+                val >> i;
             }
         }
     }

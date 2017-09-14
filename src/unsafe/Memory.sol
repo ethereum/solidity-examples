@@ -15,27 +15,6 @@ library Memory {
         uint _ptr;
     }
 
-    function fromBytes(bytes bts) internal constant returns (MemoryArray memory mArr) {
-        uint addr;
-        assembly {
-            addr := add(bts, 0x20)
-        }
-        mArr._len = bts.length;
-        mArr._ptr = addr;
-    }
-
-    function toBytes(MemoryArray memory self) internal constant returns (bytes memory bts) {
-        if (self._len == 0) {
-            return;
-        }
-        bts = new bytes(self._len);
-        uint btsptr;
-        assembly {
-            btsptr := add(bts, 0x20)
-        }
-        unsafeCopy(btsptr, self._ptr, self._len);
-    }
-
     // Allocates 'size' bytes of memory and returns a MemoryArray object.
     function allocate(uint numBytes) constant internal returns (MemoryArray memory mArr) {
         mArr._len = numBytes;
@@ -49,18 +28,20 @@ library Memory {
     }
 
     // Copy a memory array. This allocates new memory and adds it
-    function copy(MemoryArray memory src) constant internal returns (MemoryArray memory dest) {
-        dest = allocate(src._len);
-        uint srcP = src._ptr;
+    function copy(MemoryArray memory self) constant internal returns (MemoryArray memory dest) {
+        require(!isNull(self));
+        dest = allocate(self._len);
+        uint srcP = self._ptr;
         uint destP = dest._ptr;
-        unsafeCopy(destP, srcP, src._len);
+        unsafeCopy(srcP, destP, self._len);
     }
 
     // Copy a memory array 'src' into a pre-allocated array 'dest'
-    function copy(MemoryArray memory src, MemoryArray memory dest) constant internal {
-        uint srcP = src._ptr;
+    function copy(MemoryArray memory self, MemoryArray memory dest) constant internal {
+        require(!isNull(self) && !isNull(dest));
+        uint srcP = self._ptr;
         uint destP = dest._ptr;
-        unsafeCopy(destP, srcP, src._len);
+        unsafeCopy(srcP, destP, self._len);
     }
 
     function equals(MemoryArray memory self, MemoryArray memory other) internal constant returns (bool equal) {
@@ -80,6 +61,28 @@ library Memory {
 
     function equals(uint addr, uint addr2, uint len) internal constant returns (bool equal) {
         // Compare word-length chunks while possible
+        for (; len >= 32; len -= 32) {
+            assembly {
+                equal := eq(mload(addr), mload(addr2))
+            }
+            if (!equal) {
+                return false;
+            }
+            addr += 32;
+            addr2 += 32;
+        }
+        // Remaining bytes
+        uint mask = 256 ** (32 - len) - 1;
+        assembly {
+            equal := eq( and(mload(addr), mask), and(mload(addr2), mask) )
+        }
+    }
+
+    function equals(uint addr, uint len, bytes memory bts) internal constant returns (bool equal) {
+        uint addr2;
+        assembly {
+            addr2 := add(bts, 0x20)
+        }
         for (; len >= 32; len -= 32) {
             assembly {
                 equal := eq(mload(addr), mload(addr2))
@@ -128,6 +131,106 @@ library Memory {
             let srcpart := and(mload(src), not(mask))
             let destpart := and(mload(dest), mask)
             mstore(dest, or(destpart, srcpart))
+        }
+    }
+
+    /******************** from types **********************/
+
+    function fromBytes(bytes memory bts) internal constant returns (MemoryArray memory mArr) {
+        uint addr;
+        uint len;
+        assembly {
+            len := mload(bts)
+            addr := add(bts, 0x20)
+        }
+        mArr._len = len;
+        mArr._ptr = addr;
+    }
+
+    function fromString(string memory str) internal constant returns (MemoryArray memory mArr) {
+        uint addr;
+        uint len;
+        assembly {
+            len := mload(str)
+            addr := add(str, 0x20)
+        }
+        mArr._len = len;
+        mArr._ptr = addr;
+    }
+
+    function fromUint(uint n) internal constant returns (MemoryArray memory mArr) {
+        mArr = allocate(32);
+        uint ptr = mArr._ptr;
+        assembly {
+            mstore(ptr, n)
+        }
+    }
+
+    function fromInt(int n) internal constant returns (MemoryArray memory mArr) {
+        mArr = allocate(32);
+        uint ptr = mArr._ptr;
+        assembly {
+            mstore(ptr, n)
+        }
+    }
+
+    function fromBytes32(bytes32 b32) internal constant returns (MemoryArray memory mArr) {
+        mArr = allocate(32);
+        uint ptr = mArr._ptr;
+        assembly {
+            mstore(ptr, b32)
+        }
+    }
+
+    /******************** to types **********************/
+
+    function toBytes(MemoryArray memory self) internal constant returns (bytes memory bts) {
+        require(!isNull(self));
+        if (self._len == 0) {
+            return;
+        }
+        bts = new bytes(self._len);
+        uint btsptr;
+        assembly {
+            btsptr := add(bts, 0x20)
+        }
+        unsafeCopy(self._ptr, btsptr, self._len);
+    }
+
+    function toString(MemoryArray memory self) internal constant returns (string memory str) {
+        require(!isNull(self));
+        if (self._len == 0) {
+            return;
+        }
+        str = new string(self._len);
+        uint strptr;
+        assembly {
+            strptr := add(str, 0x20)
+        }
+        unsafeCopy(self._ptr, strptr, self._len);
+    }
+
+    function toUint(MemoryArray memory mArr) internal constant returns (uint n) {
+        require(mArr._len == 32);
+        uint ptr = mArr._ptr;
+        assembly {
+            n := mload(ptr)
+        }
+    }
+
+    function toInt(MemoryArray memory mArr) internal constant returns (int n) {
+        require(mArr._len == 32);
+        uint ptr = mArr._ptr;
+        assembly {
+            n := mload(ptr)
+        }
+    }
+
+    function toBytes32(MemoryArray memory mArr) internal constant returns (bytes32 b32) {
+        require(mArr._len == 32);
+        uint ptr = mArr._ptr;
+        assembly {
+            b32 := mload(ptr)
         }
     }
 

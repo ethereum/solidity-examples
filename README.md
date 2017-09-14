@@ -180,3 +180,19 @@ Fillers has a name, and four different principal parts:
 The STL test-framework makes it possible to modify the filler any way needed, by making it possible to set custom filler generators for individual test cases. This is used in some Patricia Tree tests for example. If no custom generator is set, it defaults to the standard (throws or does not throw) template, which looks the exact same for all tests except for the test name and code.
 
 More about testeth can be found at http://ethereum-tests.readthedocs.io/en/latest/.
+
+## Packages
+
+These are the different packages.
+
+[bits](docs/packages/bits.md)
+
+[bytes](docs/packages/bytes.md)
+
+[patricia_tree](docs/packages/patricia_tree.md)
+
+[rlp](docs/packages/rlp.md)
+
+[strings](docs/packages/strings.md)
+
+[unsafe](docs/packages/unsafe.md)
