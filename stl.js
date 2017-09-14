@@ -72,32 +72,27 @@ function compileAndGenerateFillers(optimize, docker) {
 function testeth(docker) {
     var testethCmd;
     if (docker) {
-        testethCmd = "docker run holiman/testeth"
+        execSync("docker run -v " + TESTETH_PATH + ":/testeth holiman/testeth -t GeneralStateTests/stSolidityTest -- --statediff --testpath /testeth --filltests");
     } else {
-        testethCmd = "testeth";
+        execSync("testeth -t GeneralStateTests/stSolidityTest -- --statediff --testpath " + TESTETH_PATH + " --filltests", {stdio: 'inherit'});
     }
-    execSync(testethCmd + " -t GeneralStateTests/stSolidityTest -- --statediff --testpath " + TESTETH_PATH + " --filltests", {stdio: 'inherit'});
+
 }
 
 function compile(subDir, testName, optimize, docker) {
     if (typeof subDir !== 'string' || subDir === '' || typeof testName !== 'string' || testName === '') {
         throw new Error("Arguments 'subDir' and 'testName' must both be non-empty strings");
     }
-    var solcCmd;
     if (docker) {
-        solcCmd = "docker run ethereum/solc:stable"
+        const cmd = "docker run -v " + ROOT_PATH + ":/solidity-examples ethereum/solc:stable /solidity-examples= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o /solidity-examples/testeth/test_bin " + path.join("/solidity-examples", "test", subDir, testName);
+        const ret = execSync(cmd);
     } else {
-        solcCmd = "solc";
+        const versionString = execSync("solc --version");
+        const cmd = "solc .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o " + TEST_BIN + " " + path.join(BASE_CONTRACT_PATH, subDir, testName);
+        const ret = execSync(cmd);
+        console.log(ret.toString());
+        fs.writeFileSync(path.join(TEST_BIN, testName + ".compver"), versionString);
     }
-    const versionString = execSync(solcCmd + " --version");
-
-    if (!fs.existsSync(TEST_BIN)) {
-        fs.mkdirSync(TEST_BIN);
-    }
-    const cmd = solcCmd + " .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o " + TEST_BIN + " " + path.join(BASE_CONTRACT_PATH, subDir, testName);
-    const ret = execSync(cmd);
-    console.log(ret.toString());
-    fs.writeFileSync(path.join(TEST_BIN, testName + ".compver"), versionString);
 }
 
 function generateFillers(optimize) {
