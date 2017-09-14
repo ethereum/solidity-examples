@@ -85,7 +85,7 @@ function compile(subDir, testName, optimize, docker) {
     }
     var solcCmd;
     if (docker) {
-        solcCmd = "docker run ethereum/solc:stable solc"
+        solcCmd = "docker run ethereum/solc:stable"
     } else {
         solcCmd = "solc";
     }
