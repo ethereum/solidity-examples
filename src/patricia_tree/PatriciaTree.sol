@@ -10,9 +10,6 @@ contract PatriciaTree {
     using Data for Data.Label;
     using Bits for uint;
 
-    // Mapping of hash of key to value
-    mapping (bytes32 => bytes) values;
-
     // Particia tree nodes (hash to decoded contents)
     mapping (bytes32 => Data.Node) nodes;
     // The current root hash, keccak256(node(path_M('')), path_M(''))
@@ -99,7 +96,6 @@ contract PatriciaTree {
     function insert(bytes key, bytes value) {
         Data.Label memory k = Data.Label(keccak256(key), 256);
         bytes32 valueHash = keccak256(value);
-        values[valueHash] = value;
         // keys.push(key);
         Data.Edge memory e;
         if (rootEdge.node == 0 && rootEdge.label.length == 0) {

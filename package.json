@@ -4,7 +4,8 @@
   "description": "Standard contracts",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test/testall.js"
+    "test": "node ./test/testall.js",
+    "testwithdocker": "node ./test/testall.js docker"
   },
   "repository": {
     "type": "git",

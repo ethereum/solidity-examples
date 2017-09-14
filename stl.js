@@ -12,9 +12,9 @@ const unsafeGenerators = require('./test/unsafe/generators');
 
 const TESTS = [
     ['bits', 'bits_tests.sol', bitsGenerators],
-    //['rlp', 'rlp_reader_tests.sol', rlpGenerators],
-    //['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators],
-    //['unsafe', 'memory_tests.sol', unsafeGenerators]
+    ['rlp', 'rlp_reader_tests.sol', rlpGenerators],
+    ['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators],
+    ['unsafe', 'memory_tests.sol', unsafeGenerators]
 ];
 
 const ROOT_PATH = __dirname;
@@ -42,7 +42,7 @@ function registerTests() {
     }
 }
 
-function testAll(optAndUnopt) {
+function testAll(optAndUnopt, docker) {
     registerTests();
     rmrf(TESTS_PATH);
     rmrf(FILLERS_PATH);
@@ -50,39 +50,51 @@ function testAll(optAndUnopt) {
 
     rmrf(TEST_BIN);
     mkdirp.sync(TEST_BIN);
-    compileAndGenerateFillers(true);
+    compileAndGenerateFillers(true, docker);
     if (optAndUnopt) {
         rmrf(TEST_BIN);
         fs.mkdirSync(TEST_BIN);
-        compileAndGenerateFillers(false);
+        compileAndGenerateFillers(false, docker);
     }
-    testeth();
+    testeth(docker);
 }
 
-function compileAndGenerateFillers(optimize) {
+function compileAndGenerateFillers(optimize, docker) {
 
     for (var i = 0; i < TESTS.length; i++) {
         const subDir = TESTS[i][0];
         const test = TESTS[i][1];
-        compile(subDir, test, false);
+        compile(subDir, test, false, docker);
     }
     generateFillers(optimize);
 }
 
-function testeth() {
-    execSync("testeth -t GeneralStateTests/stSolidityTest -- --statediff --testpath " + TESTETH_PATH + " --filltests", {stdio: 'inherit'});
+function testeth(docker) {
+    var testethCmd;
+    if (docker) {
+        testethCmd = "docker run holiman/testeth"
+    } else {
+        testethCmd = "testeth";
+    }
+    execSync(testethCmd + " -t GeneralStateTests/stSolidityTest -- --statediff --testpath " + TESTETH_PATH + " --filltests", {stdio: 'inherit'});
 }
 
-function compile(subDir, testName, optimize) {
+function compile(subDir, testName, optimize, docker) {
     if (typeof subDir !== 'string' || subDir === '' || typeof testName !== 'string' || testName === '') {
         throw new Error("Arguments 'subDir' and 'testName' must both be non-empty strings");
     }
-    const versionString = execSync("solc --version");
+    var solcCmd;
+    if (docker) {
+        solcCmd = "docker run ethereum/solc:stable solc"
+    } else {
+        solcCmd = "solc";
+    }
+    const versionString = execSync(solcCmd + " --version");
 
     if (!fs.existsSync(TEST_BIN)) {
         fs.mkdirSync(TEST_BIN);
     }
-    const cmd = "solc .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o " + TEST_BIN + " " + path.join(BASE_CONTRACT_PATH, subDir, testName);
+    const cmd = solcCmd + " .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize " : "") + "-o " + TEST_BIN + " " + path.join(BASE_CONTRACT_PATH, subDir, testName);
     const ret = execSync(cmd);
     console.log(ret.toString());
     fs.writeFileSync(path.join(TEST_BIN, testName + ".compver"), versionString);

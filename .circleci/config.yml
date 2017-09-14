@@ -2,28 +2,23 @@ version: 2
 jobs:
   build:
     docker:
-      - image: holiman/testeth:latest
+      - image: circleci/node:4.8.2
     working_directory: ~/solidity-examples
     steps:
       - checkout
-      - run:
-          name: fetch-external-deps
-          command: 'sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh'
+      - setup_remote_docker
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: install-npm-wee
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+          name: pull solc image
+          command: 'docker pull ethereum/solc:stable'
+      - run:
+          name: pull testeth image
+          command: 'docker pull holiman/testeth:latest'
       - run:
           name: test
-          command: npm test
+          command: npm run testwithdocker
       - store_artifacts:
           path: test-results.xml
           prefix: tests
