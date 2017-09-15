@@ -6,15 +6,17 @@ const fillerUtils = require('./script/fillerUtils');
 const mkdirp = require('mkdirp');
 
 const bitsGenerators = require('./test/bits/generators');
+const bytesGenerators = require('./test/bytes/generators');
 const rlpGenerators = require('./test/rlp/generators');
 const patriciaTrieGenerators = require('./test/patricia_tree/generators');
 const unsafeGenerators = require('./test/unsafe/generators');
 
 const TESTS = [
-    ['bits', 'bits_tests.sol', bitsGenerators],
-    ['rlp', 'rlp_reader_tests.sol', rlpGenerators],
-    ['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators],
-    ['unsafe', 'memory_tests.sol', unsafeGenerators]
+    //['bits', 'bits_tests.sol', bitsGenerators],
+    //['bytes', 'bytes_tests.sol', bytesGenerators],
+    ['rlp', 'rlp_reader_tests.sol', rlpGenerators]
+    //['patricia_tree', 'patricia_tree_tests.sol', patriciaTrieGenerators],
+    //['unsafe', 'memory_tests.sol', unsafeGenerators]
 ];
 
 const ROOT_PATH = __dirname;
@@ -70,7 +72,6 @@ function compileAndGenerateFillers(optimize, docker) {
 }
 
 function testeth(docker) {
-    var testethCmd;
     if (docker) {
         execSync("docker run -v " + TESTETH_PATH + ":/testeth holiman/testeth -t GeneralStateTests/stSolidityTest -- --statediff --testpath /testeth --filltests");
     } else {

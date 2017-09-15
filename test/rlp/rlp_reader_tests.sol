@@ -18,12 +18,12 @@ contract TestRLPReaderToRLPItem1Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"00";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val = 0;
         assembly {
             val := mload(memPtr)
         }
-        assert(val == 0 && item._unsafe_length == 1);
+        assert(val == 0 && item._len == 1);
     }
 }
 
@@ -31,12 +31,12 @@ contract TestRLPReaderToRLPItem2Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"05";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val = 0;
         assembly {
             val := mload(memPtr)
         }
-        assert(val == hex"05" && item._unsafe_length == 1);
+        assert(val == hex"05" && item._len == 1);
     }
 }
 
@@ -45,12 +45,12 @@ contract TestRLPReaderToRLPItem3Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"80";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val = 0;
         assembly {
             val := mload(memPtr)
         }
-        assert(val == hex"80" && item._unsafe_length == 1);
+        assert(val == hex"80" && item._len == 1);
     }
 }
 
@@ -59,12 +59,12 @@ contract TestRLPReaderToRLPItem4Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"820505";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val = 0;
         assembly {
             val := mload(memPtr)
         }
-        assert(val == hex"820505" && item._unsafe_length == 3);
+        assert(val == hex"820505" && item._len == 3);
     }
 }
 
@@ -73,12 +73,12 @@ contract TestRLPReaderToRLPItem5Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"880102030405060708";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val = 0;
         assembly {
             val := mload(memPtr)
         }
-        assert(val == hex"880102030405060708" && item._unsafe_length == 9);
+        assert(val == hex"880102030405060708" && item._len == 9);
     }
 }
 
@@ -87,7 +87,7 @@ contract TestRLPReaderToRLPItem6Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"B701020304050607080102030405060708010203040506070801020304050607080102030405060708010203040506070801020304050607";
         var item = bts.toRLPItem();
-        uint memPtr = item._unsafe_memPtr;
+        uint memPtr = item._ptr;
         bytes32 val1 = 0;
         bytes32 val2 = 0;
         assembly {
@@ -96,7 +96,7 @@ contract TestRLPReaderToRLPItem6Success is RLPReaderTest {
         }
         assert(val1 == hex"B701020304050607080102030405060708010203040506070801020304050607"
             && val2 == hex"080102030405060708010203040506070801020304050607"
-            && item._unsafe_length == 56
+            && item._len == 56
         );
     }
 }
@@ -356,22 +356,6 @@ contract TestRLPReaderItems5Success is RLPReaderTest {
     function testImpl() internal {
         bytes memory bts = hex"F838B701020304050607080102030405060708010203040506070801020304050607080102030405060708010203040506070801020304050607";
         assert(bts.toRLPItem().items() == 1);
-    }
-}
-
-
-contract TestRLPReaderItems6Success is RLPReaderTest {
-    function testImpl() internal {
-        bytes memory bts = hex"880102030405060708";
-        assert(bts.toRLPItem().items() == 0);
-    }
-}
-
-
-contract TestRLPReaderItems7Success is RLPReaderTest {
-    function testImpl() internal {
-        bytes memory bts = hex"B8380102030405060708010203040506070801020304050607080102030405060708010203040506070801020304050607080102030405060708";
-        assert(bts.toRLPItem().items() == 0);
     }
 }
 

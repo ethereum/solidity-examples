@@ -383,7 +383,6 @@ contract TestPatriciaUtilsSplitCommonPrefix is PatriciaUtilsTest {
 
 // These tests has a storage check as part of the validation.
 
-/*
 contract TestPatriciaTreeInsert is PatriciaTreeTest {
     function testImpl() internal {
         insert("val", "VAL");
@@ -430,7 +429,6 @@ contract TestPatriciaTreeInsertThreePerm2 is PatriciaTreeTest {
         insert("val", "VAL");
     }
 }
-*/
 
 /*
 contract PatriciaTreeTest is PatriciaTree {

@@ -46,7 +46,7 @@ function generateDefaultTestExpect(storage) {
             "value": -1
         },
         network: [
-            "ALL"
+            "Homestead"
         ],
         result: {
             "095e7baea6a6c7c4c2dfeb977efac326af552d87": {

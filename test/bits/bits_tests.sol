@@ -76,7 +76,7 @@ contract TestBitsBitsThrowsNumBitsZero is BitsTest {
 
 contract TestBitsBitsThrowsOutOfRange is BitsTest {
     function testImpl() internal {
-        ONES.bits(5,252);
+        ONES.bits(5, 252);
     }
 }
 

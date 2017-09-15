@@ -20,5 +20,8 @@
   "devDependencies": {
     "mkdirp": "^0.5.1",
     "z-schema": "^3.18.3"
+  },
+  "dependencies": {
+    "inquirer": "^3.2.3"
   }
 }

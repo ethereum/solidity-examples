@@ -4,6 +4,54 @@ import {Memory} from "../unsafe/Memory.sol";
 
 library Bytes {
 
+    // Check if two 'bytes memory' are equal. Equality is defined as such:
+    // firstBytes.length == secondBytes.length (= length)
+    // for 0 <= i < length, firstBytes[i] == secondBytes[i]
+    function equals(bytes memory self, bytes memory other) internal constant returns (bool equal) {
+        if (self.length != other.length) {
+            return false;
+        }
+        uint addr;
+        uint addr2;
+        assembly {
+            addr := add(self, 0x20)
+            addr2 := add(other, 0x20)
+        }
+        equal = Memory.equals(addr, addr2, self.length);
+    }
+
+    // Check if two bytes references are the same, i.e. has the same memory address.
+    // If 'equals(self, other) == true', but 'equalsRef(self, other) == false', then
+    // 'self' and 'other' must be independent copies of each other.
+    function equalsRef(bytes memory self, bytes memory other) internal constant returns (bool equal) {
+        equal = Memory.memAddress(self) == Memory.memAddress(other);
+    }
+
+    function copy(bytes memory self) internal constant returns (bytes memory cpy) {
+        if (self.length == 0) {
+            return;
+        }
+        cpy = new bytes(self.length);
+        uint src;
+        uint dest;
+        assembly {
+            src := add(self, 0x20)
+            dest := add(cpy, 0x20)
+        }
+        Memory.unsafeCopy(src, dest, self.length);
+    }
+
+    function concat(bytes memory self, bytes memory other) internal constant returns (bytes memory) {
+        bytes memory ret = new bytes(self.length + other.length);
+        uint src = Memory.memAddressData(self);
+        uint src2 = Memory.memAddressData(other);
+        uint dest = Memory.memAddressData(ret);
+        uint dest2 = dest + other.length;
+        Memory.unsafeCopy(src, dest, self.length);
+        Memory.unsafeCopy(src2, dest2, other.length);
+        return ret;
+    }
+
     /*
      * @dev Returns the length of a null-terminated bytes32 string.
      * @param self The value to find the length of.
@@ -32,7 +80,7 @@ library Bytes {
         if (self & 0xff == 0) {
             ret += 1;
         }
-        return 32 - ret;
+        return ret;
     }
 
     function highestByteSet(bytes32 self) internal constant returns (uint) {
@@ -62,42 +110,18 @@ library Bytes {
         return ret;
     }
 
-    function equals(bytes memory self, bytes memory other) internal constant returns (bool equal) {
-        if (self.length != other.length) {
-            return false;
+    // Shaves of leading 0 bytes and writes the remaining string to a 'memory bytes'
+    function toBytes(bytes32 b32) internal constant returns (bytes memory bts) {
+        if (b32 == 0) {
+            return;
         }
-        uint addr;
-        uint addr2;
-        assembly {
-            addr := add(self, 0x20)
-            addr2 := add(other, 0x20)
-        }
-        equal = Memory.equals(addr, addr2, self.length);
-    }
-
-    function concat(bytes memory self, bytes memory other) internal constant returns (bytes memory) {
-        bytes memory ret = new bytes(self.length + other.length);
-        uint src;
-        uint src2;
-        uint dest;
-        assembly {
-            src := add(self, 0x20)
-            src2 := add(other, 0x20)
-            dest := add(ret, 0x20)
-        }
-        uint dest2 = dest + other.length;
-        Memory.unsafeCopy(src, dest, self.length);
-        Memory.unsafeCopy(src2, dest2, other.length);
-        return ret;
-    }
-
-    function bytes32ToBytes(bytes32 b32) internal constant returns (bytes memory bts) {
         uint lbs = lowestByteSet(b32);
-        uint bu = uint(b32) >> (31 - lbs)*8;
-        bts = new bytes(lbs);
+        uint bu = uint(b32);
+        bts = new bytes(32 - lbs);
         assembly {
             mstore(add(bts, 0x20), bu)
         }
+        return bts;
     }
 
 }
