@@ -6,7 +6,7 @@ library Bits {
     uint constant ONES = uint(~0);
 
     function setBit(uint self, uint8 index) internal constant returns (uint) {
-        return self | (ONE << index);
+        return self | ONE << index;
     }
 
     function clearBit(uint self, uint8 index) internal constant returns (uint) {
@@ -14,36 +14,36 @@ library Bits {
     }
 
     function toggleBit(uint self, uint8 index) internal constant returns (uint) {
-        return self ^ (ONE << index);
+        return self ^ ONE << index;
     }
 
     function bit(uint self, uint8 index) internal constant returns (uint8) {
-        return uint8((self >> index) & 1);
+        return uint8(self >> index & 1);
     }
 
     function bitSet(uint self, uint8 index) internal constant returns (bool) {
-        return (self >> index) & 1 == 1;
+        return self >> index & 1 == 1;
     }
 
     function bitEqual(uint self, uint other, uint8 index) internal constant returns (bool) {
-        return (self >> index) & 1 == (other >> index) & 1;
+        return (self ^ other) >> index == 0;
     }
 
     function bitAnd(uint self, uint other, uint8 index) internal constant returns (uint8) {
-        return uint8((self >> index & 1) & (other >> index & 1));
+        return uint8((self & other) >> index & 1);
     }
 
     function bitOr(uint self, uint other, uint8 index) internal constant returns (uint8) {
-        return uint8((self >> index & 1) | (other >> index & 1));
+        return uint8((self | other) >> index & 1);
     }
 
     function bitXor(uint self, uint other, uint8 index) internal constant returns (uint8) {
-        return uint8((self >> index & 1) ^ (other >> index & 1));
+        return uint8((self ^ other) >> index & 1);
     }
 
     function bits(uint self, uint8 startIndex, uint8 numBits) internal constant returns (uint) {
         require(uint(startIndex) + uint(numBits) <= 256 && numBits > 0);
-        return (self >> startIndex) & (ONES >> (256 - numBits));
+        return self >> startIndex & ONES >> 256 - numBits;
     }
 
     /// Returns the last bit set in the bitfield, where the 0th bit
@@ -54,7 +54,7 @@ library Bits {
         uint val = self;
         for(uint8 i = 128; i >= 1; i >>= 1) {
 
-            if (val & ((ONE << i) - 1) << i != 0) {
+            if (val & (ONE << i) - 1 << i != 0) {
                 highest += i;
                 val >> i;
             }
@@ -68,7 +68,7 @@ library Bits {
         require(self != 0);
         uint val = self;
         for(uint8 i = 128; i >= 1; i >>= 1) {
-            if (val & ((ONE << i) - 1) == 0) {
+            if (val & (ONE << i) - 1 == 0) {
                 lowest += i;
                 val >> i;
             }

@@ -2,7 +2,7 @@ pragma solidity ^0.4.15;
 
 //import {Bits} from "../../bits/Bits.sol";
 import {Data} from "../../src/patricia_tree/Data.sol";
-import {PatriciaTree} from "../../src/patricia_tree/PatriciaTree.sol";
+import {PatriciaTreeImpl} from "../../src/patricia_tree/PatriciaTreeImpl.sol";
 import {STLTest} from "../STLTest.sol";
 
 /*******************************************************/
@@ -21,7 +21,7 @@ contract PatriciaUtilsTest is STLTest {
 }
 
 
-contract PatriciaTreeTest is STLTest, PatriciaTree {
+contract PatriciaTreeTest is STLTest, PatriciaTreeImpl {
 
 }
 
