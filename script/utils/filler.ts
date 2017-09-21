@@ -1,16 +1,16 @@
-var ZSchema = require('z-schema');
-var schema = require('./st-filler-schema.json');
+import ZSchema = require('z-schema');
+const schema = require('../st-filler-schema.json');
 
-function generateDefaultTestFiller(name, code) {
+export const generateDefaultTestFiller = (name: string, code: string): Object => {
     const ohex = /Throws/.test(name) ? "0x" : "0x1";
     const env = generateDefaultTestEnv();
     const expect = [generateDefaultTestExpect({"0x": ohex})];
     const pre = generateDefaultTestPre(code);
     const transaction = generateDefaultTransaction();
     return generateTestFiller(name, env, expect, pre, transaction);
-}
+};
 
-function generateDefaultTestEnv() {
+export const generateDefaultTestEnv = (): Object => {
     return {
         currentCoinbase: "2adc25665018aa1fe0e6bc666dac8fc2697ff9ba",
         currentDifficulty: "0x020000",
@@ -19,9 +19,9 @@ function generateDefaultTestEnv() {
         currentTimestamp: "1000",
         previousHash: "5e20a0453cecd065ea59c37ac63e079ee08998b6045136a8ce6635c7912ec0b6"
     };
-}
+};
 
-function generateDefaultTestPre(code) {
+export const generateDefaultTestPre = (code: string): Object => {
     return {
         "095e7baea6a6c7c4c2dfeb977efac326af552d87": {
             "balance": "0",
@@ -36,9 +36,9 @@ function generateDefaultTestPre(code) {
             "storage": {}
         }
     };
-}
+};
 
-function generateDefaultTestExpect(storage) {
+export const generateDefaultTestExpect = (storage: Object): Object => {
     return {
         indexes: {
             "data": -1,
@@ -54,9 +54,9 @@ function generateDefaultTestExpect(storage) {
             }
         }
     };
-}
+};
 
-function generateDefaultTransaction() {
+export const generateDefaultTransaction = (): Object => {
     return {
         data: [
             '0xf8a8fd6d'
@@ -72,9 +72,9 @@ function generateDefaultTransaction() {
             "0"
         ]
     };
-}
+};
 
-function generateTestFiller(name, env, expect, pre, transaction) {
+export const generateTestFiller =(name: string, env: Object, expect: Object, pre: Object, transaction: Object): Object =>{
     const obj = {};
     obj[name] = {
         env: env,
@@ -92,13 +92,4 @@ function generateTestFiller(name, env, expect, pre, transaction) {
     }
 
     return obj;
-}
-
-module.exports = {
-    generateDefaultTestFiller: generateDefaultTestFiller,
-    generateTestFiller: generateTestFiller,
-    generateDefaultTransaction: generateDefaultTransaction,
-    generateDefaultTestExpect: generateDefaultTestExpect,
-    generateDefaultTestPre: generateDefaultTestPre,
-    generateDefaultTestEnv: generateDefaultTestEnv
 };

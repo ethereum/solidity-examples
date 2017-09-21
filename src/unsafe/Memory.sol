@@ -1,5 +1,6 @@
-pragma solidity ^0.4.15;
-
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 library Memory {
 
@@ -15,13 +16,13 @@ library Memory {
     }
 
     // Allocates 'size' bytes of memory and returns a Array object.
-    function allocate(uint numBytes) constant internal returns (Array memory mArr) {
+    function allocate(uint numBytes) internal pure returns (Array memory mArr) {
         mArr._len = numBytes;
         mArr._ptr = unsafeAllocate(numBytes);
     }
 
     // Copy a memory array. This allocates new memory and adds it
-    function copy(Array memory self) constant internal returns (Array memory dest) {
+    function copy(Array memory self) internal pure returns (Array memory dest) {
         require(!isNull(self));
         dest = allocate(self._len);
         uint srcP = self._ptr;
@@ -30,29 +31,29 @@ library Memory {
     }
 
     // Copy a memory array 'src' into a pre-allocated array 'dest'
-    function copy(Array memory self, Array memory dest) constant internal {
+    function copy(Array memory self, Array memory dest) internal pure {
         require(!isNull(self) && !isNull(dest) && self._len == dest._len);
         uint srcP = self._ptr;
         uint destP = dest._ptr;
         unsafeCopy(srcP, destP, self._len);
     }
 
-    function equals(Array memory self, Array memory other) internal constant returns (bool equal) {
+    function equals(Array memory self, Array memory other) internal pure returns (bool equal) {
         if (self._len != other._len) {
             return false;
         }
         return equals(self._ptr, other._ptr, self._len);
     }
 
-    function equalsRef(Array memory self, Array memory other) internal constant returns (bool equal) {
+    function equalsRef(Array memory self, Array memory other) internal pure returns (bool equal) {
         equal = self._len == other._len && self._ptr == other._ptr;
     }
 
-    function isNull(Array memory self) internal constant returns (bool) {
+    function isNull(Array memory self) internal pure returns (bool) {
         return self._ptr == 0 && self._len == 0;
     }
 
-    function equals(uint addr, uint addr2, uint len) internal constant returns (bool equal) {
+    function equals(uint addr, uint addr2, uint len) internal pure returns (bool equal) {
         // Compare word-length chunks while possible
         for (; len >= 32; len -= 32) {
             assembly {
@@ -71,7 +72,7 @@ library Memory {
         }
     }
 
-    function equals(uint addr, uint len, bytes memory bts) internal constant returns (bool equal) {
+    function equals(uint addr, uint len, bytes memory bts) internal pure returns (bool equal) {
         uint addr2;
         assembly {
             addr2 := add(bts, 0x20)
@@ -97,7 +98,7 @@ library Memory {
     // Additionally, all allocated bytes are equal to 0.
     // UNSAFE because it does not produce an Array object that couples the
     // address with the number of allocated bytes. This has to be tracked manually.
-    function unsafeAllocate(uint numBytes) constant internal returns (uint addr) {
+    function unsafeAllocate(uint numBytes) internal pure returns (uint addr) {
         // Take the current value of the free memory pointer, and update.
         assembly {
             addr := mload(0x40)
@@ -108,7 +109,7 @@ library Memory {
     // Copies 'len' bytes of memory from address 'src' to address 'dest'
     // UNSAFE because there is no checking that the destination has been
     // properly allocated.
-    function unsafeCopy(uint src, uint dest, uint len) constant internal {
+    function unsafeCopy(uint src, uint dest, uint len) internal pure {
         // Copy word-length chunks while possible
         for (; len >= 32; len -= 32) {
             assembly {
@@ -130,25 +131,25 @@ library Memory {
     /******************** get memory address from types **********************/
 
 
-    function memAddress(bytes memory bts) internal constant returns (uint addr) {
+    function memAddress(bytes memory bts) internal pure returns (uint addr) {
         assembly {
             addr := bts
         }
     }
 
-    function memAddressData(bytes memory bts) internal constant returns (uint addr) {
+    function memAddressData(bytes memory bts) internal pure returns (uint addr) {
         assembly {
             addr := add(bts, 0x20)
         }
     }
 
-    function memAddress(string memory str) internal constant returns (uint addr) {
+    function memAddress(string memory str) internal pure returns (uint addr) {
         assembly {
             addr := str
         }
     }
 
-    function memAddressData(string memory str) internal constant returns (uint addr) {
+    function memAddressData(string memory str) internal pure returns (uint addr) {
         assembly {
             addr := add(str, 0x20)
         }
@@ -156,7 +157,7 @@ library Memory {
 
     /******************** from types **********************/
 
-    function fromBytes(bytes memory bts) internal constant returns (Array memory mArr) {
+    function fromBytes(bytes memory bts) internal pure returns (Array memory mArr) {
         uint addr;
         uint len;
         assembly {
@@ -167,7 +168,7 @@ library Memory {
         mArr._ptr = addr;
     }
 
-    function fromString(string memory str) internal constant returns (Array memory mArr) {
+    function fromString(string memory str) internal pure returns (Array memory mArr) {
         uint addr;
         uint len;
         assembly {
@@ -178,7 +179,7 @@ library Memory {
         mArr._ptr = addr;
     }
 
-    function fromUint(uint n) internal constant returns (Array memory mArr) {
+    function fromUint(uint n) internal pure returns (Array memory mArr) {
         mArr = allocate(32);
         uint ptr = mArr._ptr;
         assembly {
@@ -186,7 +187,7 @@ library Memory {
         }
     }
 
-    function fromBytes32(bytes32 b32) internal constant returns (Array memory mArr) {
+    function fromBytes32(bytes32 b32) internal pure returns (Array memory mArr) {
         mArr = allocate(32);
         uint ptr = mArr._ptr;
         assembly {
@@ -196,7 +197,7 @@ library Memory {
 
     /******************** to types **********************/
 
-    function toBytes(Array memory self) internal constant returns (bytes memory bts) {
+    function toBytes(Array memory self) internal pure returns (bytes memory bts) {
         require(!isNull(self));
         if (self._len == 0) {
             return;
@@ -209,7 +210,7 @@ library Memory {
         unsafeCopy(self._ptr, btsptr, self._len);
     }
 
-    function toString(Array memory self) internal constant returns (string memory str) {
+    function toString(Array memory self) internal pure returns (string memory str) {
         require(!isNull(self));
         if (self._len == 0) {
             return;
@@ -222,7 +223,7 @@ library Memory {
         unsafeCopy(self._ptr, strptr, self._len);
     }
 
-    function toUint(Array memory mArr) internal constant returns (uint n) {
+    function toUint(Array memory mArr) internal pure returns (uint n) {
         require(!isNull(mArr) && 0 < mArr._len && mArr._len <= 32);
         uint ptr = mArr._ptr;
         assembly {
@@ -231,7 +232,7 @@ library Memory {
         n &= ~(~uint(0) << mArr._len*8);
     }
 
-    function toBytes32(Array memory mArr) internal constant returns (bytes32 b32) {
+    function toBytes32(Array memory mArr) internal pure returns (bytes32 b32) {
         require(!isNull(mArr) && mArr._len == 32);
         uint ptr = mArr._ptr;
         assembly {

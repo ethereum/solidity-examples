@@ -1,4 +1,6 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 import {Memory} from "../unsafe/Memory.sol";
 
@@ -7,7 +9,7 @@ library Bytes {
     // Check if two 'bytes memory' are equal. Equality is defined as such:
     // firstBytes.length == secondBytes.length (= length)
     // for 0 <= i < length, firstBytes[i] == secondBytes[i]
-    function equals(bytes memory self, bytes memory other) internal constant returns (bool equal) {
+    function equals(bytes memory self, bytes memory other) internal pure returns (bool equal) {
         if (self.length != other.length) {
             return false;
         }
@@ -23,11 +25,11 @@ library Bytes {
     // Check if two bytes references are the same, i.e. has the same memory address.
     // If 'equals(self, other) == true', but 'equalsRef(self, other) == false', then
     // 'self' and 'other' must be independent copies of each other.
-    function equalsRef(bytes memory self, bytes memory other) internal constant returns (bool equal) {
+    function equalsRef(bytes memory self, bytes memory other) internal pure returns (bool equal) {
         equal = Memory.memAddress(self) == Memory.memAddress(other);
     }
 
-    function copy(bytes memory self) internal constant returns (bytes memory cpy) {
+    function copy(bytes memory self) internal pure returns (bytes memory cpy) {
         if (self.length == 0) {
             return;
         }
@@ -41,7 +43,7 @@ library Bytes {
         Memory.unsafeCopy(src, dest, self.length);
     }
 
-    function concat(bytes memory self, bytes memory other) internal constant returns (bytes memory) {
+    function concat(bytes memory self, bytes memory other) internal pure returns (bytes memory) {
         bytes memory ret = new bytes(self.length + other.length);
         uint src = Memory.memAddressData(self);
         uint src2 = Memory.memAddressData(other);
@@ -58,7 +60,7 @@ library Bytes {
      * @return The length of the string, from 0 to 32.
      *
      */
-    function lowestByteSet(bytes32 self) internal constant returns (uint) {
+    function lowestByteSet(bytes32 self) internal pure returns (uint) {
         require(self != 0);
         uint ret;
         if (self & 0xffffffffffffffffffffffffffffffff == 0) {
@@ -83,7 +85,7 @@ library Bytes {
         return ret;
     }
 
-    function highestByteSet(bytes32 self) internal constant returns (uint) {
+    function highestByteSet(bytes32 self) internal pure returns (uint) {
         require(self != 0);
         uint ret;
         if (self == 0)
@@ -111,7 +113,7 @@ library Bytes {
     }
 
     // Shaves of leading 0 bytes and writes the remaining string to a 'memory bytes'
-    function toBytes(bytes32 b32) internal constant returns (bytes memory bts) {
+    function toBytes(bytes32 b32) internal pure returns (bytes memory bts) {
         if (b32 == 0) {
             return;
         }

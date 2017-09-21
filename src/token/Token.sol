@@ -1,6 +1,6 @@
 pragma solidity ^0.4.15;
 
-// Interface for EIP-20 compliant token-contracts.
+// Interface for ERC-20 compliant token-contracts.
 contract Token {
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);

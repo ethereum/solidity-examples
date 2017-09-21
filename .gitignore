@@ -8,7 +8,6 @@
 ### Eclipse template
 
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
@@ -372,3 +371,5 @@ ENV/
 testeth
 .idea
 node_modules
+perf_bin
+logs

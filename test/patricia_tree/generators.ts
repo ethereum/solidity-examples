@@ -1,7 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var filler_1 = require("../../script/utils/filler");
-exports.generate = function () {
+import {
+    generateDefaultTestEnv, generateDefaultTestExpect, generateDefaultTestPre,
+    generateDefaultTransaction, generateTestFiller
+} from '../../script/utils/filler';
+
+export const generate = () => {
     return {
         "TestPatriciaTreeInsert": testInsert,
         "TestPatriciaTreeInsertTwo": testInsertTwo,
@@ -11,22 +13,25 @@ exports.generate = function () {
         "TestPatriciaTreeInsertThreePerm2": testInsertThree
     };
 };
+
+
 function testInsert(name, code) {
-    var storage = {
+    const storage = {
         "0x": "0x1",
         "0x01": "0x39fd944613a52ff5d776068277cf6905576365e6f01a1afb3346de34b946dbf2",
         "0x02": "0x6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07",
         "0x03": "0x749eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a11",
         "0x04": "0x100"
     };
-    var env = filler_1.generateDefaultTestEnv();
-    var pre = filler_1.generateDefaultTestPre(code);
-    var tx = filler_1.generateDefaultTransaction();
-    var expect = [filler_1.generateDefaultTestExpect(storage)];
-    return filler_1.generateTestFiller(name, env, expect, pre, tx);
+    const env = generateDefaultTestEnv();
+    const pre = generateDefaultTestPre(code);
+    const tx = generateDefaultTransaction();
+    const expect = [generateDefaultTestExpect(storage)];
+    return generateTestFiller(name, env, expect, pre, tx);
 }
+
 function testInsertTwo(name, code) {
-    var storage = {
+    const storage = {
         "0x": "0x1",
         "0x01": "0x30ca1d513a446f6be18ca4e5cce7ffa71ebce69492e5461885212b2438da4e3a",
         "0x02": "0x49d5ff14955320f0897d9099ff72e29c961d71ad98bcc1a2ef3c6e6d057be09c",
@@ -38,14 +43,15 @@ function testInsertTwo(name, code) {
         "0x730bae04d846980bd21919029d0c9183e1facebac0ce9b466f3572b423700d5f": "0xd27ae68c9812878f5558f91d7c8a95088688a667c9d3ed6b361280345814e844",
         "0x730bae04d846980bd21919029d0c9183e1facebac0ce9b466f3572b423700d60": "0xfe"
     };
-    var env = filler_1.generateDefaultTestEnv();
-    var pre = filler_1.generateDefaultTestPre(code);
-    var tx = filler_1.generateDefaultTransaction();
-    var expect = [filler_1.generateDefaultTestExpect(storage)];
-    return filler_1.generateTestFiller(name, env, expect, pre, tx);
+    const env = generateDefaultTestEnv();
+    const pre = generateDefaultTestPre(code);
+    const tx = generateDefaultTransaction();
+    const expect = [generateDefaultTestExpect(storage)];
+    return generateTestFiller(name, env, expect, pre, tx);
 }
+
 function testInsertThree(name, code) {
-    var storage = {
+    const storage = {
         "0x": "0x1",
         "0x01": "0xf637e05e31f0cb7934038a6e71997250f718b9c207f87860da323efd66650ba2",
         "0x02": "0x2652c8edffac832f9321d392920c32d08f4e3176add8ad9995f5c3ee26629cf8",
@@ -63,9 +69,9 @@ function testInsertThree(name, code) {
         "0xd390a43002d5609bdea07c5e4ff0bdbd08f41634aecdce595acfe1b9d729a057": "0x49eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a110",
         "0xd390a43002d5609bdea07c5e4ff0bdbd08f41634aecdce595acfe1b9d729a058": "0xfc"
     };
-    var env = filler_1.generateDefaultTestEnv();
-    var pre = filler_1.generateDefaultTestPre(code);
-    var tx = filler_1.generateDefaultTransaction();
-    var expect = [filler_1.generateDefaultTestExpect(storage)];
-    return filler_1.generateTestFiller(name, env, expect, pre, tx);
+    const env = generateDefaultTestEnv();
+    const pre = generateDefaultTestPre(code);
+    const tx = generateDefaultTransaction();
+    const expect = [generateDefaultTestExpect(storage)];
+    return generateTestFiller(name, env, expect, pre, tx);
 }

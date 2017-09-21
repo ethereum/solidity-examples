@@ -1,4 +1,6 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
@@ -18,24 +20,20 @@ contract PatriciaTreeImpl is PatriciaTree {
     // Particia tree nodes (hash to decoded contents)
     mapping (bytes32 => Data.Node) nodes;
 
-    function getNode(bytes32 hash) constant returns (uint, bytes32, bytes32, uint, bytes32, bytes32) {
-        var n = nodes[hash];
-        return (
-            n.children[0].label.length, n.children[0].label.data, n.children[0].node,
-            n.children[1].label.length, n.children[1].label.data, n.children[1].node
-        );
+    function getNode(bytes32 hash) public view returns (Data.Node n) {
+        n = nodes[hash];
     }
 
-    function getRootEdge() constant returns (uint, bytes32, bytes32) {
-        return (rootEdge.label.length, rootEdge.label.data, rootEdge.node);
+    function getRootEdge() public view returns (Data.Edge e) {
+        e = rootEdge;
     }
 
-    function edgeHash(Data.Edge e) constant internal returns (bytes32) {
+    function edgeHash(Data.Edge memory e) internal pure returns (bytes32) {
         return keccak256(e.node, e.label.length, e.label.data);
     }
 
     // Returns the hash of the encoding of a node.
-    function hash(Data.Node memory n) constant internal returns (bytes32) {
+    function hash(Data.Node memory n) internal pure returns (bytes32) {
         return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
     }
 
@@ -45,7 +43,7 @@ contract PatriciaTreeImpl is PatriciaTree {
     //  - uint branchMask - bitmask with high bits at the positions in the key
     //                    where we have branch nodes (bit in key denotes direction)
     //  - bytes32[] hashes - hashes of sibling edges
-    function getProof(bytes key) constant returns (uint branchMask, bytes32[] _siblings) {
+    function getProof(bytes key) public view returns (uint branchMask, bytes32[] _siblings) {
         require(root != 0);
         Data.Label memory k = Data.Label(keccak256(key), 256);
         Data.Edge memory e = rootEdge;
@@ -75,7 +73,7 @@ contract PatriciaTreeImpl is PatriciaTree {
         }
     }
 
-    function verifyProof(bytes32 rootHash, bytes key, bytes value, uint branchMask, bytes32[] siblings) constant returns (bool) {
+    function verifyProof(bytes32 rootHash, bytes key, bytes value, uint branchMask, bytes32[] siblings) public view returns (bool) {
         Data.Label memory k = Data.Label(keccak256(key), 256);
         Data.Edge memory e;
         e.node = keccak256(value);
@@ -95,12 +93,11 @@ contract PatriciaTreeImpl is PatriciaTree {
         return true;
     }
 
-    function insert(bytes key, bytes value) {
+    function insert(bytes key, bytes value) public {
         Data.Label memory k = Data.Label(keccak256(key), 256);
         bytes32 valueHash = keccak256(value);
-        // keys.push(key);
         Data.Edge memory e;
-        if (rootEdge.node == 0 && rootEdge.label.length == 0) {
+        if (root == 0) {
             // Empty Trie
             e.label = k;
             e.node = valueHash;

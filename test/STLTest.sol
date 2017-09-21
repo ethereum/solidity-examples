@@ -4,7 +4,7 @@ contract STLTest {
 
     bool ret;
 
-    function test() {
+    function test() public {
         ret = true;
         testImpl();
     }

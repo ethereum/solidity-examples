@@ -183,59 +183,6 @@ contract TestPatriciaUtilsCommonPrefixOfLabelWithItselfIsLabelLength is Patricia
 }
 
 
-contract TestPatriciaUtilsCommonPrefixIsCommutative is PatriciaUtilsTest {
-    function testImpl() internal {
-        Data.Label memory a = Data.Label(hex"bbcd", 16);
-        Data.Label memory b = Data.Label(hex"bb00", 16);
-        require(a.commonPrefix(b) == b.commonPrefix(a));
-    }
-}
-
-
-contract TestPatriciaUtilsCommonPrefixDoesNotMutate is PatriciaUtilsTest {
-    function testImpl() internal {
-        Data.Label memory a = Data.Label(hex"bbcd", 16);
-        Data.Label memory b = Data.Label(hex"bb00", 16);
-        a.commonPrefix(b);
-        require(a.data == hex"bbcd");
-        require(a.length == 16);
-        require(b.data == hex"bb00");
-        require(b.length == 16);
-    }
-}
-
-
-contract TestPatriciaUtilsCommonPrefixLengthsLessThanGreaterThanAndEqual is PatriciaUtilsTest {
-    function testImpl() internal {
-        Data.Label memory a = Data.Label(hex"bb0031", 24);
-        Data.Label memory b = Data.Label(hex"bbcd", 16);
-        require(a.commonPrefix(b) == 8);
-        require(b.commonPrefix(a) == 8);
-        a = Data.Label(hex"bb00", 16);
-        require(a.commonPrefix(b) == 8);
-    }
-}
-
-
-contract TestPatriciaUtilsCommonPrefix is PatriciaUtilsTest {
-    function testImpl() internal {
-        Data.Label memory a;
-        Data.Label memory b;
-        a.data = hex"abcd";
-        a.length = 16;
-        b.data = hex"a000";
-        b.length = 16;
-        require(a.commonPrefix(b) == 4);
-
-        b.length = 0;
-        require(a.commonPrefix(b) == 0);
-
-        b.data = hex"bbcd";
-        b.length = 16;
-        require(a.commonPrefix(b) == 3);
-        require(b.commonPrefix(b) == b.length);
-    }
-}
 
 
 contract TestPatriciaUtilsSplitAtThrowsPosGreaterThanLength is PatriciaUtilsTest {
