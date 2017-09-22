@@ -1,15 +1,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {PERF_BIN, PERF_CONTRACT_PATH, PERF_FUN_HASH, PERF_LOGS, UNITS} from "./constants";
+import {PERF_BIN, PERF_FUN_HASH, PERF_LOGS, UNITS} from "./constants";
 import {rmrf} from "./utils/files";
-import {compilePerf, compileRuntime, version as solcVersion} from "./exec/solc";
-import {perf, version as ethvmVersion} from './exec/ethvm';
+import {compilePerf, version as solcVersion} from "./exec/solc";
+import {perf, version as evmVersion} from './exec/evm';
 import * as mkdirp from 'mkdirp';
 import * as jsondiffpatch from 'jsondiffpatch';
 
 export const perfAll = (optAndUnopt: boolean): void => {
     const solcV = solcVersion().split(/\r\n|\r|\n/)[1].trim();
-    const ethvmV = ethvmVersion().split(/\r\n|\r|\n/)[0].trim();
+    const ethvmV = evmVersion().split(/\r\n|\r|\n/)[0].trim();
     rmrf(PERF_BIN);
     mkdirp.sync(PERF_BIN);
 
@@ -75,8 +75,8 @@ export const perfAll = (optAndUnopt: boolean): void => {
 export const compileAndRunPerf = (optimize: boolean): Object => {
     for (let i = 0; i < UNITS.length; i++) {
         const subDir = UNITS[i][0];
-        const test = UNITS[i][1];
-        compilePerf(subDir, test, optimize);
+        const perf = UNITS[i][1];
+        compilePerf(subDir, perf, optimize);
     }
     return runPerf();
 };
@@ -93,7 +93,6 @@ export const runPerf = (): Object => {
         const perfName = sigfile.substr(0, sigfile.length - 11);
         const binRuntimePath = path.join(PERF_BIN, perfName + ".bin-runtime");
         const hashesPath = path.join(PERF_BIN, sigfile);
-        const binRuntime = fs.readFileSync(binRuntimePath).toString();
         const hashes = fs.readFileSync(hashesPath).toString();
 
         const lines = hashes.split(/\r\n|\r|\n/);
@@ -123,8 +122,7 @@ export const runPerf = (): Object => {
             throw new Error("Contract has no perf: " + hashes);
         }
 
-        const code = '0x' + binRuntime;
-        const result = perf(code);
+        const result = perf(binRuntimePath);
 
         log[perfName] = parseData(result);
     }
@@ -132,24 +130,7 @@ export const runPerf = (): Object => {
 };
 
 const parseData = (output: string): Object => {
-
-    const lines = output.split(/\r\n|\r|\n/);
-
-    if (lines[0].indexOf('Gas used') !== 0) {
-        throw new Error(`Malformed ethvm output (line 1):\n ${output}`);
-    }
-    // Output
-    if (lines[1].indexOf('Output:') !== 0) {
-        throw new Error(`Malformed ethvm output (line 2):\n ${output}`);
-    }
-    const outputSplit = lines[1].split(':');
-    if (outputSplit.length !== 2) {
-        throw new Error(`Malformed ethvm output (line 2):\n ${output}`);
-    }
-    const gasUsed = parseInt(outputSplit[1].trim(), 16);
-
-
     return {
-        gasUsed: gasUsed || 0
+        gasUsed: parseInt(output.trim(), 16) || 0
     };
 };

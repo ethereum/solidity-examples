@@ -2,7 +2,27 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:4.8.2
+      - image: ubuntu:16.04
     working_directory: ~/solidity-examples
     steps:
       - checkout
+      - run:
+          name: fetch-deps
+          command: 'sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_test_results:
+          path: test-results.xml

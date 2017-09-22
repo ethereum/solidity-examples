@@ -1,54 +1,34 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {FILLERS_PATH, TEST_BIN, TEST_FUN_HASH, UNITS, TESTS_PATH} from "./constants";
+import {TEST_BIN, TEST_FUN_HASH, UNITS} from "./constants";
 import {rmrf} from "./utils/files";
-import {testeth} from "./exec/testeth";
 import {compileTest} from "./exec/solc";
-import {generateDefaultTestFiller} from '../script/utils/filler';
 import * as mkdirp from 'mkdirp';
+import {test} from "./exec/evm";
 
-const generators = {};
-
-export const registerTests = () => {
-    for (let i = 0; i < UNITS.length; i++) {
-        const gens = UNITS[i][2];
-        const tests = gens();
-        for(let test in tests) {
-            if(generators[test]) {
-                throw new Error(`Multiple generators for: `);
-            }
-            generators[test] = tests[test];
-        }
-    }
-};
 
 export const testAll = (optAndUnopt: boolean): void => {
-    registerTests();
-    rmrf(TESTS_PATH);
-    rmrf(FILLERS_PATH);
-    mkdirp.sync(FILLERS_PATH);
-
     rmrf(TEST_BIN);
     mkdirp.sync(TEST_BIN);
-    compileAndGenerateFillers(true);
+
+    compileAndRunTests(true);
     if (optAndUnopt) {
         rmrf(TEST_BIN);
-        fs.mkdirSync(TEST_BIN);
-        compileAndGenerateFillers(false);
+        mkdirp.sync(TEST_BIN);
+        compileAndRunTests(false);
     }
-    testeth();
 };
 
-export const compileAndGenerateFillers = (optimize: boolean) => {
+export const compileAndRunTests = (optimize: boolean) => {
     for (let i = 0; i < UNITS.length; i++) {
         const subDir = UNITS[i][0];
         const test = UNITS[i][1];
         compileTest(subDir, test, false);
     }
-    generateFillers(optimize);
+    runTests(optimize);
 };
 
-export const generateFillers = (optimize: boolean) => {
+export const runTests = (optimize: boolean) => {
 
     const files = fs.readdirSync(TEST_BIN);
     const sigfiles = files.filter(function (file) {
@@ -60,7 +40,6 @@ export const generateFillers = (optimize: boolean) => {
         const testName = sigfile.substr(0, sigfile.length - 11);
         const binRuntimePath = path.join(TEST_BIN, testName + ".bin-runtime");
         const hashesPath = path.join(TEST_BIN, sigfile);
-        const binRuntime = fs.readFileSync(binRuntimePath).toString();
         const hashes = fs.readFileSync(hashesPath).toString();
 
         const lines = hashes.split(/\r\n|\r|\n/);
@@ -90,13 +69,19 @@ export const generateFillers = (optimize: boolean) => {
             throw new Error("Contract has no test: " + hashes);
         }
 
-        const name = testName + (optimize ? "Opt" : "Unopt");
-        const code = '0x' + binRuntime;
+        const throws = /Throws/.test(testName);
+        const result = parseData(test(binRuntimePath));
 
-        const filler = generators[testName] ? generators[testName](name, code) : generateDefaultTestFiller(name, code);
+        if (throws && result) {
+            throw new Error(`Failed: Expected test to throw: ${testName} (${optimize ? "optimized" : "unoptimized"})`);
+        }
 
-        const fillerPath = path.join(FILLERS_PATH, name + "Filler.json");
-        const fillerData = JSON.stringify(filler, null, '\t');
-        fs.writeFileSync(fillerPath, fillerData);
+        if (!throws && !result) {
+            throw new Error(`Failed: Expected test not to throw: ${testName} (${optimize ? "optimized" : "unoptimized"})`);
+        }
     }
+    console.log(`Successfully ran ${sigfiles.length} tests.`);
 };
+
+
+const parseData = (output: string): boolean => parseInt(output.trim(), 16) === 1;

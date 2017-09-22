@@ -5,12 +5,12 @@ var path = require("path");
 var constants_1 = require("./constants");
 var files_1 = require("./utils/files");
 var solc_1 = require("./exec/solc");
-var ethvm_1 = require("./exec/ethvm");
+var evm_1 = require("./exec/evm");
 var mkdirp = require("mkdirp");
 var jsondiffpatch = require("jsondiffpatch");
 exports.perfAll = function (optAndUnopt) {
     var solcV = solc_1.version().split(/\r\n|\r|\n/)[1].trim();
-    var ethvmV = ethvm_1.version().split(/\r\n|\r|\n/)[0].trim();
+    var ethvmV = evm_1.version().split(/\r\n|\r|\n/)[0].trim();
     files_1.rmrf(constants_1.PERF_BIN);
     mkdirp.sync(constants_1.PERF_BIN);
     var folder = new Date().getTime().toString(10);
@@ -71,8 +71,8 @@ exports.perfAll = function (optAndUnopt) {
 exports.compileAndRunPerf = function (optimize) {
     for (var i = 0; i < constants_1.UNITS.length; i++) {
         var subDir = constants_1.UNITS[i][0];
-        var test = constants_1.UNITS[i][1];
-        solc_1.compilePerf(subDir, test, optimize);
+        var perf_1 = constants_1.UNITS[i][1];
+        solc_1.compilePerf(subDir, perf_1, optimize);
     }
     return exports.runPerf();
 };
@@ -88,7 +88,6 @@ exports.runPerf = function () {
         var perfName = sigfile.substr(0, sigfile.length - 11);
         var binRuntimePath = path.join(constants_1.PERF_BIN, perfName + ".bin-runtime");
         var hashesPath = path.join(constants_1.PERF_BIN, sigfile);
-        var binRuntime = fs.readFileSync(binRuntimePath).toString();
         var hashes = fs.readFileSync(hashesPath).toString();
         var lines = hashes.split(/\r\n|\r|\n/);
         if (lines.length === 0) {
@@ -115,27 +114,13 @@ exports.runPerf = function () {
         if (!perfFound) {
             throw new Error("Contract has no perf: " + hashes);
         }
-        var code = '0x' + binRuntime;
-        var result = ethvm_1.perf(code);
+        var result = evm_1.perf(binRuntimePath);
         log[perfName] = parseData(result);
     }
     return log;
 };
 var parseData = function (output) {
-    var lines = output.split(/\r\n|\r|\n/);
-    if (lines[0].indexOf('Gas used') !== 0) {
-        throw new Error("Malformed ethvm output (line 1):\n " + output);
-    }
-    // Output
-    if (lines[1].indexOf('Output:') !== 0) {
-        throw new Error("Malformed ethvm output (line 2):\n " + output);
-    }
-    var outputSplit = lines[1].split(':');
-    if (outputSplit.length !== 2) {
-        throw new Error("Malformed ethvm output (line 2):\n " + output);
-    }
-    var gasUsed = parseInt(outputSplit[1].trim(), 16);
     return {
-        gasUsed: gasUsed || 0
+        gasUsed: parseInt(output.trim(), 16) || 0
     };
 };

@@ -4,47 +4,28 @@ var fs = require("fs");
 var path = require("path");
 var constants_1 = require("./constants");
 var files_1 = require("./utils/files");
-var testeth_1 = require("./exec/testeth");
 var solc_1 = require("./exec/solc");
-var filler_1 = require("../script/utils/filler");
 var mkdirp = require("mkdirp");
-var generators = {};
-exports.registerTests = function () {
-    for (var i = 0; i < constants_1.UNITS.length; i++) {
-        var gens = constants_1.UNITS[i][2];
-        var tests = gens();
-        for (var test in tests) {
-            if (generators[test]) {
-                throw new Error("Multiple generators for: ");
-            }
-            generators[test] = tests[test];
-        }
-    }
-};
+var evm_1 = require("./exec/evm");
 exports.testAll = function (optAndUnopt) {
-    exports.registerTests();
-    files_1.rmrf(constants_1.TESTS_PATH);
-    files_1.rmrf(constants_1.FILLERS_PATH);
-    mkdirp.sync(constants_1.FILLERS_PATH);
     files_1.rmrf(constants_1.TEST_BIN);
     mkdirp.sync(constants_1.TEST_BIN);
-    exports.compileAndGenerateFillers(true);
+    exports.compileAndRunTests(true);
     if (optAndUnopt) {
         files_1.rmrf(constants_1.TEST_BIN);
-        fs.mkdirSync(constants_1.TEST_BIN);
-        exports.compileAndGenerateFillers(false);
+        mkdirp.sync(constants_1.TEST_BIN);
+        exports.compileAndRunTests(false);
     }
-    testeth_1.testeth();
 };
-exports.compileAndGenerateFillers = function (optimize) {
+exports.compileAndRunTests = function (optimize) {
     for (var i = 0; i < constants_1.UNITS.length; i++) {
         var subDir = constants_1.UNITS[i][0];
-        var test = constants_1.UNITS[i][1];
-        solc_1.compileTest(subDir, test, false);
+        var test_1 = constants_1.UNITS[i][1];
+        solc_1.compileTest(subDir, test_1, false);
     }
-    exports.generateFillers(optimize);
+    exports.runTests(optimize);
 };
-exports.generateFillers = function (optimize) {
+exports.runTests = function (optimize) {
     var files = fs.readdirSync(constants_1.TEST_BIN);
     var sigfiles = files.filter(function (file) {
         var f = file.trim();
@@ -55,7 +36,6 @@ exports.generateFillers = function (optimize) {
         var testName = sigfile.substr(0, sigfile.length - 11);
         var binRuntimePath = path.join(constants_1.TEST_BIN, testName + ".bin-runtime");
         var hashesPath = path.join(constants_1.TEST_BIN, sigfile);
-        var binRuntime = fs.readFileSync(binRuntimePath).toString();
         var hashes = fs.readFileSync(hashesPath).toString();
         var lines = hashes.split(/\r\n|\r|\n/);
         if (lines.length === 0) {
@@ -82,11 +62,15 @@ exports.generateFillers = function (optimize) {
         if (!testFound) {
             throw new Error("Contract has no test: " + hashes);
         }
-        var name_1 = testName + (optimize ? "Opt" : "Unopt");
-        var code = '0x' + binRuntime;
-        var filler = generators[testName] ? generators[testName](name_1, code) : filler_1.generateDefaultTestFiller(name_1, code);
-        var fillerPath = path.join(constants_1.FILLERS_PATH, name_1 + "Filler.json");
-        var fillerData = JSON.stringify(filler, null, '\t');
-        fs.writeFileSync(fillerPath, fillerData);
+        var throws = /Throws/.test(testName);
+        var result = parseData(evm_1.test(binRuntimePath));
+        if (throws && result) {
+            throw new Error("Failed: Expected test to throw: " + testName + " (" + (optimize ? "optimized" : "unoptimized") + ")");
+        }
+        if (!throws && !result) {
+            throw new Error("Failed: Expected test not to throw: " + testName + " (" + (optimize ? "optimized" : "unoptimized") + ")");
+        }
     }
+    console.log("Successfully ran " + sigfiles.length + " tests.");
 };
+var parseData = function (output) { return parseInt(output.trim(), 16) === 1; };

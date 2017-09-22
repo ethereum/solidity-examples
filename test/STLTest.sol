@@ -4,9 +4,7 @@ pragma experimental ABIEncoderV2;
 
 contract STLTest {
 
-    bool ret;
-
-    function test() public payable {
+    function test() public payable returns (bool ret) {
         ret = true;
         testImpl();
     }

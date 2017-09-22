@@ -4,8 +4,7 @@
   "description": "Standard contracts",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test/testall.js",
-    "testwithdocker": "node ./test/testall.js docker"
+    "test": "node ./bin/test.js"
   },
   "repository": {
     "type": "git",
@@ -19,13 +18,12 @@
   "homepage": "https://github.com/ethereum/solidity-examples#readme",
   "devDependencies": {
     "@types/node": "^8.0.28",
-    "bn.js": "^4.11.8",
-    "jsondiffpatch": "^0.2.4",
-    "mkdirp": "^0.5.1",
-    "typescript": "^2.5.2",
-    "z-schema": "^3.18.3"
+    "typescript": "^2.5.2"
   },
   "dependencies": {
-    "inquirer": "^3.2.3"
+    "inquirer": "^3.2.3",
+    "jsondiffpatch": "^0.2.4",
+    "mkdirp": "^0.5.1",
+    "z-schema": "^3.18.3"
   }
 }

@@ -372,4 +372,5 @@ testeth
 .idea
 node_modules
 perf_bin
+test_bin
 logs
