@@ -1,8 +1,7 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: buildpack-deps:trusty
+    machine: true
     working_directory: ~/solidity-examples
     steps:
       - checkout
