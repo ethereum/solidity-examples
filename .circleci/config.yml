@@ -7,4 +7,9 @@ jobs:
       - checkout
       - run:
           name: fetch-deps
-          command: 'cd solidity-examples && sudo chmod +x ./.circleci/fetch_deps.sh && ./.circleci/fetch_deps.sh && npm install && && npm test'
+          command: |
+            cd solidity-examples
+            sudo chmod +x ./.circleci/fetch_deps.sh
+            ./.circleci/fetch_deps.sh
+            npm install
+            npm test
