@@ -5,12 +5,24 @@ jobs:
     working_directory: ~/solidity-examples
     steps:
       - checkout
+- checkout
       - run:
           name: fetch-deps
-          command: |
-            pwd
-            ls -a
-            sudo chmod +x .circleci/fetch_deps.sh
-            ./.circleci/fetch_deps.sh
-            npm install
-            npm test
+          command: 'sudo chmod +x .circleci/fetch-deps.sh && ./.circleci/fetch-deps.sh'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_test_results:
+          path: test-results.xml
