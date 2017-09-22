@@ -5,5 +5,5 @@ sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo add-apt-repository -y ppa:ethereum/ethereum-dev
 sudo apt-get -y update
 sudo apt-get install -y curl
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash
 sudo apt-get install -y nodejs evm solc
