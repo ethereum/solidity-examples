@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:16.04
+      - image: buildpack-deps:trusty
     working_directory: ~/solidity-examples
     steps:
       - checkout
