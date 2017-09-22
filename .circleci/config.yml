@@ -2,7 +2,6 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: ~/solidity-examples
     steps:
       - checkout
       - run:

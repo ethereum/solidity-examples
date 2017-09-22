@@ -6,4 +6,4 @@ sudo add-apt-repository -y ppa:ethereum/ethereum-dev
 sudo apt-get -y update
 sudo apt-get install -y curl
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
-sudo apt-get install -y nodejs npm evm solc
+sudo apt-get install -y nodejs evm solc
