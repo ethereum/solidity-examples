@@ -43,8 +43,8 @@ library Bits {
         return uint8((self ^ other) >> index & 1);
     }
 
-    function bits(uint self, uint8 startIndex, uint8 numBits) internal pure returns (uint) {
-        require(uint(startIndex) + uint(numBits) <= 256 && numBits > 0);
+    function bits(uint self, uint8 startIndex, uint numBits) internal pure returns (uint) {
+        require(startIndex + numBits <= 256 && numBits > 0);
         return self >> startIndex & ONES >> 256 - numBits;
     }
 

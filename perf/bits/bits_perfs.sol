@@ -1,34 +1,132 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 import {Bits} from "../../src/bits/Bits.sol";
 import {STLPerf} from "../STLPerf.sol";
 
-contract BitsPerf is STLPerf {
 
-    uint constant ZERO = uint(0);
-    uint constant ONE = uint(1);
-    uint constant ONES = uint(~0);
-
+contract PerfBitsSetBit is STLPerf {
     using Bits for uint;
-}
 
-
-contract PerfBitsBitAnd is BitsPerf {
     function perfImpl() internal {
-        ONE.bitAnd(ZERO, 66);
+        uint(1).setBit(66);
     }
 }
 
 
-contract PerfBitsHighestBitSet is BitsPerf {
+contract PerfBitsClearBit is STLPerf {
+    using Bits for uint;
+
     function perfImpl() internal {
-        ONE.highestBitSet();
+        uint(1).clearBit(66);
     }
 }
 
 
-contract PerfBits is BitsPerf {
-    function perfImpl() internal {
+contract PerfBitsToggleBit is STLPerf {
+    using Bits for uint;
 
+    function perfImpl() internal {
+        uint(1).toggleBit(66);
+    }
+}
+
+
+contract PerfBitsBit is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bit(66);
+    }
+}
+
+
+contract PerfBitsBitSet is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bitSet(66);
+    }
+}
+
+
+contract PerfBitsBitEqual is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bitEqual(5, 66);
+    }
+}
+
+
+contract PerfBitsBitAnd is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bitAnd(0, 66);
+    }
+}
+
+
+contract PerfBitsBitOr is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bitOr(0, 66);
+    }
+}
+
+
+contract PerfBitsBitXor is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bitXor(0, 66);
+    }
+}
+
+
+contract PerfBitsBits is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).bits(5, 66);
+    }
+}
+
+
+contract PerfBitsHighestBitSetLow is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).highestBitSet();
+    }
+}
+
+
+contract PerfBitsHighestBitSetHigh is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        (uint(1) << uint(255)).highestBitSet();
+    }
+}
+
+
+contract PerfBitsLowestBitSetLow is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        uint(1).lowestBitSet();
+    }
+}
+
+
+contract PerfBitsLowestBitSetHigh is STLPerf {
+    using Bits for uint;
+
+    function perfImpl() internal {
+        (uint(1) << uint(255)).lowestBitSet();
     }
 }

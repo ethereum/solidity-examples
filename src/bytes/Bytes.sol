@@ -26,7 +26,7 @@ library Bytes {
     // If 'equals(self, other) == true', but 'equalsRef(self, other) == false', then
     // 'self' and 'other' must be independent copies of each other.
     function equalsRef(bytes memory self, bytes memory other) internal pure returns (bool equal) {
-        equal = Memory.memAddress(self) == Memory.memAddress(other);
+        equal = Memory.ptr(self) == Memory.ptr(other);
     }
 
     function copy(bytes memory self) internal pure returns (bytes memory cpy) {
@@ -40,17 +40,17 @@ library Bytes {
             src := add(self, 0x20)
             dest := add(cpy, 0x20)
         }
-        Memory.unsafeCopy(src, dest, self.length);
+        Memory.copy(src, dest, self.length);
     }
 
     function concat(bytes memory self, bytes memory other) internal pure returns (bytes memory) {
         bytes memory ret = new bytes(self.length + other.length);
-        uint src = Memory.memAddressData(self);
-        uint src2 = Memory.memAddressData(other);
-        uint dest = Memory.memAddressData(ret);
-        uint dest2 = dest + other.length;
-        Memory.unsafeCopy(src, dest, self.length);
-        Memory.unsafeCopy(src2, dest2, other.length);
+        var (src, srcLen) = Memory.fromBytes(self);
+        var (src2, src2Len) = Memory.fromBytes(other);
+        var (dest, destLen) = Memory.fromBytes(ret);
+        var dest2 = dest + src2Len;
+        Memory.copy(src, dest, srcLen);
+        Memory.copy(src2, dest2, src2Len);
         return ret;
     }
 

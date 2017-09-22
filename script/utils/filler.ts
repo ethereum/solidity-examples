@@ -1,4 +1,4 @@
-import ZSchema = require('z-schema');
+import * as ZSchema from 'z-schema';
 const schema = require('../st-filler-schema.json');
 
 export const generateDefaultTestFiller = (name: string, code: string): Object => {

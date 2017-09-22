@@ -1,4 +1,6 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 import {Bits} from "../../src/bits/Bits.sol";
 import {STLTest} from "../STLTest.sol";
@@ -67,20 +69,6 @@ contract TestBitsBitSet is BitsTest {
 }
 
 
-contract TestBitsBitsThrowsNumBitsZero is BitsTest {
-    function testImpl() internal {
-        ONES.bits(0,0);
-    }
-}
-
-
-contract TestBitsBitsThrowsOutOfRange is BitsTest {
-    function testImpl() internal {
-        ONES.bits(5, 252);
-    }
-}
-
-
 contract TestBitsBitsWithDifferentIndices is BitsTest {
     function testImpl() internal {
         for (uint8 i = 0; i < 12; i++) {
@@ -95,6 +83,41 @@ contract TestBitsBitsWithDifferentNumBits is BitsTest {
         for (uint8 i = 1; i < 12; i++) {
             assert(ONES.bits(0, i) == ONES >> (256 - i));
         }
+    }
+}
+
+
+contract TestBitsBitsGetAll is BitsTest {
+    function testImpl() internal {
+        assert(ONES.bits(0, 256) == ONES);
+    }
+}
+
+
+contract TestBitsBitsGetUpperHalf is BitsTest {
+    function testImpl() internal {
+        assert(ONES.bits(128, 128) == ONES >> 128);
+    }
+}
+
+
+contract TestBitsBitsGetLowerHalf is BitsTest {
+    function testImpl() internal {
+        assert(ONES.bits(0, 128) == ONES >> 128);
+    }
+}
+
+
+contract TestBitsBitsThrowsNumBitsZero is BitsTest {
+    function testImpl() internal {
+        ONES.bits(0,0);
+    }
+}
+
+
+contract TestBitsBitsThrowsOutOfRange is BitsTest {
+    function testImpl() internal {
+        ONES.bits(5, 252);
     }
 }
 

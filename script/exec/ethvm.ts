@@ -1,13 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-import constants = require('../constants');
-const child = require('child_process');
+import * as child from 'child_process';
+import {PERF_FUN_HASH} from "../constants";
 const execSync = child.execSync;
 
 export const perf = (code: string): string => {
-    const cmd = `ethvm --code ${code} --input ${constants.PERF_FUN_HASH}`;
+    const cmd = `ethvm --code ${code} --input ${PERF_FUN_HASH}`;
     const ret = execSync(cmd);
-    return ret.toString();
+    return ret !== null ? ret.toString() : "";
 };
 
 export const version = (): string => {

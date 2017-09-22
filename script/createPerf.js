@@ -15,7 +15,6 @@ exports.perfAll = function (optAndUnopt) {
     mkdirp.sync(constants_1.PERF_BIN);
     var folder = new Date().getTime().toString(10);
     var logPath = path.join(constants_1.PERF_LOGS, folder);
-    mkdirp.sync(logPath);
     var ret = exports.compileAndRunPerf(true);
     var log = {
         solcVersion: solcV,
@@ -23,13 +22,14 @@ exports.perfAll = function (optAndUnopt) {
         results: ret
     };
     var logStr = JSON.stringify(log, null, '\t');
+    mkdirp.sync(logPath);
     var optResultsPath = path.join(logPath, "results_optimized.json");
     fs.writeFileSync(optResultsPath, logStr);
     console.log("Logs printed to: " + optResultsPath);
     var logU = null;
     if (optAndUnopt) {
         files_1.rmrf(constants_1.PERF_BIN);
-        fs.mkdirSync(constants_1.PERF_BIN);
+        mkdirp.sync(constants_1.PERF_BIN);
         var retU = exports.compileAndRunPerf(false);
         logU = {
             solcVersion: solcV,
@@ -72,11 +72,11 @@ exports.compileAndRunPerf = function (optimize) {
     for (var i = 0; i < constants_1.UNITS.length; i++) {
         var subDir = constants_1.UNITS[i][0];
         var test = constants_1.UNITS[i][1];
-        solc_1.compilePerf(subDir, test, false);
+        solc_1.compilePerf(subDir, test, optimize);
     }
-    return exports.runPerf(optimize);
+    return exports.runPerf();
 };
-exports.runPerf = function (optimize) {
+exports.runPerf = function () {
     var files = fs.readdirSync(constants_1.PERF_BIN);
     var sigfiles = files.filter(function (file) {
         var f = file.trim();
@@ -135,48 +135,7 @@ var parseData = function (output) {
         throw new Error("Malformed ethvm output (line 2):\n " + output);
     }
     var gasUsed = parseInt(outputSplit[1].trim(), 16);
-    // Operations
-    var opsinIdx = lines[3].indexOf('operations in');
-    if (opsinIdx <= 0) {
-        throw new Error("Malformed ethvm output (line 4):\n " + output);
-    }
-    var ops = parseInt(lines[3].substring(0, opsinIdx - 1).trim(), 10);
-    // Maximum mem usage.
-    if (lines[4].indexOf('Maximum memory usage:') !== 0) {
-        throw new Error("Malformed ethvm output (line 5):\n " + output);
-    }
-    var mmuSplit = lines[4].split(':');
-    if (mmuSplit.length !== 2) {
-        throw new Error("Malformed ethvm output (line 5):\n " + output);
-    }
-    var musgStr = mmuSplit[1].trim();
-    var bytesIdx = musgStr.indexOf('bytes');
-    if (bytesIdx <= 0) {
-        throw new Error("Malformed ethvm output (line 5):\n " + output);
-    }
-    var maxMemUsage = parseInt(musgStr.substring(0, bytesIdx - 1).trim(), 16);
-    // Expensive operations
-    var expOps = {};
-    if (lines[5].indexOf('Expensive operations:') === 0) {
-        for (var i = 6; i < lines.length && lines[i].trim() !== ""; i++) {
-            var expOpStr = lines[i].trim();
-            var idxX = expOpStr.indexOf(' x ');
-            if (idxX <= 0) {
-                throw new Error("Malformed ethvm output (line " + i + "):\n " + output);
-            }
-            var idxLP = expOpStr.indexOf('(');
-            if (idxLP <= 0) {
-                throw new Error("Malformed ethvm output (line " + i + "):\n " + output);
-            }
-            var expOp = expOpStr.substring(0, idxX).trim();
-            var numUsed = parseInt(expOpStr.substring(idxX + 2, idxLP - 1).trim(), 10);
-            expOps[expOp] = numUsed;
-        }
-    }
     return {
-        gasUsed: gasUsed,
-        ops: ops,
-        maxMemUsage: maxMemUsage,
-        expensiveOps: expOps
+        gasUsed: gasUsed
     };
 };

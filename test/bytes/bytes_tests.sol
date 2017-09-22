@@ -1,4 +1,6 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental ABIEncoderV2;
 
 import {Bytes} from "../../src/bytes/Bytes.sol";
 import {Memory} from "../../src/unsafe/Memory.sol";
@@ -111,7 +113,7 @@ contract TestBytesCopy is BytesTest {
          bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
          var cpy = bts.copy();
          assert(bts.length == cpy.length);
-         assert(Memory.memAddress(bts) != Memory.memAddress(cpy));
+         assert(Memory.ptr(bts) != Memory.ptr(cpy));
          assert(bts.equals(cpy));
     }
 }
@@ -122,10 +124,10 @@ contract TestBytesCopyDoesNotMutate is BytesTest {
          bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
          bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
          var btsLen = bts.length;
-         var btsAddr = Memory.memAddress(bts);
+         var btsAddr = Memory.ptr(bts);
          bts.copy();
          assert(bts.length == btsLen);
-         assert(Memory.memAddress(bts) == btsAddr);
+         assert(Memory.ptr(bts) == btsAddr);
          assert(bts.equals(btsEq));
     }
 }
@@ -182,13 +184,13 @@ contract TestBytesConcatDoesNotMutate is BytesTest {
          bytes memory bts2Eq = hex"ddeeff8899aabbccddeeff8899aabbccaabbccddeeff8899aabbccddeeff8899aa";
          var bts1Len = bts1.length;
          var bts2Len = bts2.length;
-         var bts1Addr = Memory.memAddress(bts1);
-         var bts2Addr = Memory.memAddress(bts2);
+         var bts1Addr = Memory.ptr(bts1);
+         var bts2Addr = Memory.ptr(bts2);
          bts1.concat(bts2);
          assert(bts1.length == bts1Len);
          assert(bts2.length == bts2Len);
-         assert(Memory.memAddress(bts1) == bts1Addr);
-         assert(Memory.memAddress(bts2) == bts2Addr);
+         assert(Memory.ptr(bts1) == bts1Addr);
+         assert(Memory.ptr(bts2) == bts2Addr);
          assert(bts1.equals(bts1Eq));
          assert(bts2.equals(bts2Eq));
     }

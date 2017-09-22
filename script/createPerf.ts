@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {PERF_BIN, PERF_FUN_HASH, PERF_LOGS, UNITS} from "./constants";
+import {PERF_BIN, PERF_CONTRACT_PATH, PERF_FUN_HASH, PERF_LOGS, UNITS} from "./constants";
 import {rmrf} from "./utils/files";
-import {compilePerf, version as solcVersion} from "./exec/solc";
+import {compilePerf, compileRuntime, version as solcVersion} from "./exec/solc";
 import {perf, version as ethvmVersion} from './exec/ethvm';
 import * as mkdirp from 'mkdirp';
 import * as jsondiffpatch from 'jsondiffpatch';
@@ -15,7 +15,7 @@ export const perfAll = (optAndUnopt: boolean): void => {
 
     const folder = new Date().getTime().toString(10);
     const logPath = path.join(PERF_LOGS, folder);
-    mkdirp.sync(logPath);
+
     const ret = compileAndRunPerf(true);
 
     const log = {
@@ -24,13 +24,14 @@ export const perfAll = (optAndUnopt: boolean): void => {
         results: ret
     };
     const logStr = JSON.stringify(log, null, '\t');
+    mkdirp.sync(logPath);
     const optResultsPath = path.join(logPath, "results_optimized.json");
     fs.writeFileSync(optResultsPath, logStr);
     console.log(`Logs printed to: ${optResultsPath}`);
     let logU: Object = null;
     if (optAndUnopt) {
         rmrf(PERF_BIN);
-        fs.mkdirSync(PERF_BIN);
+        mkdirp.sync(PERF_BIN);
         const retU = compileAndRunPerf(false);
         logU = {
             solcVersion: solcV,
@@ -75,12 +76,12 @@ export const compileAndRunPerf = (optimize: boolean): Object => {
     for (let i = 0; i < UNITS.length; i++) {
         const subDir = UNITS[i][0];
         const test = UNITS[i][1];
-        compilePerf(subDir, test, false);
+        compilePerf(subDir, test, optimize);
     }
-    return runPerf(optimize);
+    return runPerf();
 };
 
-export const runPerf = (optimize: boolean): Object => {
+export const runPerf = (): Object => {
 
     const files = fs.readdirSync(PERF_BIN);
     const sigfiles = files.filter(function (file) {
@@ -148,51 +149,8 @@ const parseData = (output: string): Object => {
     }
     const gasUsed = parseInt(outputSplit[1].trim(), 16);
 
-    // Operations
-    const opsinIdx = lines[3].indexOf('operations in');
-    if (opsinIdx <= 0) {
-        throw new Error(`Malformed ethvm output (line 4):\n ${output}`);
-    }
-    const ops = parseInt(lines[3].substring(0, opsinIdx - 1).trim(), 10);
-
-    // Maximum mem usage.
-    if (lines[4].indexOf('Maximum memory usage:') !== 0) {
-        throw new Error(`Malformed ethvm output (line 5):\n ${output}`);
-    }
-    const mmuSplit = lines[4].split(':');
-    if (mmuSplit.length !== 2) {
-        throw new Error(`Malformed ethvm output (line 5):\n ${output}`);
-    }
-    const musgStr = mmuSplit[1].trim();
-    const bytesIdx = musgStr.indexOf('bytes');
-    if (bytesIdx <= 0) {
-        throw new Error(`Malformed ethvm output (line 5):\n ${output}`);
-    }
-    const maxMemUsage = parseInt(musgStr.substring(0, bytesIdx - 1).trim(), 16);
-
-    // Expensive operations
-    let expOps: {[operation: string]: number} = {};
-    if (lines[5].indexOf('Expensive operations:') === 0) {
-        for(let i = 6; i < lines.length && lines[i].trim() !== ""; i++) {
-            const expOpStr = lines[i].trim();
-            const idxX = expOpStr.indexOf(' x ');
-            if (idxX <= 0) {
-                throw new Error(`Malformed ethvm output (line ${i}):\n ${output}`);
-            }
-            const idxLP = expOpStr.indexOf('(');
-            if (idxLP <= 0) {
-                throw new Error(`Malformed ethvm output (line ${i}):\n ${output}`);
-            }
-            const expOp = expOpStr.substring(0, idxX).trim();
-            const numUsed = parseInt(expOpStr.substring(idxX + 2, idxLP - 1).trim(), 10);
-            expOps[expOp] = numUsed;
-        }
-    }
 
     return {
-        gasUsed: gasUsed,
-        ops: ops,
-        maxMemUsage: maxMemUsage,
-        expensiveOps: expOps
+        gasUsed: gasUsed
     };
 };

@@ -1,4 +1,4 @@
-import fs = require('fs');
+import * as fs from 'fs';
 
 export const rmrf = (path: string): void => {
     if (fs.existsSync(path)) {
