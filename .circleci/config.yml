@@ -5,7 +5,6 @@ jobs:
     working_directory: ~/solidity-examples
     steps:
       - checkout
-- checkout
       - run:
           name: fetch-deps
           command: 'sudo chmod +x .circleci/fetch-deps.sh && ./.circleci/fetch-deps.sh'
