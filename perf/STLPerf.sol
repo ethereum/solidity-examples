@@ -7,14 +7,5 @@ pragma experimental ABIEncoderV2;
 // gas reporting manually.
 // If no buildup is needed, just extend 'prefImpl()'.
 contract STLPerf {
-
-     function perf() public payable returns (uint) {
-         uint gasPre = msg.gas;
-         perfImpl();
-         uint gasPost = msg.gas;
-         return gasPre - gasPost;
-     }
-
-     function perfImpl() internal {}
-
+     function perf() public payable returns (uint);
  }

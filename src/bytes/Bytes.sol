@@ -29,25 +29,35 @@ library Bytes {
         equal = Memory.ptr(self) == Memory.ptr(other);
     }
 
-    function copy(bytes memory self) internal pure returns (bytes memory cpy) {
+    function copy(bytes memory self) internal pure returns (bytes memory) {
         if (self.length == 0) {
             return;
         }
-        cpy = new bytes(self.length);
-        uint src;
-        uint dest;
-        assembly {
-            src := add(self, 0x20)
-            dest := add(cpy, 0x20)
+        var addr = Memory.dataPtr(self);
+        return Memory.toBytes(addr, self.length);
+    }
+
+    function copy(bytes memory self, uint startIdx) internal pure returns (bytes memory) {
+        require(startIdx < self.length);
+        var len = self.length - startIdx;
+        var addr = Memory.dataPtr(self);
+        return Memory.toBytes(addr + startIdx, len);
+    }
+
+    function copy(bytes memory self, uint startIdx, uint len) internal pure returns (bytes memory) {
+        require(startIdx < self.length && startIdx + len <= self.length);
+        if (len == 0) {
+            return;
         }
-        Memory.copy(src, dest, self.length);
+        var addr = Memory.dataPtr(self);
+        return Memory.toBytes(addr + startIdx, len);
     }
 
     function concat(bytes memory self, bytes memory other) internal pure returns (bytes memory) {
         bytes memory ret = new bytes(self.length + other.length);
         var (src, srcLen) = Memory.fromBytes(self);
         var (src2, src2Len) = Memory.fromBytes(other);
-        var (dest, destLen) = Memory.fromBytes(ret);
+        var (dest, ) = Memory.fromBytes(ret);
         var dest2 = dest + src2Len;
         Memory.copy(src, dest, srcLen);
         Memory.copy(src2, dest2, src2Len);

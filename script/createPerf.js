@@ -136,6 +136,6 @@ var parseData = function (output) {
     }
     var gasUsed = parseInt(outputSplit[1].trim(), 16);
     return {
-        gasUsed: gasUsed
+        gasUsed: gasUsed || 0
     };
 };

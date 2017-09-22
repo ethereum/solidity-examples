@@ -82,7 +82,6 @@ export const compileAndRunPerf = (optimize: boolean): Object => {
 };
 
 export const runPerf = (): Object => {
-
     const files = fs.readdirSync(PERF_BIN);
     const sigfiles = files.filter(function (file) {
         const f = file.trim();
@@ -151,6 +150,6 @@ const parseData = (output: string): Object => {
 
 
     return {
-        gasUsed: gasUsed
+        gasUsed: gasUsed || 0
     };
 };

@@ -26,8 +26,8 @@ export const TEST_FUN_HASH = 'f8a8fd6d';
 export const PERF_FUN_HASH = '1c4af786';
 
 export const UNITS: Array<[string, string, () => Object]> = [
-    ['bits', 'bits', generateBits],
+    //['bits', 'bits', generateBits],
     ['bytes', 'bytes', generateBytes],
-    ['patricia_tree', 'patricia_tree', generatePatriciaTree],
-    ['unsafe', 'memory', generateUnsafe]
+    //['patricia_tree', 'patricia_tree', generatePatriciaTree],
+    //['unsafe', 'memory', generateUnsafe]
 ];
