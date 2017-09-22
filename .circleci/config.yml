@@ -8,8 +8,8 @@ jobs:
       - run:
           name: fetch-deps
           command: |
-            echo ${pwd}
-            cd solidity-examples
+            pwd
+            cd  ~/solidity-examples
             sudo chmod +x ./.circleci/fetch_deps.sh
             ./.circleci/fetch_deps.sh
             npm install
