@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 import {Bytes} from "../../src/bytes/Bytes.sol";
 import {Memory} from "../../src/unsafe/Memory.sol";
@@ -46,10 +46,19 @@ contract TestBytesEqualsCommutative is BytesTest {
 }
 
 
-contract TestBytesEqualsNotEqualDataFails is BytesTest {
+contract TestBytesEqualsNotEqualData is BytesTest {
     function testImpl() internal {
         bytes memory bts1 = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
         bytes memory bts2 = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddee8899aabbccddeeffaabbff";
+        assert(!bts1.equals(bts2));
+    }
+}
+
+
+contract TestBytesEqualsNotEqualLength is BytesTest {
+    function testImpl() internal {
+        bytes memory bts1 = hex"8899aabbccddeeff8899";
+        bytes memory bts2 = hex"8899aabbccddeeff88";
         assert(!bts1.equals(bts2));
     }
 }
@@ -64,15 +73,6 @@ contract TestBytesEqualsNotEqualCommutative is BytesTest {
 }
 
 
-contract TestBytesEqualsNotEqualLengthFails is BytesTest {
-    function testImpl() internal {
-        bytes memory bts1 = hex"8899aabbccddeeff8899";
-        bytes memory bts2 = hex"8899aabbccddeeff88";
-        assert(!bts1.equals(bts2));
-    }
-}
-
-
 contract TestBytesEqualsRef is BytesTest {
     function testImpl() internal {
         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabb";
@@ -81,7 +81,7 @@ contract TestBytesEqualsRef is BytesTest {
 }
 
 
-contract TestBytesEqualsRefFailNotEqual is BytesTest {
+contract TestBytesEqualsRefNotEqual is BytesTest {
     function testImpl() internal {
         bytes memory bts1 = hex"8899aabb";
         bytes memory bts2 = hex"8899aabb";
@@ -112,9 +112,16 @@ contract TestBytesCopy is BytesTest {
     function testImpl() internal {
          bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
          var cpy = bts.copy();
-         assert(bts.length == cpy.length);
-         assert(Memory.ptr(bts) != Memory.ptr(cpy));
          assert(bts.equals(cpy));
+    }
+}
+
+
+contract TestBytesCopyCreatesNew is BytesTest {
+    function testImpl() internal {
+         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+         var cpy = bts.copy();
+         assert(Memory.ptr(bts) != Memory.ptr(cpy));
     }
 }
 
@@ -126,8 +133,8 @@ contract TestBytesCopyDoesNotMutate is BytesTest {
          var btsLen = bts.length;
          var btsAddr = Memory.ptr(bts);
          bts.copy();
-         assert(bts.length == btsLen);
          assert(Memory.ptr(bts) == btsAddr);
+         assert(bts.length == btsLen);
          assert(bts.equals(btsEq));
     }
 }
@@ -139,7 +146,6 @@ contract TestBytesCopyWithStartIndex is BytesTest {
          var cpy = bts.copy(1);
          var sdp = Memory.dataPtr(bts);
          var cdp = Memory.dataPtr(cpy);
-         assert(sdp != cdp);
          assert(bts.length == cpy.length + 1);
          assert(Memory.equals(sdp + 1, cdp, cpy.length));
     }
@@ -153,7 +159,6 @@ contract TestBytesCopyWithStartIndexDoesNotMutate is BytesTest {
          var btsLen = bts.length;
          var btsAddr = Memory.ptr(bts);
          bts.copy(4);
-         assert(bts.length == btsLen);
          assert(Memory.ptr(bts) == btsAddr);
          assert(bts.equals(btsEq));
     }
@@ -174,7 +179,6 @@ contract TestBytesCopyWithStartIndexAndLen is BytesTest {
          var cpy = bts.copy(7, 12);
          var sdp = Memory.dataPtr(bts);
          var cdp = Memory.dataPtr(cpy);
-         assert(sdp != cdp);
          assert(cpy.length == 12);
          assert(Memory.equals(sdp + 7, cdp, 12));
     }
@@ -209,7 +213,6 @@ contract TestBytesCopyWithStartIndexAndLenDoesNotMutate is BytesTest {
          var btsLen = bts.length;
          var btsAddr = Memory.ptr(bts);
          bts.copy(4, 21);
-         assert(bts.length == btsLen);
          assert(Memory.ptr(bts) == btsAddr);
          assert(bts.equals(btsEq));
     }
@@ -270,6 +273,15 @@ contract TestBytesConcat is BytesTest {
         for (i = 0; i < bts2Len; i++) {
             cnct[i + bts1Len] == bts2[i];
         }
+    }
+}
+
+
+contract TestBytesConcatCreatesNew is BytesTest {
+    function testImpl() internal {
+        bytes memory bts = new bytes(0);
+        var cnct = bts.concat(bts);
+        assert(!bts.equalsRef(cnct));
     }
 }
 
@@ -368,12 +380,5 @@ contract TestBytesToBytes32Zero is BytesTest {
         var bts = B32_ZERO.toBytes();
         bytes memory btsExp = new bytes(0);
         assert(bts.equals(btsExp));
-    }
-}
-
-
-contract TestBytes is BytesTest {
-    function testImpl() internal {
-
     }
 }

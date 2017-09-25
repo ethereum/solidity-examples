@@ -1,8 +1,9 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 import {Memory} from "../unsafe/Memory.sol";
+
 
 library Bytes {
 
@@ -57,7 +58,7 @@ library Bytes {
         bytes memory ret = new bytes(self.length + other.length);
         var (src, srcLen) = Memory.fromBytes(self);
         var (src2, src2Len) = Memory.fromBytes(other);
-        var (dest, ) = Memory.fromBytes(ret);
+        var (dest,) = Memory.fromBytes(ret);
         var dest2 = dest + src2Len;
         Memory.copy(src, dest, srcLen);
         Memory.copy(src2, dest2, src2Len);
@@ -99,7 +100,7 @@ library Bytes {
         require(self != 0);
         uint ret;
         if (self == 0)
-            return 0;
+        return 0;
         if (self & 0xffffffffffffffffffffffffffffffff00000000000000000000000000000000 != 0) {
             ret += 16;
             self = bytes32(uint(self) >> 128);

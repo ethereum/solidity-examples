@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var path = require("path");
 var child = require("child_process");
 var constants_1 = require("../constants");

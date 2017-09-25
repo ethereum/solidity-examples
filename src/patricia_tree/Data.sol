@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 library Data {
 
@@ -31,7 +31,8 @@ library Data {
         prefix.length = pos;
         if (pos == 0) {
             prefix.data = bytes32(0);
-        } else {
+        }
+        else {
             prefix.data = self.data & ~bytes32((uint(1) << (256 - pos)) - 1);
         }
         suffix.length = self.length - pos;
@@ -45,8 +46,9 @@ library Data {
         uint diff = uint(self.data ^ lbl.data);
         uint mask = uint(1) << 255;
         for (; prefix < length; prefix++) {
-            if ((mask & diff) != 0)
+            if ((mask & diff) != 0) {
                 break;
+            }
             diff += diff;
         }
     }

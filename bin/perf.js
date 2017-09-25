@@ -1,8 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var createPerf = require("../script/createPerf");
 try {
-    createPerf.perfAll(false);
+    createPerf.perfAll(true);
 }
 catch (err) {
     console.error("Execution failed: " + err.message);

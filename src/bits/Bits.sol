@@ -1,10 +1,12 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
+
 
 library Bits {
 
     uint constant ONE = uint(1);
+
     uint constant ONES = uint(~0);
 
     function setBit(uint self, uint8 index) internal pure returns (uint) {
@@ -54,7 +56,7 @@ library Bits {
     function highestBitSet(uint self) internal pure returns (uint8 highest) {
         require(self != 0);
         uint val = self;
-        for(uint8 i = 128; i >= 1; i >>= 1) {
+        for (uint8 i = 128; i >= 1; i >>= 1) {
 
             if (val & (ONE << i) - 1 << i != 0) {
                 highest += i;
@@ -69,7 +71,7 @@ library Bits {
     function lowestBitSet(uint self) internal pure returns (uint8 lowest) {
         require(self != 0);
         uint val = self;
-        for(uint8 i = 128; i >= 1; i >>= 1) {
+        for (uint8 i = 128; i >= 1; i >>= 1) {
             if (val & (ONE << i) - 1 == 0) {
                 lowest += i;
                 val >> i;

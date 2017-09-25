@@ -1,10 +1,11 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
 import {PatriciaTree} from "./PatriciaTree.sol";
+
 
 contract PatriciaTreeImpl is PatriciaTree {
 
@@ -15,6 +16,7 @@ contract PatriciaTreeImpl is PatriciaTree {
 
     // The current root hash, keccak256(node(path_M('')), path_M(''))
     bytes32 public root;
+
     Data.Edge rootEdge;
 
     // Particia tree nodes (hash to decoded contents)
@@ -101,7 +103,8 @@ contract PatriciaTreeImpl is PatriciaTree {
             // Empty Trie
             e.label = k;
             e.node = valueHash;
-        } else {
+        }
+        else {
             e = insertAtEdge(rootEdge, k, valueHash);
         }
         root = edgeHash(e);
@@ -123,10 +126,12 @@ contract PatriciaTreeImpl is PatriciaTree {
         if (suffix.length == 0) {
             // Full match with the key, update operation
             newNodeHash = value;
-        } else if (prefix.length >= e.label.length) {
+        }
+        else if (prefix.length >= e.label.length) {
             // Partial match, just follow the path
             newNodeHash = insertAtNode(e.node, suffix, value);
-        } else {
+        }
+        else {
             // Mismatch, so let us create a new branch node.
             var (head, tail) = suffix.chopFirstBit();
             Data.Node memory branchNode;

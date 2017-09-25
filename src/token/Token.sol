@@ -1,4 +1,6 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental "ABIEncoderV2";
 
 // Interface for ERC-20 compliant token-contracts.
 contract Token {

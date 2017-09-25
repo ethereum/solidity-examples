@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 import {Memory} from "../../src/unsafe/Memory.sol";
 import {STLPerf} from "../STLPerf.sol";

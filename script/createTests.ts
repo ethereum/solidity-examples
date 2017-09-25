@@ -1,87 +1,122 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {TEST_BIN, TEST_FUN_HASH, UNITS} from "./constants";
-import {rmrf} from "./utils/files";
-import {compileTest} from "./exec/solc";
-import * as mkdirp from 'mkdirp';
-import {test} from "./exec/evm";
+import {
+    RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, TEST_BIN, TEST_FUN_HASH, TEST_LOGS, UNITS,
+    UNITS_EXTENDED
+} from "./constants";
+import {createTimestampSubfolder, ensureAndClear, isSigInHashes, writeLog} from "./utils/files";
+import {compileTest, version as solcVersion} from "./exec/solc";
+import {run, version as evmVersion} from "./exec/evm";
+import {newTestLogger} from "./utils/logger";
 
+const testLogger = newTestLogger();
 
-export const testAll = (optAndUnopt: boolean): void => {
-    rmrf(TEST_BIN);
-    mkdirp.sync(TEST_BIN);
+export const testAll = (extended: boolean, optAndUnopt: boolean): void => {
+    const solcV = solcVersion();
+    const evmV = evmVersion();
+    ensureAndClear(TEST_BIN);
 
-    compileAndRunTests(true);
+    const tests = extended ? UNITS_EXTENDED : UNITS;
+
+    const ret = compileAndRunTests(tests, true);
+
+    const log = {
+        solcVersion: solcV,
+        evmVersion: evmV,
+        results: ret
+    };
+    const logsPath = createTimestampSubfolder(TEST_LOGS);
+    writeLog(log, logsPath, RESULTS_NAME_OPTIMIZED);
+
     if (optAndUnopt) {
-        rmrf(TEST_BIN);
-        mkdirp.sync(TEST_BIN);
-        compileAndRunTests(false);
+        ensureAndClear(TEST_BIN);
+        const retU = compileAndRunTests(tests, false);
+        const logU = {
+            solcVersion: solcV,
+            evmVersion: evmV,
+            results: retU
+        };
+        writeLog(logU, logsPath, RESULTS_NAME_UNOPTIMIZED);
+    }
+
+    if(!checkAndPresent(ret)) {
+        throw new Error("One or more tests failed.");
     }
 };
 
-export const compileAndRunTests = (optimize: boolean) => {
-    for (let i = 0; i < UNITS.length; i++) {
-        const subDir = UNITS[i][0];
-        const test = UNITS[i][1];
-        compileTest(subDir, test, false);
+export const compileAndRunTests = (units: Array<[string, string]>, optimize: boolean): Object => {
+    for (let i = 0; i < units.length; i++) {
+        const pckge = units[i][0];
+        const test = units[i][1];
+        compileTest(pckge, test, optimize);
     }
-    runTests(optimize);
+    return runTests(optimize);
 };
 
-export const runTests = (optimize: boolean) => {
-
+export const runTests = (optimize: boolean): Object => {
     const files = fs.readdirSync(TEST_BIN);
     const sigfiles = files.filter(function (file) {
         const f = file.trim();
         return f.length > 4 && f.substr(0, 4) === 'Test' && f.split('.').pop() === 'signatures';
     });
-    for (let j = 0; j < sigfiles.length; j++) {
-        const sigfile = sigfiles[j];
-        const testName = sigfile.substr(0, sigfile.length - 11);
-        const binRuntimePath = path.join(TEST_BIN, testName + ".bin-runtime");
-        const hashesPath = path.join(TEST_BIN, sigfile);
-        const hashes = fs.readFileSync(hashesPath).toString();
+    const results = {};
 
-        const lines = hashes.split(/\r\n|\r|\n/);
-        if (lines.length === 0) {
-            throw new Error("No methods in: " + testName);
+    for (let i = 0; i < sigfiles.length; i++) {
+        const sigfile = sigfiles[i];
+        if (!isSigInHashes(TEST_BIN, sigfile, TEST_FUN_HASH)) {
+            throw new Error(`No test function in signature file: ${sigfile}`)
         }
-        let testFound = false;
-        for (let i = 0; i < lines.length; i++) {
+        const name = sigfile.substr(0, sigfile.length - 11);
+        const binRuntimePath = path.join(TEST_BIN, name + ".bin-runtime");
+        const result = parseData(run(binRuntimePath, TEST_FUN_HASH));
 
-            const line = lines[i].trim();
-            if (line.length === 0) {
-                continue;
-            }
-            const tokens = line.split(':');
-            if (tokens.length !== 2) {
-                throw new Error("No : separator in line: " + line);
-            }
-            const hash = tokens[0].trim();
-            if (hash === TEST_FUN_HASH) {
-                if (testFound) {
-                    throw new Error("Repeated hash of test function in file: " + hashes);
-                }
-                testFound = true;
-            }
-        }
-        if (!testFound) {
-            throw new Error("Contract has no test: " + hashes);
-        }
+        const throws = /Throws/.test(name);
 
-        const throws = /Throws/.test(testName);
-        const result = parseData(test(binRuntimePath));
+        let passed = true;
 
         if (throws && result) {
-            throw new Error(`Failed: Expected test to throw: ${testName} (${optimize ? "optimized" : "unoptimized"})`);
+            passed = false;
+            console.error(`Failed: Expected test to throw: ${name} (${optimize ? "optimized" : "unoptimized"})`);
+        } else if (!throws && !result) {
+            passed = false;
+            console.error(`Failed: Expected test not to throw: ${name} (${optimize ? "optimized" : "unoptimized"})`);
         }
+        results[name] = {passed};
+    }
 
-        if (!throws && !result) {
-            throw new Error(`Failed: Expected test not to throw: ${testName} (${optimize ? "optimized" : "unoptimized"})`);
+    return results;
+};
+
+const checkAndPresent = (results: Object): boolean => {
+    let tests = 0;
+    let failed = 0;
+
+    testLogger.header('');
+    testLogger.header('Running tests... ');
+    testLogger.header('');
+
+    for(let name in results) {
+        const res = results[name];
+        tests++;
+        if (res.passed) {
+            testLogger.success(`${name}: PASSED`);
+        } else {
+            failed++;
+            testLogger.fail(`${name}: FAILED`);
         }
     }
-    console.log(`Successfully ran ${sigfiles.length} tests.`);
+
+    testLogger.header('');
+    testLogger.header(`Ran ${tests} tests.`);
+
+    if (failed !== 0) {
+        testLogger.fail(`${failed} tests FAILED.`);
+        return false;
+    } else {
+        testLogger.success(`All tests PASSED`);
+        return true;
+    }
 };
 
 
-const parseData = (output: string): boolean => parseInt(output.trim(), 16) === 1;
+const parseData = (output: string): boolean => parseInt(output, 16) === 1;

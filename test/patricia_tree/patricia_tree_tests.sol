@@ -1,11 +1,13 @@
 pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
-pragma experimental ABIEncoderV2;
+pragma experimental "ABIEncoderV2";
 
 //import {Bits} from "../../bits/Bits.sol";
 import {Data} from "../../src/patricia_tree/Data.sol";
 import {PatriciaTreeImpl} from "../../src/patricia_tree/PatriciaTreeImpl.sol";
 import {STLTest} from "../STLTest.sol";
+
+// TODO seems testing here is a bit over the top.
 
 /*******************************************************/
 
@@ -23,9 +25,7 @@ contract PatriciaUtilsTest is STLTest {
 }
 
 
-contract PatriciaTreeTest is STLTest, PatriciaTreeImpl {
-
-}
+contract PatriciaTreeTest is STLTest, PatriciaTreeImpl {}
 
 /*******************************************************/
 
@@ -334,77 +334,64 @@ contract TestPatriciaUtilsSplitCommonPrefix is PatriciaUtilsTest {
 
 contract TestPatriciaTreeInsert is PatriciaTreeTest {
     function testImpl() internal {
+
+        bytes memory keyBts = "val";
+        bytes memory valBts = "VAL";
+        bytes32 keyHash = keccak256(keyBts); // 749eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a11
+                bytes32 valHash = keccak256(valBts); // 6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07
+
         insert("val", "VAL");
+
+        assert(rootEdge.node == valHash);
+        assert(rootEdge.label.data == keyHash);
+        assert(rootEdge.label.length == 256);
     }
 }
 
 contract TestPatriciaTreeInsertTwo is PatriciaTreeTest {
     function testImpl() internal {
+        bytes memory keyBts = "val";
+        bytes memory valBts = "VAL";
+        bytes memory key2Bts = "val2";
+        bytes memory val2Bts = "VAL2";
+
+        bytes32 keyHash = keccak256(keyBts); // 749eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a11
+        bytes32 valHash = keccak256(valBts); // 6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07
+        bytes32 key2Hash = keccak256(key2Bts); // 0f70e93237e6edac092d1573b606d68d672d920b51559399f352166ae4b4a727
+        bytes32 val2Hash = keccak256(val2Bts); // 780f7d9be6b7b221c27f7d5e84ff9ff220b60283dd7d012fbd9195bb6bb472aa
+
         insert("val", "VAL");
         insert("val2", "VAL2");
+
+        var node = nodes[rootEdge.node];
+        var c0 = node.children[0];
+        var c1 = node.children[1];
+
+        assert(rootEdge.label.length == 1);
+        assert(c0.node == val2Hash);
+        assert(c0.label.length == 254);
+        assert(c1.node == valHash);
+        assert(c1.label.length == 254);
     }
 }
 
-contract TestPatriciaTreeInsertTwoDifferentOrder is PatriciaTreeTest {
+
+contract TestPatriciaTreeInsertOrderDoesNotMatter is STLTest {
     function testImpl() internal {
-        insert("val2", "VAL2");
-        insert("val", "VAL");
+        var pt1 = new PatriciaTreeImpl();
+        var pt2 = new PatriciaTreeImpl();
+        pt1.insert("testkey", "testval");
+        pt1.insert("testkey2", "testval2");
+        pt1.insert("testkey3", "testval3");
+        pt1.insert("testkey4", "testval4");
+        pt1.insert("testkey5", "testval5");
+
+        pt2.insert("testkey2", "testval2");
+        pt2.insert("testkey", "testval");
+        pt2.insert("testkey5", "testval5");
+        pt2.insert("testkey3", "testval3");
+        pt2.insert("testkey4", "testval4");
+
+        assert(pt1.root() == pt2.root());
     }
 }
-
-
-contract TestPatriciaTreeInsertThree is PatriciaTreeTest {
-    function testImpl() internal {
-        insert("val", "VAL");
-        insert("val2", "VAL2");
-        insert("val3", "VAL3");
-    }
-}
-
-
-contract TestPatriciaTreeInsertThreePerm1 is PatriciaTreeTest {
-    function testImpl() internal {
-        insert("val", "VAL");
-        insert("val3", "VAL3");
-        insert("val2", "VAL2");
-    }
-}
-
-
-contract TestPatriciaTreeInsertThreePerm2 is PatriciaTreeTest {
-    function testImpl() internal {
-        insert("val3", "VAL3");
-        insert("val2", "VAL2");
-        insert("val", "VAL");
-    }
-}
-
-/*
-contract PatriciaTreeTest is PatriciaTree {
-    function test() {
-        //testInsert();
-        testProofs();
-    }
-    function testInsert() internal {
-        insert("one", "ONE");
-        insert("two", "ONE");
-        insert("three", "ONE");
-        insert("four", "ONE");
-        insert("five", "ONE");
-        insert("six", "ONE");
-        insert("seven", "ONE");
-        // update
-        insert("one", "TWO");
-    }
-    function testProofs() internal {
-        insert("one", "ONE");
-        var (branchMask, siblings) = getProof("one");
-        verifyProof(root, "one", "ONE", branchMask, siblings);
-        insert("two", "TWO");
-        (branchMask, siblings) = getProof("one");
-        verifyProof(root, "one", "ONE", branchMask, siblings);
-        (branchMask, siblings) = getProof("two");
-        verifyProof(root, "two", "TWO", branchMask, siblings);
-    }
-}
-*/

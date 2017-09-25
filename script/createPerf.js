@@ -1,78 +1,57 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var fs = require("fs");
 var path = require("path");
 var constants_1 = require("./constants");
 var files_1 = require("./utils/files");
 var solc_1 = require("./exec/solc");
 var evm_1 = require("./exec/evm");
-var mkdirp = require("mkdirp");
 var jsondiffpatch = require("jsondiffpatch");
 exports.perfAll = function (optAndUnopt) {
-    var solcV = solc_1.version().split(/\r\n|\r|\n/)[1].trim();
-    var ethvmV = evm_1.version().split(/\r\n|\r|\n/)[0].trim();
-    files_1.rmrf(constants_1.PERF_BIN);
-    mkdirp.sync(constants_1.PERF_BIN);
-    var folder = new Date().getTime().toString(10);
-    var logPath = path.join(constants_1.PERF_LOGS, folder);
-    var ret = exports.compileAndRunPerf(true);
+    if (optAndUnopt === void 0) { optAndUnopt = false; }
+    // Set up paths and check versions of the required tools.
+    var solcV = solc_1.version();
+    var evmV = evm_1.version();
+    files_1.ensureAndClear(constants_1.PERF_BIN);
+    var ret = exports.compileAndRunPerf(constants_1.UNITS, true);
     var log = {
         solcVersion: solcV,
-        ethvmVersion: ethvmV,
+        evmVersion: evmV,
         results: ret
     };
-    var logStr = JSON.stringify(log, null, '\t');
-    mkdirp.sync(logPath);
-    var optResultsPath = path.join(logPath, "results_optimized.json");
-    fs.writeFileSync(optResultsPath, logStr);
-    console.log("Logs printed to: " + optResultsPath);
-    var logU = null;
+    var logsPath = files_1.createTimestampSubfolder(constants_1.PERF_LOGS);
+    files_1.writeLog(log, logsPath, constants_1.RESULTS_NAME_OPTIMIZED);
+    // If unoptimized is enabled.
     if (optAndUnopt) {
-        files_1.rmrf(constants_1.PERF_BIN);
-        mkdirp.sync(constants_1.PERF_BIN);
-        var retU = exports.compileAndRunPerf(false);
-        logU = {
+        files_1.ensureAndClear(constants_1.PERF_BIN);
+        var retU = exports.compileAndRunPerf(constants_1.UNITS, false);
+        var logU = {
             solcVersion: solcV,
-            ethvmVersion: ethvmV,
+            evmVersion: evmV,
             results: retU
         };
-        var logStrU = JSON.stringify(logU, null, '\t');
-        var unoptResultsPath = path.join(logPath, "results_unoptimized.json");
-        fs.writeFileSync(unoptResultsPath, logStrU);
-        console.log("Logs printed to: " + optResultsPath);
+        files_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
     }
+    // Diffs
     var latestFile = path.join(constants_1.PERF_LOGS, 'latest');
     if (fs.existsSync(latestFile)) {
-        var latest = fs.readFileSync(latestFile).toString();
-        var latestOptStr = fs.readFileSync(path.join(constants_1.PERF_LOGS, latest, "results_optimized.json")).toString();
-        var latestOptResults = JSON.parse(latestOptStr);
-        var diff = jsondiffpatch.diff(latestOptResults, log);
+        var latestResultsFolder = fs.readFileSync(latestFile).toString();
+        var latestResults = files_1.readLog(latestResultsFolder, constants_1.RESULTS_NAME_OPTIMIZED);
+        var diff = jsondiffpatch.diff(latestResults, log);
         if (diff) {
             var output = jsondiffpatch.formatters.console.format(diff);
             console.log("Changes since last run:");
             console.log(output);
         }
-        if (optAndUnopt) {
-            var latestUnOptFile = path.join(constants_1.PERF_LOGS, latest, "results_unoptimized.json");
-            if (fs.existsSync(latestUnOptFile)) {
-                var latestUnOptStr = fs.readFileSync(latestUnOptFile).toString();
-                var latestUnOptResults = JSON.parse(latestUnOptStr);
-                var diff_1 = jsondiffpatch.diff(latestUnOptResults, logU);
-                if (diff_1) {
-                    var output = jsondiffpatch.formatters.console.format(diff_1);
-                    console.log("Changes since last run:");
-                    console.log(output);
-                }
-            }
-        }
     }
-    fs.writeFileSync(latestFile, folder);
+    // Set the new result as latest.
+    fs.writeFileSync(latestFile, logsPath);
 };
-exports.compileAndRunPerf = function (optimize) {
-    for (var i = 0; i < constants_1.UNITS.length; i++) {
-        var subDir = constants_1.UNITS[i][0];
-        var perf_1 = constants_1.UNITS[i][1];
-        solc_1.compilePerf(subDir, perf_1, optimize);
+exports.compileAndRunPerf = function (units, optimize) {
+    for (var i = 0; i < units.length; i++) {
+        var subDir = units[i][0];
+        var perf = units[i][1];
+        solc_1.compilePerf(subDir, perf, optimize);
     }
     return exports.runPerf();
 };
@@ -82,45 +61,18 @@ exports.runPerf = function () {
         var f = file.trim();
         return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
     });
-    var log = {};
-    for (var j = 0; j < sigfiles.length; j++) {
-        var sigfile = sigfiles[j];
-        var perfName = sigfile.substr(0, sigfile.length - 11);
-        var binRuntimePath = path.join(constants_1.PERF_BIN, perfName + ".bin-runtime");
-        var hashesPath = path.join(constants_1.PERF_BIN, sigfile);
-        var hashes = fs.readFileSync(hashesPath).toString();
-        var lines = hashes.split(/\r\n|\r|\n/);
-        if (lines.length === 0) {
-            throw new Error("No methods in: " + perfName);
+    var results = {};
+    for (var i = 0; i < sigfiles.length; i++) {
+        var sigfile = sigfiles[i];
+        if (!files_1.isSigInHashes(constants_1.PERF_BIN, sigfile, constants_1.PERF_FUN_HASH)) {
+            throw new Error("No perf function in signature file: " + sigfile);
         }
-        var perfFound = false;
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            if (line.length === 0) {
-                continue;
-            }
-            var tokens = line.split(':');
-            if (tokens.length !== 2) {
-                throw new Error("No : separator in line: " + line);
-            }
-            var hash = tokens[0].trim();
-            if (hash === constants_1.PERF_FUN_HASH) {
-                if (perfFound) {
-                    throw new Error("Repeated hash of perf function in file: " + hashes);
-                }
-                perfFound = true;
-            }
-        }
-        if (!perfFound) {
-            throw new Error("Contract has no perf: " + hashes);
-        }
-        var result = evm_1.perf(binRuntimePath);
-        log[perfName] = parseData(result);
+        var name_1 = sigfile.substr(0, sigfile.length - 11);
+        var binRuntimePath = path.join(constants_1.PERF_BIN, name_1 + ".bin-runtime");
+        var result = evm_1.run(binRuntimePath, constants_1.PERF_FUN_HASH);
+        var gasUsed = parseData(result);
+        results[name_1] = { gasUsed: gasUsed };
     }
-    return log;
+    return results;
 };
-var parseData = function (output) {
-    return {
-        gasUsed: parseInt(output.trim(), 16) || 0
-    };
-};
+var parseData = function (output) { return parseInt(output, 16); };
