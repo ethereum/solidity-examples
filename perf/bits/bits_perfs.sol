@@ -5,10 +5,11 @@ pragma experimental "ABIEncoderV2";
 import {Bits} from "../../src/bits/Bits.sol";
 import {STLPerf} from "../STLPerf.sol";
 
-
-contract PerfBitsSetBit is STLPerf {
+contract BitsPerf is STLPerf {
     using Bits for uint;
+}
 
+contract PerfBitsSetBit is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).setBit(66);
@@ -18,9 +19,7 @@ contract PerfBitsSetBit is STLPerf {
 }
 
 
-contract PerfBitsClearBit is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsClearBit is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).clearBit(66);
@@ -30,9 +29,7 @@ contract PerfBitsClearBit is STLPerf {
 }
 
 
-contract PerfBitsToggleBit is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsToggleBit is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).toggleBit(66);
@@ -42,9 +39,7 @@ contract PerfBitsToggleBit is STLPerf {
 }
 
 
-contract PerfBitsBit is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBit is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bit(66);
@@ -54,9 +49,7 @@ contract PerfBitsBit is STLPerf {
 }
 
 
-contract PerfBitsBitSet is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBitSet is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bitSet(66);
@@ -66,9 +59,7 @@ contract PerfBitsBitSet is STLPerf {
 }
 
 
-contract PerfBitsBitEqual is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBitEqual is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bitEqual(5, 66);
@@ -78,9 +69,7 @@ contract PerfBitsBitEqual is STLPerf {
 }
 
 
-contract PerfBitsBitAnd is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBitAnd is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bitAnd(0, 66);
@@ -90,9 +79,7 @@ contract PerfBitsBitAnd is STLPerf {
 }
 
 
-contract PerfBitsBitOr is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBitOr is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bitOr(0, 66);
@@ -102,9 +89,7 @@ contract PerfBitsBitOr is STLPerf {
 }
 
 
-contract PerfBitsBitXor is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBitXor is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bitXor(0, 66);
@@ -114,9 +99,7 @@ contract PerfBitsBitXor is STLPerf {
 }
 
 
-contract PerfBitsBits is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsBits is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).bits(5, 66);
@@ -126,9 +109,7 @@ contract PerfBitsBits is STLPerf {
 }
 
 
-contract PerfBitsHighestBitSetLow is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsHighestBitSetLow is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).highestBitSet();
@@ -138,9 +119,7 @@ contract PerfBitsHighestBitSetLow is STLPerf {
 }
 
 
-contract PerfBitsHighestBitSetHigh is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsHighestBitSetHigh is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         (uint(1) << uint(255)).highestBitSet();
@@ -150,9 +129,7 @@ contract PerfBitsHighestBitSetHigh is STLPerf {
 }
 
 
-contract PerfBitsLowestBitSetLow is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsLowestBitSetLow is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         uint(1).lowestBitSet();
@@ -162,9 +139,7 @@ contract PerfBitsLowestBitSetLow is STLPerf {
 }
 
 
-contract PerfBitsLowestBitSetHigh is STLPerf {
-    using Bits for uint;
-
+contract PerfBitsLowestBitSetHigh is BitsPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         (uint(1) << uint(255)).lowestBitSet();

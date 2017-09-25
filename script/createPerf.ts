@@ -1,7 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {PERF_BIN, PERF_FUN_HASH, PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, UNITS} from "./constants";
-import {createTimestampSubfolder, ensureAndClear, isSigInHashes, readLog, writeLog} from "./utils/files";
+import {
+    createTimestampSubfolder, ensureAndClear, isSigInHashes, readLatest, readLog, writeLatest,
+    writeLog
+} from "./utils/files";
 import {compilePerf, version as solcVersion} from "./exec/solc";
 import {run, version as evmVersion} from './exec/evm';
 import * as jsondiffpatch from 'jsondiffpatch';
@@ -35,10 +38,9 @@ export const perfAll = (optAndUnopt: boolean = false): void => {
     }
 
     // Diffs
-    const latestFile = path.join(PERF_LOGS, 'latest');
-    if (fs.existsSync(latestFile)) {
-        const latestResultsFolder = fs.readFileSync(latestFile).toString();
-        const latestResults = readLog(latestResultsFolder, RESULTS_NAME_OPTIMIZED);
+    const latest = readLatest(PERF_LOGS);
+    if (latest !== '') {
+        const latestResults = readLog(latest, RESULTS_NAME_OPTIMIZED);
         const diff = jsondiffpatch.diff(latestResults, log);
         if (diff) {
             const output = jsondiffpatch.formatters.console.format(diff);
@@ -46,9 +48,7 @@ export const perfAll = (optAndUnopt: boolean = false): void => {
             console.log(output);
         }
     }
-
-    // Set the new result as latest.
-    fs.writeFileSync(latestFile, logsPath);
+    writeLatest(PERF_LOGS, logsPath);
 };
 
 export const compileAndRunPerf = (units: Array<[string, string]>, optimize: boolean): Object => {

@@ -1,13 +1,16 @@
 import {Memory} from "../unsafe/Memory.sol";
 
 
-// String validation library.
-//
-// Strings uses the UTF-8 encoding, as defined in the unicode 10.0 standard:
-// http://www.unicode.org/versions/Unicode10.0.0/
-//
-// Idea taken from Arachnid's (Nick Johnson) string-utils:
-// https://github.com/Arachnid/solidity-stringutils
+/*
+    String validation library. This library can be used to validate that a
+    solidity string is valid UTF-8.
+
+    Strings uses the UTF-8 encoding, as defined in the unicode 10.0 standard:
+    http://www.unicode.org/versions/Unicode10.0.0/
+
+    Idea taken from Arachnid's (Nick Johnson) string-utils:
+    https://github.com/Arachnid/solidity-stringutils
+*/
 library Strings {
 
     // Key bytes.
@@ -15,111 +18,116 @@ library Strings {
     // Table 3-7, p 126, Well-Formed UTF-8 Byte Sequences
 
     // Default 80..BF range
-    byte constant DL = 0x80;
-    byte constant DH = 0xBF;
+    uint constant DL = 0x80;
+    uint constant DH = 0xBF;
 
     // Row - number of bytes
 
     // R1 - 1
-    byte constant B11L = 0x00;
-    byte constant B11H = 0x7F;
+    uint constant B11L = 0x00;
+    uint constant B11H = 0x7F;
 
     // R2 - 2
-    byte constant B21L = 0xC2;
-    byte constant B21H = 0xDF;
+    uint constant B21L = 0xC2;
+    uint constant B21H = 0xDF;
 
     // R3 - 3
-    byte constant B31 = 0xE0;
-    byte constant B32L = 0xA0;
-    byte constant B32H = 0xBF;
+    uint constant B31 = 0xE0;
+    uint constant B32L = 0xA0;
+    uint constant B32H = 0xBF;
 
     // R4 - 3
-    byte constant B41L = 0xE1;
-    byte constant B41H = 0xEC;
+    uint constant B41L = 0xE1;
+    uint constant B41H = 0xEC;
 
     // R5 - 3
-    byte constant B51 = 0xED;
-    byte constant B52L = 0x80;
-    byte constant B52H = 0x9F;
+    uint constant B51 = 0xED;
+    uint constant B52L = 0x80;
+    uint constant B52H = 0x9F;
 
     // R6 - 3
-    byte constant B61L = 0xEE;
-    byte constant B61H = 0xEF;
+    uint constant B61L = 0xEE;
+    uint constant B61H = 0xEF;
 
     // R7 - 4
-    byte constant B71 = 0xF0;
-    byte constant B72L = 0x90;
-    byte constant B72H = 0xBF;
+    uint constant B71 = 0xF0;
+    uint constant B72L = 0x90;
+    uint constant B72H = 0xBF;
 
     // R8 - 4
-    byte constant B81L = 0xF1;
-    byte constant B81H = 0xF3;
+    uint constant B81L = 0xF1;
+    uint constant B81H = 0xF3;
 
     // R9 - 4
-    byte constant B91 = 0xF4;
-    byte constant B92L = 0x80;
-    byte constant B92H = 0x8F;
+    uint constant B91 = 0xF4;
+    uint constant B92L = 0x80;
+    uint constant B92H = 0x8F;
 
     // Check that a string is well-formed.
     function validate(string memory self) internal pure {
-        var bts = bytes(self);
-        if (bts.length == 0) {
+        var (addr, len) = Memory.fromString(self);
+        if (len == 0) {
             return;
         }
         uint bytePos = 0;
-        while (bytePos < bts.length) {
-            bytePos += parseRune(bts, bytePos);
+        while (bytePos < len) {
+            bytePos += parseRune(addr + bytePos);
         }
-        require(bytePos == bts.length);
+        require(bytePos == len);
     }
 
     // Parses the (presumed) UTF-8 encoded character that starts at the given byte, and
     // returns its length. Fails if the encoding is not valid. Hefty function, although
     // runes normally doesn't go beyond two bytes in size (or even one).
-    function parseRune(bytes memory bts, uint bytePos) internal pure returns (uint len) {
-        byte b = bts[bytePos];
-        if (b <= B11H) {
+    function parseRune(uint bytePos) internal pure returns (uint len) {
+        uint val;
+        assembly {
+            val := mload(bytePos)
+        }
+        val >>= 224; // Remove all but the first four bytes.
+        uint v0 = val >> 24; // Get first byte.
+        if (v0 <= B11H) { // Check a 1 byte character.
             len = 1;
-        } else if (B21L <= b && b <= B21H) {
-            var bp1 = bts[bytePos + 1];
-            require(DL <= bp1 && bp1 <= DH);
+        } else if (B21L <= v0 && v0 <= B21H) { // Check a 2 byte character.
+            var v1 = (val & 0x00FF0000) >> 16;
+            require(DL <= v1 && v1 <= DH);
             len = 2;
-        } else if (b == B31) {
-            validateWithNextDefault(bts, bytePos + 1, B32L, B32H);
+        } else if (v0 == B31) { // Check a 3 byte character in the following three.
+            validateWithNextDefault((val & 0x00FFFF00) >> 8, B32L, B32H);
             len = 3;
-        } else if (b == B51) {
-            validateWithNextDefault(bts, bytePos + 1, B52L, B52H);
+        } else if (v0 == B51) {
+            validateWithNextDefault((val & 0x00FFFF00) >> 8, B52L, B52H);
             len = 3;
-        } else if ((B41L <= b && b <= B41H) || b == B61L || b == B61H) {
-            validateWithNextDefault(bts, bytePos + 1, DL, DH);
+        } else if ((B41L <= v0 && v0 <= B41H) || v0 == B61L || v0 == B61H) {
+            validateWithNextDefault((val & 0x00FFFF00) >> 8, DL, DH);
             len = 3;
-        } else if (b == B71) {
-            validateWithNextTwoDefault(bts, bytePos + 1, B72L, B72H);
+        } else if (v0 == B71) { // Check a 4 byte character in the following three.
+            validateWithNextTwoDefault(val & 0x00FFFFFF, B72L, B72H);
             len = 4;
-        } else if (B81L <= b && b <= B81H) {
-            validateWithNextTwoDefault(bts, bytePos + 1, DL, DH);
+        } else if (B81L <= v0 && v0 <= B81H) {
+            validateWithNextTwoDefault(val & 0x00FFFFFF, DL, DH);
             len = 4;
-        } else if (b == B91) {
-            validateWithNextTwoDefault(bts, bytePos + 1, B92L, B92H);
+        } else if (v0 == B91) {
+            validateWithNextTwoDefault(val & 0x00FFFFFF, B92L, B92H);
             len = 4;
-        } else {
-            require(false);
+        } else { // If we reach this point, the character is not valid UTF-8
+            revert();
         }
     }
 
-    function validateWithNextDefault(bytes memory bts, uint bytePos, byte low, byte high) private pure {
-        byte b = bts[bytePos];
+    function validateWithNextDefault(uint val, uint low, uint high) private pure {
+        uint b = (val & 0xFF00) >> 8;
         require(low <= b && b <= high);
-        b = bts[bytePos + 1];
+        b = val & 0x00FF;
         require(DL <= b && b <= DH);
     }
 
-    function validateWithNextTwoDefault(bytes memory bts, uint bytePos, byte low, byte high) private pure {
-        byte b = bts[bytePos];
+    function validateWithNextTwoDefault(uint val, uint low, uint high) private pure {
+        uint b = (val & 0xFF0000) >> 16;
         require(low <= b && b <= high);
-        b = bts[bytePos + 1];
+        b = (val & 0x00FF00) >> 8;
         require(DL <= b && b <= DH);
-        b = bts[bytePos + 2];
+        b = val & 0x0000FF;
         require(DL <= b && b <= DH);
     }
 

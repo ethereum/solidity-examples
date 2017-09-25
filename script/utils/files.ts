@@ -28,6 +28,22 @@ export const createTimestampSubfolder = (root: string): string => {
     return logPath;
 };
 
+export const readLatest = (dir: string): string => {
+    const latestFile = path.join(dir, 'latest');
+    if (!fs.existsSync(latestFile)) {
+        return "";
+    }
+    return fs.readFileSync(latestFile).toString();
+};
+
+export const writeLatest = (dir: string, data: string) => {
+    const latestFile = path.join(dir, 'latest');
+    if (!fs.existsSync(latestFile)) {
+        mkdirp.sync(dir);
+    }
+    fs.writeFileSync(latestFile, data);
+};
+
 export const writeLog = (log: Object, dir: string, name: string): void => {
     const optResultsPath = path.join(dir, name);
     fs.writeFileSync(optResultsPath, JSON.stringify(log, null, '\t'));

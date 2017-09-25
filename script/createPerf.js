@@ -33,10 +33,9 @@ exports.perfAll = function (optAndUnopt) {
         files_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
     }
     // Diffs
-    var latestFile = path.join(constants_1.PERF_LOGS, 'latest');
-    if (fs.existsSync(latestFile)) {
-        var latestResultsFolder = fs.readFileSync(latestFile).toString();
-        var latestResults = files_1.readLog(latestResultsFolder, constants_1.RESULTS_NAME_OPTIMIZED);
+    var latest = files_1.readLatest(constants_1.PERF_LOGS);
+    if (latest !== '') {
+        var latestResults = files_1.readLog(latest, constants_1.RESULTS_NAME_OPTIMIZED);
         var diff = jsondiffpatch.diff(latestResults, log);
         if (diff) {
             var output = jsondiffpatch.formatters.console.format(diff);
@@ -44,8 +43,7 @@ exports.perfAll = function (optAndUnopt) {
             console.log(output);
         }
     }
-    // Set the new result as latest.
-    fs.writeFileSync(latestFile, logsPath);
+    files_1.writeLatest(constants_1.PERF_LOGS, logsPath);
 };
 exports.compileAndRunPerf = function (units, optimize) {
     for (var i = 0; i < units.length; i++) {

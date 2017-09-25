@@ -9,10 +9,12 @@ import {STLPerf} from "../STLPerf.sol";
 // bytes memory bts1 = hex"aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899";
 // bytes memory bts2 = hex"aabbccddeeffaabbccddeeffaabbcc";
 
-
-contract PerfBytesEqualsOneWordSuccess is STLPerf {
+contract BytesPerf is STLPerf {
     using Bytes for bytes;
+    using Bytes for bytes32;
+}
 
+contract PerfBytesEqualsOneWordSuccess is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(32);
         uint gasPre = msg.gas;
@@ -23,9 +25,7 @@ contract PerfBytesEqualsOneWordSuccess is STLPerf {
 }
 
 
-contract PerfBytesEqualsTenWordsSuccess is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesEqualsTenWordsSuccess is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(320);
         uint gasPre = msg.gas;
@@ -36,9 +36,7 @@ contract PerfBytesEqualsTenWordsSuccess is STLPerf {
 }
 
 
-contract PerfBytesEqualsHalfWordSuccess is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesEqualsHalfWordSuccess is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(16);
         uint gasPre = msg.gas;
@@ -49,9 +47,7 @@ contract PerfBytesEqualsHalfWordSuccess is STLPerf {
 }
 
 
-contract PerfBytesEqualsDifferentLengthFail is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesEqualsDifferentLengthFail is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts1 = new bytes(0);
         bytes memory bts2 = new bytes(1);
@@ -63,9 +59,7 @@ contract PerfBytesEqualsDifferentLengthFail is STLPerf {
 }
 
 
-contract PerfBytesEqualsOneWordFail is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesEqualsOneWordFail is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts1 = new bytes(32);
         bytes memory bts2 = hex"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -77,9 +71,7 @@ contract PerfBytesEqualsOneWordFail is STLPerf {
 }
 
 
-contract PerfBytesCopyOneWord is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesCopyOneWord is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(32);
         uint gasPre = msg.gas;
@@ -90,9 +82,7 @@ contract PerfBytesCopyOneWord is STLPerf {
 }
 
 
-contract PerfBytesCopyTenWords is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesCopyTenWords is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(320);
         uint gasPre = msg.gas;
@@ -103,9 +93,7 @@ contract PerfBytesCopyTenWords is STLPerf {
 }
 
 
-contract PerfBytesCopyEmpty is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesCopyEmpty is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -116,9 +104,7 @@ contract PerfBytesCopyEmpty is STLPerf {
 }
 
 
-contract PerfBytesCopyWithStartIndexOneWord is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesCopyWithStartIndexOneWord is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(35);
         uint gasPre = msg.gas;
@@ -129,9 +115,7 @@ contract PerfBytesCopyWithStartIndexOneWord is STLPerf {
 }
 
 
-contract PerfBytesCopyWithStartIndexAndLengthOneWord is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesCopyWithStartIndexAndLengthOneWord is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(35);
         uint gasPre = msg.gas;
@@ -142,9 +126,7 @@ contract PerfBytesCopyWithStartIndexAndLengthOneWord is STLPerf {
 }
 
 
-contract PerfBytesConcatTwoWords is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesConcatTwoWords is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(32);
         uint gasPre = msg.gas;
@@ -155,9 +137,7 @@ contract PerfBytesConcatTwoWords is STLPerf {
 }
 
 
-contract PerfBytesConcatTenWords is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesConcatTenWords is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(160);
         uint gasPre = msg.gas;
@@ -168,9 +148,7 @@ contract PerfBytesConcatTenWords is STLPerf {
 }
 
 
-contract PerfBytesConcatEmpty is STLPerf {
-    using Bytes for bytes;
-
+contract PerfBytesConcatEmpty is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -181,9 +159,7 @@ contract PerfBytesConcatEmpty is STLPerf {
 }
 
 
-contract PerfBytesHighestByteSetLow is STLPerf {
-    using Bytes for bytes32;
-
+contract PerfBytesHighestByteSetLow is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -194,9 +170,7 @@ contract PerfBytesHighestByteSetLow is STLPerf {
 }
 
 
-contract PerfBytesHighestByteSetHigh is STLPerf {
-    using Bytes for bytes32;
-
+contract PerfBytesHighestByteSetHigh is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -207,9 +181,7 @@ contract PerfBytesHighestByteSetHigh is STLPerf {
 }
 
 
-contract PerfBytesLowestByteSetLow is STLPerf {
-    using Bytes for bytes32;
-
+contract PerfBytesLowestByteSetLow is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -220,9 +192,7 @@ contract PerfBytesLowestByteSetLow is STLPerf {
 }
 
 
-contract PerfBytesLowestByteSetHigh is STLPerf {
-    using Bytes for bytes32;
-
+contract PerfBytesLowestByteSetHigh is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
@@ -233,9 +203,7 @@ contract PerfBytesLowestByteSetHigh is STLPerf {
 }
 
 
-contract PerfBytesToBytes is STLPerf {
-    using Bytes for bytes32;
-
+contract PerfBytesToBytes is BytesPerf {
     function perf() public payable returns (uint) {
         bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;

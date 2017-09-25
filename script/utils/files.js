@@ -27,6 +27,20 @@ exports.createTimestampSubfolder = function (root) {
     mkdirp.sync(logPath);
     return logPath;
 };
+exports.readLatest = function (dir) {
+    var latestFile = path.join(dir, 'latest');
+    if (!fs.existsSync(latestFile)) {
+        return "";
+    }
+    return fs.readFileSync(latestFile).toString();
+};
+exports.writeLatest = function (dir, data) {
+    var latestFile = path.join(dir, 'latest');
+    if (!fs.existsSync(latestFile)) {
+        mkdirp.sync(dir);
+    }
+    fs.writeFileSync(latestFile, data);
+};
 exports.writeLog = function (log, dir, name) {
     var optResultsPath = path.join(dir, name);
     fs.writeFileSync(optResultsPath, JSON.stringify(log, null, '\t'));
