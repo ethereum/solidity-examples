@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-var createPerf = require("../script/createPerf");
+var perf = require("../script/perf");
 try {
-    createPerf.perfAll(true);
+    perf.perfAll(true);
 }
 catch (err) {
     console.error("Execution failed: " + err.message);

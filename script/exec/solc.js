@@ -26,6 +26,7 @@ function compileRuntime(file, optimize) {
 }
 exports.compileRuntime = compileRuntime;
 function version() {
-    return execSync('solc --version').toString();
+    var verStr = execSync('solc --version').toString();
+    return verStr.substr(verStr.indexOf('\n')).trim();
 }
 exports.version = version;

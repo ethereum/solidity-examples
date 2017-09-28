@@ -22,5 +22,6 @@ export function compileRuntime(file: string, optimize: boolean = true): string {
 }
 
 export function version(): string {
-    return execSync('solc --version').toString();
+    const verStr = execSync('solc --version').toString();
+    return verStr.substr(verStr.indexOf('\n')).trim();
 }

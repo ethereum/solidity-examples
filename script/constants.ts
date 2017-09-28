@@ -23,9 +23,12 @@ export const RESULTS_NAME_UNOPTIMIZED = "results_unoptimized.json";
 export const UNITS: Array<[string, string]> = [
     //['bits', 'bits'],
     //['bytes', 'bytes'],
+    ['math', 'math'],
     //['patricia_tree', 'patricia_tree'],
-    //['unsafe', 'memory'],
-    ['strings', 'strings']
+    //['strings', 'strings'],
+    //['unsafe', 'memory']
 ];
 
-export const UNITS_EXTENDED: Array<[string, string]> = UNITS.concat([]);
+export const UNITS_EXTENDED: Array<[string, string]> = UNITS.concat([
+    //['math', 'math_consistency']
+]);

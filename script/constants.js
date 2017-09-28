@@ -19,8 +19,6 @@ exports.RESULTS_NAME_UNOPTIMIZED = "results_unoptimized.json";
 exports.UNITS = [
     //['bits', 'bits'],
     //['bytes', 'bytes'],
-    //['patricia_tree', 'patricia_tree'],
-    //['unsafe', 'memory'],
-    ['strings', 'strings']
+    ['math', 'math'],
 ];
 exports.UNITS_EXTENDED = exports.UNITS.concat([]);

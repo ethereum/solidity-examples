@@ -27,6 +27,12 @@ library Memory {
             addr := mload(0x40)
             mstore(0x40, add(addr, numBytes))
         }
+        uint words = (numBytes + 31) / 32;
+        for (uint i = 0; i < words; i++) {
+            assembly {
+                mstore(add(addr, mul(i, 32)), 0)
+            }
+        }
     }
 
     // Copies 'len' bytes of memory from address 'src' to address 'dest'

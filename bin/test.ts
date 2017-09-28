@@ -1,7 +1,7 @@
-import createTests = require('../script/createTests');
+import tests = require('../script/tests');
 
 try {
-    createTests.testAll(true, false);
+    tests.testAll(true, false);
 } catch (err) {
     console.error("Execution failed: " + err.message);
     process.exit(1);

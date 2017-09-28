@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-var createTests = require("../script/createTests");
+var tests = require("../script/tests");
 try {
-    createTests.testAll(true, false);
+    tests.testAll(true, false);
 }
 catch (err) {
     console.error("Execution failed: " + err.message);
