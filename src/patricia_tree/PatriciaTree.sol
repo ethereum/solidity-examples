@@ -4,15 +4,15 @@ pragma experimental "ABIEncoderV2";
 
 import {Data} from "./Data.sol";
 
-
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
+ */
 contract PatriciaTree {
     function getNode(bytes32 hash) public view returns (Data.Node n);
-
     function getRootEdge() public view returns (Data.Edge e);
-
     function getProof(bytes key) public view returns (uint branchMask, bytes32[] _siblings);
-
     function verifyProof(bytes32 rootHash, bytes key, bytes value, uint branchMask, bytes32[] siblings) public view returns (bool);
-
     function insert(bytes key, bytes value) public;
 }

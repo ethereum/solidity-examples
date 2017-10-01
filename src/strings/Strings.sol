@@ -15,6 +15,11 @@ import {Memory} from "../unsafe/Memory.sol";
     Idea taken from Arachnid's (Nick Johnson) string-utils:
     https://github.com/Arachnid/solidity-stringutils
 */
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
+ */
 library Strings {
 
     // Key bytes.

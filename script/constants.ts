@@ -21,9 +21,9 @@ export const RESULTS_NAME_OPTIMIZED = "results_optimized.json";
 export const RESULTS_NAME_UNOPTIMIZED = "results_unoptimized.json";
 
 export const UNITS: Array<[string, string]> = [
-    //['bits', 'bits'],
+    ['bits', 'bits'],
     //['bytes', 'bytes'],
-    ['math', 'math'],
+    //['math', 'math'],
     //['patricia_tree', 'patricia_tree'],
     //['strings', 'strings'],
     //['unsafe', 'memory']

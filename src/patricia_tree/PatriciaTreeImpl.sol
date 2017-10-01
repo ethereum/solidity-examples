@@ -6,7 +6,11 @@ import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
 import {PatriciaTree} from "./PatriciaTree.sol";
 
-
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
+ */
 contract PatriciaTreeImpl is PatriciaTree {
 
     using Data for Data.Node;
@@ -38,7 +42,6 @@ contract PatriciaTreeImpl is PatriciaTree {
     function hash(Data.Node memory n) internal pure returns (bytes32) {
         return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
     }
-
 
     // Returns the Merkle-proof for the given key
     // Proof format should be:

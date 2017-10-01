@@ -3,7 +3,12 @@
 
     Inspiration is taken from the SafeMath library in zeppelin-solidity:
     https://github.com/OpenZeppelin/zeppelin-solidity/blob/353285e5d96477b4abb86f7cde9187e84ed251ac/contracts/math/SafeMath.sol
-    
+
+ */
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
  */
 library Math {
 
@@ -18,7 +23,17 @@ library Math {
     int constant INT_TWO = 2;
     int constant INT_MINUS_ONE = -1;
     int constant INT_MAX = int(2**255 - 1);
-    int constant INT_MIN = int(-(2**255));S
+    int constant INT_MIN = int(-(2**255));
+
+    // For when a Uint needs to be passed by reference.
+    struct Uint {
+        uint n;
+    }
+
+    // For when an Int needs to be passed by reference.
+    struct Int {
+        uint n;
+    }
 
     // Some math ops with overflow guards.
 

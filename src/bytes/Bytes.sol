@@ -4,7 +4,11 @@ pragma experimental "ABIEncoderV2";
 
 import {Memory} from "../unsafe/Memory.sol";
 
-
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
+ */
 library Bytes {
 
     // Check if two 'bytes memory' are equal. Equality is defined as such:

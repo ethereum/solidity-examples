@@ -3,6 +3,11 @@ pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
 // Interface for ERC-20 compliant token-contracts.
+/**
+ * @title
+ * @author Andreas Olofsson (androlo@tutanota.de)
+ * @dev
+ */
 contract Token {
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);

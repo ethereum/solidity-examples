@@ -17,8 +17,6 @@ exports.PERF_FUN_HASH = '1c4af786';
 exports.RESULTS_NAME_OPTIMIZED = "results_optimized.json";
 exports.RESULTS_NAME_UNOPTIMIZED = "results_unoptimized.json";
 exports.UNITS = [
-    //['bits', 'bits'],
-    //['bytes', 'bytes'],
-    ['math', 'math'],
+    ['bits', 'bits'],
 ];
 exports.UNITS_EXTENDED = exports.UNITS.concat([]);
