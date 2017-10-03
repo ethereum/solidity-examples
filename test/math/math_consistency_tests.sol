@@ -4,7 +4,6 @@ pragma experimental "ABIEncoderV2";
 
 import {STLTest} from "../STLTest.sol";
 
-
 contract TestMathUint256Overflow is STLTest {
 
     uint constant ZERO = 0;

@@ -4,10 +4,11 @@ pragma experimental "ABIEncoderV2";
 
 import {Memory} from "../unsafe/Memory.sol";
 
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: Bytes
+ * author: Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
  */
 library Bytes {
 

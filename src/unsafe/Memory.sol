@@ -2,10 +2,13 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: Memory
+ * author: Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * Library for working with memory.
  */
 library Memory {
 

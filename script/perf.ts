@@ -1,21 +1,21 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {PERF_BIN, PERF_FUN_HASH, PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, UNITS} from "./constants";
+import {PERF_BIN, PERF_FUN_HASH, PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED} from "./constants";
 import {
     createTimestampSubfolder, ensureAndClear, isSigInHashes, readLatest, readLog, writeLatest,
     writeLog
-} from "./utils/files";
+} from "./utils/io";
 import {compilePerf, version as solcVersion} from "./exec/solc";
 import {run, version as evmVersion} from './exec/evm';
 import * as jsondiffpatch from 'jsondiffpatch';
 
-export const perfAll = (optAndUnopt: boolean = false): void => {
+export const perf = async (units: Array<[string, string]>, optAndUnopt: boolean = false) => {
     // Set up paths and check versions of the required tools.
     const solcV = solcVersion();
     const evmV = evmVersion();
     ensureAndClear(PERF_BIN);
 
-    const ret = compileAndRunPerf(UNITS, true);
+    const ret = await compileAndRunPerf(units, optAndUnopt);
 
     const log = {
         solcVersion: solcV,
@@ -28,7 +28,7 @@ export const perfAll = (optAndUnopt: boolean = false): void => {
     // If unoptimized is enabled.
     if (optAndUnopt) {
         ensureAndClear(PERF_BIN);
-        const retU = compileAndRunPerf(UNITS, false);
+        const retU = await compileAndRunPerf(units, false);
         const logU = {
             solcVersion: solcV,
             evmVersion: evmV,
@@ -51,27 +51,26 @@ export const perfAll = (optAndUnopt: boolean = false): void => {
     writeLatest(PERF_LOGS, logsPath);
 };
 
-export const compileAndRunPerf = (units: Array<[string, string]>, optimize: boolean): Object => {
-    for (let i = 0; i < units.length; i++) {
-        const subDir = units[i][0];
-        const perf = units[i][1];
-        compilePerf(subDir, perf, optimize);
+export const compileAndRunPerf = async (units: Array<[string, string]>, optimize: boolean) => {
+    for (const unit of units) {
+        const subDir = unit[0];
+        const prf = unit[1];
+        await compilePerf(subDir, prf, optimize);
     }
     return runPerf();
 };
 
-export const runPerf = (): Object => {
+export const runPerf = () => {
     const files = fs.readdirSync(PERF_BIN);
-    const sigfiles = files.filter(function (file) {
+    const sigfiles = files.filter((file) => {
         const f = file.trim();
         return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
     });
     const results = {};
 
-    for (let i = 0; i < sigfiles.length; i++) {
-        const sigfile = sigfiles[i];
+    for (const sigfile of sigfiles) {
         if (!isSigInHashes(PERF_BIN, sigfile, PERF_FUN_HASH)) {
-            throw new Error(`No perf function in signature file: ${sigfile}`)
+            throw new Error(`No perf function in signature file: ${sigfile}`);
         }
         const name = sigfile.substr(0, sigfile.length - 11);
         const binRuntimePath = path.join(PERF_BIN, name + ".bin-runtime");

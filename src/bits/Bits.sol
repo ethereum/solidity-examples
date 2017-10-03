@@ -2,10 +2,11 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
-/**
- * @title Bits
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev Functions for operating on individual bits.
+/*
+ * title: Bits
+ * author: Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description: Functions for operating on individual bits.
  */
 library Bits {
 

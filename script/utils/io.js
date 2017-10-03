@@ -1,12 +1,22 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var mkdirp = require("mkdirp");
 var path = require("path");
-exports.rmrf = function (path) {
-    if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file, index) {
-            var curPath = path + "/" + file;
+var logger_1 = require("./logger");
+exports.print = function (text) {
+    process.stdout.write(text);
+};
+exports.println = function (text) {
+    process.stdout.write(text + '\n');
+};
+exports.readText = function (filePath) {
+    return fs.readFileSync(filePath).toString();
+};
+exports.rmrf = function (pth) {
+    if (fs.existsSync(pth)) {
+        fs.readdirSync(pth).forEach(function (file, index) {
+            var curPath = pth + "/" + file;
             if (fs.lstatSync(curPath).isDirectory()) {
                 exports.rmrf(curPath);
             }
@@ -14,7 +24,7 @@ exports.rmrf = function (path) {
                 fs.unlinkSync(curPath);
             }
         });
-        fs.rmdirSync(path);
+        fs.rmdirSync(pth);
     }
 };
 exports.ensureAndClear = function (dir) {
@@ -44,7 +54,7 @@ exports.writeLatest = function (dir, data) {
 exports.writeLog = function (log, dir, name) {
     var optResultsPath = path.join(dir, name);
     fs.writeFileSync(optResultsPath, JSON.stringify(log, null, '\t'));
-    console.info("Logs written to: " + optResultsPath);
+    logger_1.default.info("Logs written to: " + optResultsPath);
 };
 exports.readLog = function (dir, name) {
     var latestOptStr = fs.readFileSync(path.join(dir, name)).toString();
@@ -57,8 +67,9 @@ exports.isSigInHashes = function (dir, sigfile, sig) {
         throw new Error("No methods found in signatures: " + sigfile);
     }
     var perfFound = false;
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i].trim();
+    for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
+        var line = lines_1[_i];
+        line = line.trim();
         if (line.length === 0) {
             continue;
         }
@@ -71,8 +82,8 @@ exports.isSigInHashes = function (dir, sigfile, sig) {
             if (perfFound) {
                 throw new Error("Repeated hash of perf function in signature file: " + sigfile);
             }
-            return true;
+            perfFound = true;
         }
     }
-    return false;
+    return perfFound;
 };

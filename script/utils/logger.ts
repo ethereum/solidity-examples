@@ -1,91 +1,53 @@
-import * as winston from 'winston';
+import * as chalk from 'chalk';
+import {println} from "./io";
 
-const levels = {
-    'silly': true,
-    'debug': true,
-    'verbose': true,
-    'info': true,
-    'warn': true,
-    'error': true
-};
+export const enum Level {
+    Error,
+    Warn,
+    Info,
+    Debug
+}
 
-const testConfig = {
-    levels: {
-        header: 0,
-        info: 1,
-        success: 2,
-        moderate: 3,
-        fail: 4
-    },
-    colors: {
-        header: 'magenta',
-        info: 'cyan',
-        success: 'green',
-        moderate: 'yellow',
-        fail: 'red'
+export default class Logger {
+
+    private static __level: Level = Level.Info;
+
+    public static error(text: string) {
+        println(chalk.redBright(`[Error] ${text}`));
     }
-};
 
-export const newLogger = () => {
-    return new (winston.Logger)({
-        transports: [
-            new (winston.transports.Console)({
-                level: 'warn',
-                label: 'Application'
-            })
-        ],
-        label: "Application"
-    });
-};
-
-export const newTestLogger = () => {
-    return new (winston.Logger)({
-        transports: [
-            new (winston.transports.Console)({
-                name: 'default',
-                colorize: 'all',
-                level: 'fail',
-                showLevel: false,
-                label: ''
-            })
-        ],
-        levels: testConfig.levels,
-        colors: testConfig.colors
-    });
-};
-
-const logger_ = newLogger();
-
-const testLogger_ = newTestLogger();
-
-export const consoleLevel = () => {
-    return logger_.transports.console.level;
-};
-
-export const setConsoleLevel = (level: string, forceNotification: boolean = false) => {
-    if (!levels[level]) {
-        logger_.warn("Illegal logging level.");
-        return;
+    public static warn(text: string) {
+        if (Logger.__level >= Level.Warn) {
+            println(chalk.yellowBright(`[Warning] ${text}`));
+        }
     }
-    if (forceNotification) {
-        console.log('Setting logging level to: ' + level);
-    } else {
-        logger_.info('Setting logging level to: ' + level);
+
+    public static info(text: string) {
+        if (Logger.__level >= Level.Info) {
+            println(chalk.whiteBright(`[Info] ${text}`));
+        }
     }
-    logger_.transports.console.level = level;
-};
 
-/**
- * Get the global logger instance.
- */
-export const globalLogger = function () {
-    return logger_;
-};
+    public static debug(text: string) {
+        if (Logger.__level === Level.Debug) {
+            println(chalk.blueBright(`[Debug] ${text}`));
+        }
+    }
 
-/**
- * Get the global test logger instance.
- */
-export const testLogger = function () {
-    return testLogger_;
-};
+    public static setLevel(level: Level) {
+        Logger.__level = level;
+    }
 
+    public static level(): string {
+        switch (Logger.__level) {
+            case Level.Error:
+                return 'error';
+            case Level.Warn:
+                return 'warn';
+            case Level.Info:
+                return 'info';
+            case Level.Debug:
+                return 'debug';
+        }
+    }
+}

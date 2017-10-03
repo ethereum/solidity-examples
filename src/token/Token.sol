@@ -2,11 +2,13 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
-// Interface for ERC-20 compliant token-contracts.
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: Token
+ * author: Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * Interface for ERC-20 compliant token-contracts.
  */
 contract Token {
     event Transfer(address indexed _from, address indexed _to, uint256 _value);

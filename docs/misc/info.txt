@@ -1,0 +1,16 @@
+The Solidity Standard Library
+
+A collection of standard library code for Solidity.
+
+Documentation can be found in the 'docs' folder.
+Examples can be found in the 'examples' folder.
+
+Contributors:
+
+Dr. Christian Reitwiessner (chris@ethereum.org)
+Andreas Olofsson (androlo@tutanota.com)
+
+Moral Support:
+
+Ksenya Serova (tigrutigru@gmail.com)
+Karl-Heinz (Sunny Von der Colberger Heyde) (karlheinz@tutamail.com)

@@ -6,10 +6,17 @@ import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
 import {PatriciaTree} from "./PatriciaTree.sol";
 
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: Data
+ * author:
+ * Christian Reitwiessner (chris@ethereum.org)
+ * Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * Patricia tree implementation.
+ *
+ * More info at: https://github.com/chriseth/patricia-trie
  */
 contract PatriciaTreeImpl is PatriciaTree {
 

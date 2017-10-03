@@ -14,7 +14,7 @@ export const run = (file: string, input: string): string => {
     if (retStr.length === 0) {
         throw new Error(`Failed when running command: ${cmd}`);
     }
-    const res = retStr.substring(0,retStr.indexOf('\n')).trim();
+    const res = retStr.substring(0, retStr.indexOf('\n')).trim();
     return res === '0x' ? '0' : res.substr(2);
 };
 

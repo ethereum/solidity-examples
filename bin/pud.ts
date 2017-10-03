@@ -1,6 +1,6 @@
 import * as jsondiffpatch from 'jsondiffpatch';
 
-import {readLatest, readLog} from "../script/utils/files";
+import {readLatest, readLog} from "../script/utils/io";
 import {PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED} from "../script/constants";
 
 const checkLatest = () => {

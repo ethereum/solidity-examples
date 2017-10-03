@@ -6,19 +6,19 @@ import {Memory} from "../unsafe/Memory.sol";
 
 
 /*
-    String validation library. This library can be used to validate that a
-    solidity string is valid UTF-8.
-
-    Strings uses the UTF-8 encoding, as defined in the unicode 10.0 standard:
-    http://www.unicode.org/versions/Unicode10.0.0/
-
-    Idea taken from Arachnid's (Nick Johnson) string-utils:
-    https://github.com/Arachnid/solidity-stringutils
-*/
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+ * title: Strings
+ * author: Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * String validation library. This library can be used to validate that a
+ * solidity string is valid UTF-8.
+ *
+ * Strings uses the UTF-8 encoding, as defined in the unicode 10.0 standard:
+ * http://www.unicode.org/versions/Unicode10.0.0/
+ *
+ * Idea taken from Arachnid's (Nick Johnson) string-utils:
+ * https://github.com/Arachnid/solidity-stringutils
  */
 library Strings {
 

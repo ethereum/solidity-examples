@@ -4,10 +4,17 @@ pragma experimental "ABIEncoderV2";
 
 import {Data} from "./Data.sol";
 
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: PatriciaTree
+ * author:
+ * Christian Reitwiessner (chris@ethereum.org)
+ * Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * Interface for patricia trees.
+ *
+ * More info at: https://github.com/chriseth/patricia-trie
  */
 contract PatriciaTree {
     function getNode(bytes32 hash) public view returns (Data.Node n);

@@ -1,18 +1,31 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
+import Logger from "./logger";
 
-export const rmrf = (path: string): void => {
-    if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file, index) {
-            let curPath = path + "/" + file;
+export const print = (text: string) => {
+    process.stdout.write(text);
+};
+
+export const println = (text: string) => {
+    process.stdout.write(text + '\n');
+};
+
+export const readText = (filePath: string): string => {
+    return fs.readFileSync(filePath).toString();
+};
+
+export const rmrf = (pth: string): void => {
+    if (fs.existsSync(pth)) {
+        fs.readdirSync(pth).forEach((file, index) => {
+            const curPath = pth + "/" + file;
             if (fs.lstatSync(curPath).isDirectory()) { // recurse
                 rmrf(curPath);
             } else { // delete file
                 fs.unlinkSync(curPath);
             }
         });
-        fs.rmdirSync(path);
+        fs.rmdirSync(pth);
     }
 };
 
@@ -44,13 +57,13 @@ export const writeLatest = (dir: string, data: string) => {
     fs.writeFileSync(latestFile, data);
 };
 
-export const writeLog = (log: Object, dir: string, name: string): void => {
+export const writeLog = (log: object, dir: string, name: string): void => {
     const optResultsPath = path.join(dir, name);
     fs.writeFileSync(optResultsPath, JSON.stringify(log, null, '\t'));
-    console.info(`Logs written to: ${optResultsPath}`);
+    Logger.info(`Logs written to: ${optResultsPath}`);
 };
 
-export const readLog = (dir: string, name: string): Object => {
+export const readLog = (dir: string, name: string): object => {
     const latestOptStr = fs.readFileSync(path.join(dir, name)).toString();
     return JSON.parse(latestOptStr);
 };
@@ -63,9 +76,9 @@ export const isSigInHashes = (dir: string, sigfile: string, sig: string): boolea
         throw new Error(`No methods found in signatures: ${sigfile}`);
     }
     let perfFound = false;
-    for (let i = 0; i < lines.length; i++) {
+    for (let line of lines) {
 
-        const line = lines[i].trim();
+        line = line.trim();
         if (line.length === 0) {
             continue;
         }
@@ -78,8 +91,8 @@ export const isSigInHashes = (dir: string, sigfile: string, sig: string): boolea
             if (perfFound) { // Should never happen with well formed signature files.
                 throw new Error(`Repeated hash of perf function in signature file: ${sigfile}`);
             }
-            return true;
+            perfFound = true;
         }
     }
-    return false;
+    return perfFound;
 };

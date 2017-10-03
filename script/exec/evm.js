@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var child = require("child_process");
 var execSync = child.execSync;
 exports.run = function (file, input) {

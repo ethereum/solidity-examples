@@ -2,10 +2,17 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
-/**
- * @title
- * @author Andreas Olofsson (androlo@tutanota.de)
- * @dev
+/*
+ * title: Data
+ * author:
+ * Christian Reitwiessner (chris@ethereum.org)
+ * Andreas Olofsson (androlo@tutanota.de)
+ *
+ * description:
+ *
+ * Data structures and utilities used in the Patricia Tree.
+ *
+ * More info at: https://github.com/chriseth/patricia-trie
  */
 library Data {
 
