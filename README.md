@@ -20,7 +20,7 @@ Routines for making sure that code meets the required standards when it comes to
 
 #### Testing
 
-npm test. Requires `solc` and `testeth` to be installed and added to $path. The test script compiles all contracts, auto-generates fillers and puts them in a directory with a layout similar to that of ethereum/tests - although it only contains `src/GeneralStateTestsFiller/stSolidityTest`; that directory is then used as root for the `testeth` tests.
+npm test. Requires `solc` and `evm` (go ethereum) to be installed and added to $path. Test code is written in Solidity, and is executed directly in the evm.
 
 #### Style
 
@@ -40,31 +40,31 @@ Github issues and gitter solidity channel.
 
 ### Ranking / categorization of contracts
 
-The QA only really applies to code that is meant to be used in production, but the library will also include code that has not yet reached that level.
+The QA only really applies to code that is meant to be used in production, but the library will also include code that has not reached that level.
 
 Node.js has a system of categorizing libraries, experimental, stable, deprecated, and so forth. This library should have something similar.
 
 
 ### Test layout
 
-Tests are single-method contracts, extending the `STLTest` contract, and implementing its `testImpl` method.
+Tests are functor-styled single-method contracts extending the `STLTest` contract and implementing its `testImpl` method.
 
-Tests are automatically compiled, and a filler is generated using the compiler artifacts.
+Tests are automatically compiled and run using a trivial test-runner written in javascript. It uses native `solc` and `evm` (go ethereum) to compile and execute the actual test code.
 
-`testeth` is run using all available protocols, and includes fillers both for optimized and unoptimized code.
+Tests that fail will throw. This is ensured by always using Solidity's `assert` function for test conditions.
 
-Basic test is one that either throws or not. If it is expected to throw, it must have `Throws` somewhere in the test name, otherwise it is assumed that the test should succeed.
+1. One test function signature.
+2. One contract per test, one function per contract.
+3. Two possible results: throws or does not throw.
 
 ##### Example
 
-This is the `STLTest` contract.
+This is the `STLTest` contract; its `test` method is the basis for all tests.
 
 ```
 contract STLTest {
 
-    bool ret;
-
-    function test() {
+    function test() public payable returns (bool ret) {
         ret = true;
         testImpl();
     }
@@ -91,95 +91,73 @@ contract TestBitsBitXor is BitsTest {
 
 It loops over the tested `uint`s and makes sure XOR works as expected.
 
+`BitsTest` is a simple (abstract) contract that extends `STLTest` and includes some constants and bindings that are useful for multiple tests throughout the suite (this pattern is used in most suites):
+
+```
+contract BitsTest is STLTest {
+    using Bits for uint;
+
+    uint constant ZERO = uint(0);
+    uint constant ONE = uint(1);
+    uint constant ONES = uint(~0);
+}
+```
+
+#### Naming
+
 The xor test is named `TestBitsBitXor`:
 
 1. `Test` is because it is a test contract, to distinguish it from other artifacts in the output directory. Tests always start with `Test`.
 2. `Bits` is the name of the library contract being tested.
 3. `BitXor` is the name of the function being tested.
 
-There can be other things in there as well, like further description of the test. Usually, all test contracts for a given library is in the same solidity source file.
+Tests that are expected to throw must have the word `Throws` somewhere in the name. There can be other things in there as well, like further description of the test.
 
-When generated, the full name of this test will be the test name + `Opt` or `Unopt` depending on whether or not the compiler was set to optimize, and finally it ends with `Filler`.
+All test contracts for a given library is normally kept in the same solidity source file.
 
-The filler for the above test, with optimizer enabled, is `TestBitsBitXorOpt`, and the filler file would be named: `TestBitsBitXorOptFiller.json`. Here is the generated filler (as of 2017-09-11).
+#### Success and failure
+
+In `STLTest.test()`, the test result is set to `true` prior to the execution of the actual test-code. This is done to detect if the function `throws` (although the `evm` also indicates that an illegal jump was made). The real point of this mechanism is to have uniformity over all tests (and a very simple way to interpret the return data in JS), which makes it easy to update.
+
+1. If a test functor does not have the word `Throws` in the name, test passes if the return value is `true`.
+2. If a test functor has the word `Throws` in the name, test passes if the return value is not `true`.
+
+Note that the example test does not have the word `Throws` in the name, and is thus expected to not throw (i.e. none of the assertions is allowed to fail).
+
+## Perf
+
+The performance of a contract is measured by looking at its gas-usage. It is mostly used in a relative way, by comparing the gas cost before and after code (or the compiler, or the evm) has been changed.
+
+The perf system is similar to the tests in that each perf is a single-method contract which is run in the go-ethereum `evm`, but unlike tests, perf functors implements the `perf`-function directly.
+
+The `perf` function returns the gas spent during execution of the tested function. This is implemented by storing the remaining gas before and after the function is executed, and then taking the difference.
+
+The reason that perf metering is done manually in every function is so that the implementor can exclude the staging part of the code (preparing variables & data) from the code that should be metered.
+
+#### Example
+
+This is the `STLPerf` contract; its `perf` method is the basis for all perf:
 
 ```
-{
-	"TestBitsBitXorOpt": {
-		"env": {
-			"currentCoinbase": "2adc25665018aa1fe0e6bc666dac8fc2697ff9ba",
-			"currentDifficulty": "0x020000",
-			"currentGasLimit": "0x7fffffffffffffff",
-			"currentNumber": "1",
-			"currentTimestamp": "1000",
-			"previousHash": "5e20a0453cecd065ea59c37ac63e079ee08998b6045136a8ce6635c7912ec0b6"
-		},
-		"expect": [
-			{
-				"indexes": {
-					"data": -1,
-					"gas": -1,
-					"value": -1
-				},
-				"network": [
-					"ALL"
-				],
-				"result": {
-					"095e7baea6a6c7c4c2dfeb977efac326af552d87": {
-						"storage": {
-							"0x": "0x1"
-						}
-					}
-				}
-			}
-		],
-		"pre": {
-			"095e7baea6a6c7c4c2dfeb977efac326af552d87": {
-				"balance": "0",
-				"code": "0x60606040526000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063f8a8fd6d1461003d57600080fd5b341561004857600080fd5b610050610052565b005b60016000806101000a81548160ff021916908315150217905550610074610076565b565b60008090505b600c8160ff1610156101b15760006100e27fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff601484027fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff6101b49092919063ffffffff16565b60ff161415156100ee57fe5b60016101296000601484027fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff6101b49092919063ffffffff16565b60ff1614151561013557fe5b60016101707fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff6014840260006101b49092919063ffffffff16565b60ff1614151561017c57fe5b600061019860006014840260006101b49092919063ffffffff16565b60ff161415156101a457fe5b808060010191505061007c565b50565b600060018260ff16849060020a90041660018360ff16869060020a90041618905093925050505600a165627a7a723058206b0a58ef09330af9646f777792dbd59d5f1e8e6858193743f228d317ae5386d60029",
-				"nonce": "0",
-				"storage": {}
-			},
-			"a94f5374fce5edbc8e2a8697c15331677e6ebf0b": {
-				"balance": "1000000000000000000000000000000",
-				"code": "",
-				"nonce": "0",
-				"storage": {}
-			}
-		},
-		"transaction": {
-			"data": [
-				"0xf8a8fd6d"
-			],
-			"gasLimit": [
-				"35000000"
-			],
-			"gasPrice": "1",
-			"nonce": "0",
-			"secretKey": "45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8",
-			"to": "095e7baea6a6c7c4c2dfeb977efac326af552d87",
-			"value": [
-				"0"
-			]
-		}
-	}
+contract STLPerf {
+    function perf() public payable returns (uint);
 }
 ```
 
-Note that this test does not have the word `Throws` in the name, and is thus not expected to throw. This means `ret == true`, so it is expected that `storage[0x] = 0x1`. Otherwise, it would have expected it to be `0x`.
+This is an example of a perf functor. It measures the gas cost when the `Bytes.equals` function can early out because the lengths of the two `bytes` are not the same:
 
-##### testeth fillers
-
-Fillers has a name, and four different principal parts:
-
-1. `env` - Defines the execution environment.
-2. `pre` - Defines the pre-state. In default tests, STL uses a contract account for putting the code in, and an account to transact from.
-3. `transaction` - The transaction data. In default tests, this just has the function id for `test()` as data, along with some account info.
-4. `expect` - How the state is expected to be after the transaction has been executed. In default tests, this is a simple check of storage address `0x`.
-
-The STL test-framework makes it possible to modify the filler any way needed, by making it possible to set custom filler generators for individual test cases. This is used in some Patricia Tree tests for example. If no custom generator is set, it defaults to the standard (throws or does not throw) template, which looks the exact same for all tests except for the test name and code.
-
-More about testeth can be found at http://ethereum-tests.readthedocs.io/en/latest/.
+```
+contract PerfBytesEqualsDifferentLengthFail is BytesPerf {
+    function perf() public payable returns (uint) {
+        bytes memory bts1 = new bytes(0);
+        bytes memory bts2 = new bytes(1);
+        uint gasPre = msg.gas;
+        Bytes.equals(bts1, bts2);
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+```
 
 ## Packages
 
@@ -189,10 +167,16 @@ These are the different packages.
 
 [bytes](docs/packages/bytes.md)
 
+[math](docs/packages/math.md)
+
 [patricia_tree](docs/packages/patricia_tree.md)
 
 [rlp](docs/packages/rlp.md)
 
 [strings](docs/packages/strings.md)
 
+[token](docs/packages/tokens.md)
+
 [unsafe](docs/packages/unsafe.md)
+
+On top of the package documentation there are also documentation in the contracts themselves, and a number of code examples in the `examples` folder.

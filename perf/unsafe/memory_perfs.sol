@@ -71,10 +71,20 @@ contract PerfMemoryEqualsHundredWordsFailFirst is STLPerf {
 }
 
 
-contract PerfMemoryAllocate is STLPerf {
+contract PerfMemoryAllocateOneWord is STLPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
-        Memory.allocate(55);
+        Memory.allocate(32);
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfMemoryAllocateTenWords is STLPerf {
+    function perf() public payable returns (uint) {
+        uint gasPre = msg.gas;
+        Memory.allocate(320);
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
