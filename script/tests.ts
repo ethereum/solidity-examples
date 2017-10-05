@@ -3,12 +3,12 @@ import * as path from 'path';
 import {
     RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, TEST_BIN, TEST_FUN_HASH, TEST_LOGS
 } from "./constants";
-import {createTimestampSubfolder, ensureAndClear, isSigInHashes, writeLog} from "./utils/io";
+import {createTimestampSubfolder, ensureAndClear, isSigInHashes, readLatest, writeLatest, writeLog} from "./utils/io";
 import {compileTest, version as solcVersion} from "./exec/solc";
 import {run, version as evmVersion} from "./exec/evm";
 import TestLogger from "./utils/test_logger";
 
-export const test = async (tests: Array<[string, string]>, optAndUnopt: boolean) => {
+export const test = async (tests: Array<[string, string]>, optAndUnopt: boolean): Promise<boolean> => {
     const solcV = solcVersion();
     const evmV = evmVersion();
     ensureAndClear(TEST_BIN);
@@ -35,9 +35,9 @@ export const test = async (tests: Array<[string, string]>, optAndUnopt: boolean)
         writeLog(logU, logsPath, RESULTS_NAME_UNOPTIMIZED);
     }
 
-    if (!ret.success && (!optAndUnopt || retU.success)) {
-        throw new Error("One or more tests failed.");
-    }
+    writeLatest(TEST_LOGS, logsPath);
+
+    return ret.success && (!optAndUnopt || retU.success);
 };
 
 export const compileAndRunTests = async (units: Array<[string, string]>, optimize: boolean) => {
@@ -59,9 +59,7 @@ export const runTests = (optimize: boolean) => {
 
     let tests = 0;
     let failed = 0;
-
-    TestLogger.header("Running tests...");
-
+    TestLogger.header('Running tests...');
     for (const sigfile of sigfiles) {
         if (!isSigInHashes(TEST_BIN, sigfile, TEST_FUN_HASH)) {
             throw new Error(`No test function in signature file: ${sigfile}`);
@@ -75,26 +73,15 @@ export const runTests = (optimize: boolean) => {
         let passed = true;
         tests++;
         if (throws && result) {
+            failed++;
             passed = false;
         } else if (!throws && !result) {
-            passed = false;
-        }
-        if (passed) {
-            TestLogger.success(`${name}: PASSED`);
-        } else {
             failed++;
-            TestLogger.fail(`${name}: FAILED`);
+            passed = false;
         }
         results[name] = {passed};
     }
-    TestLogger.header('');
-    TestLogger.header(`Ran ${tests} tests.`);
-
-    if (failed !== 0) {
-        TestLogger.fail(`${failed} tests FAILED.`);
-    } else {
-        TestLogger.success(`All tests PASSED`);
-    }
+    TestLogger.header("Done");
     return {
         success: failed === 0,
         results

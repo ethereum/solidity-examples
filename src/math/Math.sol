@@ -26,7 +26,7 @@ library Math {
     int constant INT_TWO = 2;
     int constant INT_MINUS_ONE = -1;
     int constant INT_MAX = int(2**255 - 1);
-    int constant INT_MIN = int(-(2**255));
+    int constant INT_MIN = int(2**255);
 
     // For when a Uint needs to be passed by reference.
     struct Uint {

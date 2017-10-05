@@ -88,7 +88,7 @@ export const LIB_CHOICES = [{
 export const librarySelectionData = (name: string) => {
     return {
         type: 'checkbox',
-        message: 'Select libraries',
+        message: 'Pick libraries (choose none to go back)',
         name,
         choices: [
             {
@@ -119,13 +119,7 @@ export const librarySelectionData = (name: string) => {
                 name: 'Extended',
                 value: UNITS_EXTENDED
             },
-        ],
-        validate: (answers: string[]) => {
-            if (answers.length < 1) {
-                return 'You must choose at least one library.';
-            }
-            return true;
-        }
+        ]
     };
 };
 

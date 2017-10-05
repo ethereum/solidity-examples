@@ -4,6 +4,7 @@ var fs = require("fs");
 var mkdirp = require("mkdirp");
 var path = require("path");
 var logger_1 = require("./logger");
+var constants_1 = require("../constants");
 exports.print = function (text) {
     process.stdout.write(text);
 };
@@ -15,7 +16,7 @@ exports.readText = function (filePath) {
 };
 exports.rmrf = function (pth) {
     if (fs.existsSync(pth)) {
-        fs.readdirSync(pth).forEach(function (file, index) {
+        fs.readdirSync(pth).forEach(function (file) {
             var curPath = pth + "/" + file;
             if (fs.lstatSync(curPath).isDirectory()) {
                 exports.rmrf(curPath);
@@ -57,8 +58,38 @@ exports.writeLog = function (log, dir, name) {
     logger_1.default.info("Logs written to: " + optResultsPath);
 };
 exports.readLog = function (dir, name) {
-    var latestOptStr = fs.readFileSync(path.join(dir, name)).toString();
-    return JSON.parse(latestOptStr);
+    var optStr = fs.readFileSync(path.join(dir, name)).toString();
+    return JSON.parse(optStr);
+};
+exports.latestPerfLog = function (optimized) {
+    if (optimized === void 0) { optimized = true; }
+    var latest = exports.readLatest(constants_1.PERF_LOGS);
+    if (latest === '') {
+        throw new Error("No perf-logs found.");
+    }
+    var file = optimized ? constants_1.RESULTS_NAME_OPTIMIZED : constants_1.RESULTS_NAME_UNOPTIMIZED;
+    return exports.readLog(latest, file);
+};
+exports.latestTestLog = function (optimized) {
+    if (optimized === void 0) { optimized = true; }
+    var latest = exports.readLatest(constants_1.TEST_LOGS);
+    if (latest === '') {
+        throw new Error("No test-logs found.");
+    }
+    var file = optimized ? constants_1.RESULTS_NAME_OPTIMIZED : constants_1.RESULTS_NAME_UNOPTIMIZED;
+    return exports.readLog(latest, file);
+};
+exports.indexedLogFolders = function (baseDir, maxEntries) {
+    if (maxEntries === void 0) { maxEntries = 20; }
+    var files = fs.readdirSync(baseDir);
+    var logFolders = files.filter(function (file) {
+        if (!fs.statSync(path.join(baseDir, file)).isDirectory()) {
+            return false;
+        }
+        var num = parseInt(file, 10);
+        return !isNaN(num) && num > 0;
+    }).sort().reverse();
+    return logFolders.length > maxEntries ? logFolders.slice(0, maxEntries) : logFolders;
 };
 exports.isSigInHashes = function (dir, sigfile, sig) {
     var hashes = fs.readFileSync(path.join(dir, sigfile)).toString();

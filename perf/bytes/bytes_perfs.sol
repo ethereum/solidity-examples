@@ -10,8 +10,7 @@ import {STLPerf} from "../STLPerf.sol";
 // bytes memory bts2 = hex"aabbccddeeffaabbccddeeffaabbcc";
 
 contract BytesPerf is STLPerf {
-    using Bytes for bytes;
-    using Bytes for bytes32;
+    using Bytes for *;
 }
 
 contract PerfBytesEqualsOneWordSuccess is BytesPerf {
@@ -159,44 +158,86 @@ contract PerfBytesConcatEmpty is BytesPerf {
 }
 
 
-contract PerfBytesHighestByteSetLow is BytesPerf {
+contract PerfBytesBytes32HighestByteSetLow is BytesPerf {
     function perf() public payable returns (uint) {
-        bytes memory bts = new bytes(0);
+        bytes32 b32 = bytes32("a");
         uint gasPre = msg.gas;
-        bytes32(1).highestByteSet();
+        b32.highestByteSet();
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
 }
 
 
-contract PerfBytesHighestByteSetHigh is BytesPerf {
+contract PerfBytesBytes32HighestByteSetHigh is BytesPerf {
     function perf() public payable returns (uint) {
-        bytes memory bts = new bytes(0);
+        bytes32 b32 = bytes32(0x01);
         uint gasPre = msg.gas;
-        bytes32(~uint(0)).highestByteSet();
+        b32.highestByteSet();
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
 }
 
 
-contract PerfBytesLowestByteSetLow is BytesPerf {
+contract PerfBytesBytes32LowestByteSetLow is BytesPerf {
     function perf() public payable returns (uint) {
-        bytes memory bts = new bytes(0);
+        bytes32 b32 = bytes32("a");
         uint gasPre = msg.gas;
-        bytes32(1).lowestByteSet();
+        b32.lowestByteSet();
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
 }
 
 
-contract PerfBytesLowestByteSetHigh is BytesPerf {
+contract PerfBytesBytes32LowestByteSetHigh is BytesPerf {
     function perf() public payable returns (uint) {
-        bytes memory bts = new bytes(0);
+        bytes32 b32 = bytes32(0x01);
         uint gasPre = msg.gas;
-        bytes32(~uint(0)).lowestByteSet();
+        b32.lowestByteSet();
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfBytesUintHighestByteSetLow is BytesPerf {
+    function perf() public payable returns (uint) {
+        uint gasPre = msg.gas;
+        uint(1).highestByteSet();
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfBytesUintHighestByteSetHigh is BytesPerf {
+    function perf() public payable returns (uint) {
+        uint n = (uint(1) << 255);
+        uint gasPre = msg.gas;
+        n.highestByteSet();
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfBytesUintLowestByteSetLow is BytesPerf {
+    function perf() public payable returns (uint) {
+        uint gasPre = msg.gas;
+        uint(1).lowestByteSet();
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfBytesUintLowestByteSetHigh is BytesPerf {
+    function perf() public payable returns (uint) {
+        uint n = (uint(1) << 255);
+        uint gasPre = msg.gas;
+        n.lowestByteSet();
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
@@ -205,7 +246,6 @@ contract PerfBytesLowestByteSetHigh is BytesPerf {
 
 contract PerfBytesToBytes is BytesPerf {
     function perf() public payable returns (uint) {
-        bytes memory bts = new bytes(0);
         uint gasPre = msg.gas;
         bytes32(0x10203040).toBytes();
         uint gasPost = msg.gas;

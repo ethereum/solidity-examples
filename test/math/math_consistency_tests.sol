@@ -115,6 +115,9 @@ contract TestMathInt256Overflow is STLTest {
         n = INT_MIN;
         n /= MINUS_ONE;
         assert(n == INT_MIN);
+
+        // <<
+
     }
 }
 

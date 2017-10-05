@@ -48,6 +48,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
 var perf_1 = require("../../script/perf");
 var constants_1 = require("../../script/constants");
+var io_1 = require("../../script/utils/io");
+var logs_1 = require("../../script/utils/logs");
+var logger_1 = require("../../script/utils/logger");
 var PerfCommand = /** @class */ (function (_super) {
     __extends(PerfCommand, _super);
     function PerfCommand() {
@@ -55,7 +58,7 @@ var PerfCommand = /** @class */ (function (_super) {
     }
     PerfCommand.prototype.execute = function (args, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var optAndUnopt, extended, _i, options_1, opt, units;
+            var optAndUnopt, extended, silent, diff, _i, options_1, opt, units;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -69,6 +72,8 @@ var PerfCommand = /** @class */ (function (_super) {
                         }
                         optAndUnopt = false;
                         extended = false;
+                        silent = false;
+                        diff = false;
                         for (_i = 0, options_1 = options; _i < options_1.length; _i++) {
                             opt = options_1[_i];
                             switch (opt) {
@@ -78,12 +83,26 @@ var PerfCommand = /** @class */ (function (_super) {
                                 case 'extended':
                                     extended = true;
                                     break;
+                                case 'silent':
+                                    silent = true;
+                                    break;
+                                case 'diff':
+                                    diff = true;
+                                    break;
                             }
                         }
                         units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
                         return [4 /*yield*/, perf_1.perf(units, optAndUnopt)];
                     case 1:
                         _a.sent();
+                        if (!silent) {
+                            logs_1.printPerfLog(io_1.latestPerfLog());
+                        }
+                        if (diff) {
+                            if (!logs_1.printLatestDiff()) {
+                                logger_1.default.info("No previous perf logs exist.");
+                            }
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -96,7 +115,7 @@ var PerfCommand = /** @class */ (function (_super) {
         return 'Run the perf suite.';
     };
     PerfCommand.prototype.validOptions = function () {
-        return ['optAndUnopt', 'extended'];
+        return ['optAndUnopt', 'extended', 'silent', 'diff'];
     };
     PerfCommand.prototype.parent = function () {
         return 'solstl';

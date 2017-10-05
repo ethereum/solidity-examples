@@ -38,14 +38,18 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
 var tests_1 = require("../../script/tests");
-var logger_1 = require("../../script/utils/logger");
+var logs_1 = require("../../script/utils/logs");
+var io_1 = require("../../script/utils/io");
 exports.testsMenu = function () { return __awaiter(_this, void 0, void 0, function () {
-    var selected, units, _i, _a, tst, err_1;
+    var selected, units, _i, _a, tst;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, utils_1.prompt(utils_1.librarySelectionData('tests'))];
             case 1:
                 selected = _b.sent();
+                if (selected.tests.length === 0) {
+                    return [2 /*return*/];
+                }
                 units = [];
                 for (_i = 0, _a = selected.tests; _i < _a.length; _i++) {
                     tst = _a[_i];
@@ -56,18 +60,11 @@ exports.testsMenu = function () { return __awaiter(_this, void 0, void 0, functi
                         units.push(tst);
                     }
                 }
-                _b.label = 2;
-            case 2:
-                _b.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, tests_1.test(units, false)];
-            case 3:
+            case 2:
                 _b.sent();
-                return [3 /*break*/, 5];
-            case 4:
-                err_1 = _b.sent();
-                logger_1.default.error(err_1.message);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                logs_1.printTestLog(io_1.latestTestLog());
+                return [2 /*return*/];
         }
     });
 }); };

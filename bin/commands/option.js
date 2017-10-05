@@ -23,7 +23,8 @@ exports.OPTIONS = {
     version: new Option('version', 'V', 'Show the current version.'),
     optAndUnopt: new Option('optAndUnopt', 'O', 'Run the suit both with optimized and un-opttimized code.'),
     extended: new Option('extended', 'E', 'Include the extended tests/performance units.'),
-    silentTests: new Option('silentTests', 'S', 'Only failed tests are reported in the console.')
+    silent: new Option('silent', 'S', 'Do not show a detailed results from tests or perf.'),
+    diff: new Option('diff', 'D', 'Compare perf results with the results from the previous perf (if any).')
 };
 exports.GLOBAL_OPTIONS = {
     debug: new Option('debug', 'D', 'Enable debug logging.')

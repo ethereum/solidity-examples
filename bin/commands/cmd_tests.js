@@ -48,7 +48,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
 var constants_1 = require("../../script/constants");
 var tests_1 = require("../../script/tests");
-var test_logger_1 = require("../../script/utils/test_logger");
+var logs_1 = require("../../script/utils/logs");
+var io_1 = require("../../script/utils/io");
 var TestsCommand = /** @class */ (function (_super) {
     __extends(TestsCommand, _super);
     function TestsCommand() {
@@ -56,7 +57,7 @@ var TestsCommand = /** @class */ (function (_super) {
     }
     TestsCommand.prototype.execute = function (args, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var optAndUnopt, extended, _i, options_1, opt, units;
+            var optAndUnopt, extended, silent, _i, options_1, opt, units, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -70,6 +71,7 @@ var TestsCommand = /** @class */ (function (_super) {
                         }
                         optAndUnopt = false;
                         extended = false;
+                        silent = false;
                         for (_i = 0, options_1 = options; _i < options_1.length; _i++) {
                             opt = options_1[_i];
                             switch (opt) {
@@ -79,14 +81,20 @@ var TestsCommand = /** @class */ (function (_super) {
                                 case 'extended':
                                     extended = true;
                                     break;
-                                case 'silentTests':
-                                    test_logger_1.default.setSilent(true);
+                                case 'silent':
+                                    silent = true;
                             }
                         }
                         units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
                         return [4 /*yield*/, tests_1.test(units, optAndUnopt)];
                     case 1:
-                        _a.sent();
+                        result = _a.sent();
+                        if (!silent) {
+                            logs_1.printTestLog(io_1.latestTestLog());
+                        }
+                        if (!result) {
+                            throw new Error("At least one test failed.");
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -99,7 +107,7 @@ var TestsCommand = /** @class */ (function (_super) {
         return 'Run the test suite.';
     };
     TestsCommand.prototype.validOptions = function () {
-        return ['optAndUnopt', 'extended', 'silentTests'];
+        return ['optAndUnopt', 'extended', 'silent'];
     };
     TestsCommand.prototype.parent = function () {
         return 'solstl';

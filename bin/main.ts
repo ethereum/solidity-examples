@@ -47,22 +47,18 @@ const parseShortFormOption = (sfo: string): string => {
     return opt;
 };
 
-export const run = async () => {
+export const run = async (input: string[]) => {
 
-    // Keep track of added options. Can't use 'Set' unfortunately.
     const optsfnd = {};
-
-    // If there are no arguments, run 'help' for the main/root command.
-    if (process.argv.length < 3) {
-        await COMMANDS['solstl'].execute([], ['help']);
-        return;
-    }
-
     const args = [];
     const globalOptions = [];
     const options = [];
 
-    const input = process.argv.slice(2);
+    if (input.length === 0) {
+        COMMANDS['solstl'].printHelp();
+        return;
+    }
+
     // Keep processing the first argument in the array.
     for (const ipt of input) {
         if (ipt.substr(0, 2) === '--') {
@@ -142,7 +138,7 @@ export const run = async () => {
 
 (async () => {
     try {
-        await run();
+        await run(process.argv.slice(2));
     } catch (error) {
         Logger.error(error.message);
         if (Logger.level() === 'debug') {

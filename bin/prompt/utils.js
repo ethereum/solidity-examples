@@ -114,7 +114,7 @@ exports.LIB_CHOICES = [{
 exports.librarySelectionData = function (name) {
     return {
         type: 'checkbox',
-        message: 'Select libraries',
+        message: 'Pick libraries (choose none to go back)',
         name: name,
         choices: [
             {
@@ -145,13 +145,7 @@ exports.librarySelectionData = function (name) {
                 name: 'Extended',
                 value: constants_1.UNITS_EXTENDED
             },
-        ],
-        validate: function (answers) {
-            if (answers.length < 1) {
-                return 'You must choose at least one library.';
-            }
-            return true;
-        }
+        ]
     };
 };
 exports.printDelim = function (text) {

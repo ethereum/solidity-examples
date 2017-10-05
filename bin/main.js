@@ -78,22 +78,19 @@ var parseShortFormOption = function (sfo) {
     }
     return opt;
 };
-exports.run = function () { return __awaiter(_this, void 0, void 0, function () {
-    var optsfnd, args, globalOptions, options, input, _i, input_1, ipt, opt, gOpt, lOpt, opt, gOpt, lOpt, cmdName, cmd;
+exports.run = function (input) { return __awaiter(_this, void 0, void 0, function () {
+    var optsfnd, args, globalOptions, options, _i, input_1, ipt, opt, gOpt, lOpt, opt, gOpt, lOpt, cmdName, cmd;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 optsfnd = {};
-                if (!(process.argv.length < 3)) return [3 /*break*/, 2];
-                return [4 /*yield*/, commands_1.COMMANDS['solstl'].execute([], ['help'])];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-            case 2:
                 args = [];
                 globalOptions = [];
                 options = [];
-                input = process.argv.slice(2);
+                if (input.length === 0) {
+                    commands_1.COMMANDS['solstl'].printHelp();
+                    return [2 /*return*/];
+                }
                 // Keep processing the first argument in the array.
                 for (_i = 0, input_1 = input; _i < input_1.length; _i++) {
                     ipt = input_1[_i];
@@ -160,24 +157,24 @@ exports.run = function () { return __awaiter(_this, void 0, void 0, function () 
                 }
                 // Handle all the global options (such as setting the log level).
                 handleGlobalOptions(globalOptions);
-                if (!(args.length === 0)) return [3 /*break*/, 4];
+                if (!(args.length === 0)) return [3 /*break*/, 2];
                 // No arguments
                 return [4 /*yield*/, commands_1.COMMANDS['solstl'].execute([], options)];
-            case 3:
+            case 1:
                 // No arguments
                 _a.sent();
-                return [3 /*break*/, 6];
-            case 4:
+                return [3 /*break*/, 4];
+            case 2:
                 cmdName = args[0];
                 cmd = commands_1.COMMANDS[cmdName];
                 if (!cmd) {
                     throw new Error("Unknown command: " + cmdName);
                 }
                 return [4 /*yield*/, cmd.execute(args.slice(1), options)];
-            case 5:
+            case 3:
                 _a.sent();
-                _a.label = 6;
-            case 6: return [2 /*return*/];
+                _a.label = 4;
+            case 4: return [2 /*return*/];
         }
     });
 }); };
@@ -187,7 +184,7 @@ exports.run = function () { return __awaiter(_this, void 0, void 0, function () 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, exports.run()];
+                return [4 /*yield*/, exports.run(process.argv.slice(2))];
             case 1:
                 _a.sent();
                 return [3 /*break*/, 3];

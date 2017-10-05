@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import Logger from "./logger";
+import {PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, TEST_LOGS} from "../constants";
 
 export const print = (text: string) => {
     process.stdout.write(text);
@@ -17,7 +18,7 @@ export const readText = (filePath: string): string => {
 
 export const rmrf = (pth: string): void => {
     if (fs.existsSync(pth)) {
-        fs.readdirSync(pth).forEach((file, index) => {
+        fs.readdirSync(pth).forEach((file) => {
             const curPath = pth + "/" + file;
             if (fs.lstatSync(curPath).isDirectory()) { // recurse
                 rmrf(curPath);
@@ -64,8 +65,38 @@ export const writeLog = (log: object, dir: string, name: string): void => {
 };
 
 export const readLog = (dir: string, name: string): object => {
-    const latestOptStr = fs.readFileSync(path.join(dir, name)).toString();
-    return JSON.parse(latestOptStr);
+    const optStr = fs.readFileSync(path.join(dir, name)).toString();
+    return JSON.parse(optStr);
+};
+
+export const latestPerfLog = (optimized: boolean = true): object => {
+    const latest = readLatest(PERF_LOGS);
+    if (latest === '') {
+        throw new Error(`No perf-logs found.`);
+    }
+    const file = optimized ? RESULTS_NAME_OPTIMIZED : RESULTS_NAME_UNOPTIMIZED;
+    return readLog(latest, file);
+};
+
+export const latestTestLog = (optimized: boolean = true): object => {
+    const latest = readLatest(TEST_LOGS);
+    if (latest === '') {
+        throw new Error(`No test-logs found.`);
+    }
+    const file = optimized ? RESULTS_NAME_OPTIMIZED : RESULTS_NAME_UNOPTIMIZED;
+    return readLog(latest, file);
+};
+
+export const indexedLogFolders = (baseDir: string, maxEntries: number = 20): string[] => {
+    const files = fs.readdirSync(baseDir);
+    const logFolders = files.filter((file) => {
+        if (!fs.statSync(path.join(baseDir, file)).isDirectory()) {
+            return false;
+        }
+        const num = parseInt(file, 10);
+        return !isNaN(num) && num > 0;
+    }).sort().reverse();
+    return logFolders.length > maxEntries ? logFolders.slice(0, maxEntries) : logFolders;
 };
 
 export const isSigInHashes = (dir: string, sigfile: string, sig: string): boolean => {

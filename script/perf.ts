@@ -8,6 +8,7 @@ import {
 import {compilePerf, version as solcVersion} from "./exec/solc";
 import {run, version as evmVersion} from './exec/evm';
 import * as jsondiffpatch from 'jsondiffpatch';
+import TestLogger from "./utils/test_logger";
 
 export const perf = async (units: Array<[string, string]>, optAndUnopt: boolean = false) => {
     // Set up paths and check versions of the required tools.
@@ -37,17 +38,6 @@ export const perf = async (units: Array<[string, string]>, optAndUnopt: boolean 
         writeLog(logU, logsPath, RESULTS_NAME_UNOPTIMIZED);
     }
 
-    // Diffs
-    const latest = readLatest(PERF_LOGS);
-    if (latest !== '') {
-        const latestResults = readLog(latest, RESULTS_NAME_OPTIMIZED);
-        const diff = jsondiffpatch.diff(latestResults, log);
-        if (diff) {
-            const output = jsondiffpatch.formatters.console.format(diff);
-            console.log("Changes since last run:");
-            console.log(output);
-        }
-    }
     writeLatest(PERF_LOGS, logsPath);
 };
 
@@ -67,7 +57,7 @@ export const runPerf = () => {
         return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
     });
     const results = {};
-
+    TestLogger.header("Running perf...");
     for (const sigfile of sigfiles) {
         if (!isSigInHashes(PERF_BIN, sigfile, PERF_FUN_HASH)) {
             throw new Error(`No perf function in signature file: ${sigfile}`);
@@ -78,6 +68,7 @@ export const runPerf = () => {
         const gasUsed = parseData(result);
         results[name] = {gasUsed};
     }
+    TestLogger.header("Done");
     return results;
 };
 

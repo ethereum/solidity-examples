@@ -70,30 +70,46 @@ library Bytes {
         return ret;
     }
 
-    /*
-     * @dev Returns the length of a null-terminated bytes32 string.
-     * @param self The value to find the length of.
-     * @return The length of the string, from 0 to 32.
-     *
-     */
+    // Find the lowest byte set of a bytes32. This function uses the same convention
+    // as bytesN index access, and counts from the most significant byte.
+    // lowestByteSet(0x01) = 31;
+    // lowestByteSet(0x0100) = 30;
+    // lowestByteSet("abc") = 0;
     function lowestByteSet(bytes32 self) internal pure returns (uint) {
+        return 31 - highestByteSet(uint(self));
+    }
+
+    // Find the lowest byte set of a bytes32. This function uses the same convention
+    // as bytesN index access, and counts from the most significant byte.
+    // lowestByteSet(0x01) = 31;
+    // lowestByteSet(0x0100) = 30;
+    // lowestByteSet("abc") = 2;
+    function highestByteSet(bytes32 self) internal pure returns (uint) {
+        return 31 - lowestByteSet(uint(self));
+    }
+
+    // Find the lowest byte set of a uint. This function counts from the least
+    // significant byte.
+    // lowestByteSet(0x01) = 0;
+    // lowestByteSet(0xbb00aa00) = 1; (aa)
+    function lowestByteSet(uint self) internal pure returns (uint) {
         require(self != 0);
         uint ret;
         if (self & 0xffffffffffffffffffffffffffffffff == 0) {
             ret += 16;
-            self = bytes32(uint(self) >> 128);
+            self >>= 128;
         }
         if (self & 0xffffffffffffffff == 0) {
             ret += 8;
-            self = bytes32(uint(self) >> 64);
+            self >>= 64;
         }
         if (self & 0xffffffff == 0) {
             ret += 4;
-            self = bytes32(uint(self) >> 32);
+            self >>= 32;
         }
         if (self & 0xffff == 0) {
             ret += 2;
-            self = bytes32(uint(self) >> 16);
+            self >>= 16;
         }
         if (self & 0xff == 0) {
             ret += 1;
@@ -101,26 +117,28 @@ library Bytes {
         return ret;
     }
 
-    function highestByteSet(bytes32 self) internal pure returns (uint) {
+    // Find the lowest byte set of a uint. This function counts from the least
+    // significant byte.
+    // highestByteSet(0x01) = 0;
+    // highestByteSet(0xbb00aa00) = 3; (bb)
+    function highestByteSet(uint self) internal pure returns (uint) {
         require(self != 0);
         uint ret;
-        if (self == 0)
-        return 0;
         if (self & 0xffffffffffffffffffffffffffffffff00000000000000000000000000000000 != 0) {
             ret += 16;
-            self = bytes32(uint(self) >> 128);
+            self >>= 128;
         }
         if (self & 0xffffffffffffffff0000000000000000 != 0) {
             ret += 8;
-            self = bytes32(uint(self) >> 64);
+            self >>= 64;
         }
         if (self & 0xffffffff00000000 != 0) {
             ret += 4;
-            self = bytes32(uint(self) >> 32);
+            self >>= 32;
         }
         if (self & 0xffff0000 != 0) {
             ret += 2;
-            self = bytes32(uint(self) >> 16);
+            self >>= 16;
         }
         if (self & 0xff00 != 0) {
             ret += 1;
@@ -128,16 +146,15 @@ library Bytes {
         return ret;
     }
 
-    // Shaves of leading 0 bytes and writes the remaining string to a 'memory bytes'
+    // Shaves of trailing 0-bytes and writes the remaining string to a 'memory bytes'
     function toBytes(bytes32 b32) internal pure returns (bytes memory bts) {
         if (b32 == 0) {
             return;
         }
-        uint lbs = lowestByteSet(b32);
-        uint bu = uint(b32);
-        bts = new bytes(32 - lbs);
+        uint hbs = highestByteSet(b32);
+        bts = new bytes(hbs + 1);
         assembly {
-            mstore(add(bts, 0x20), bu)
+            mstore(add(bts, 0x20), b32)
         }
         return bts;
     }

@@ -7,5 +7,4 @@ import {STLPerf} from "../STLPerf.sol";
 
 
 contract PerfPatriciaTree is STLPerf {
-    function perfImpl() internal {}
 }

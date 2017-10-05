@@ -2,9 +2,13 @@
   "name": "solidity-examples",
   "version": "0.1.0",
   "description": "Standard contracts",
-  "main": "index.js",
+  "bin": {
+    "solstl": "./bin/main.js"
+  },
   "scripts": {
-    "test": "node ./bin/main.js tests --silentTests"
+    "test": "jest && node ./bin/main.js tests --silent",
+    "contract-tests": "node ./bin/main.js tests",
+    "contract-perf": "node ./bin/main.js perf"
   },
   "repository": {
     "type": "git",
@@ -15,19 +19,33 @@
   "bugs": {
     "url": "https://github.com/ethereum/solidity-examples/issues"
   },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
+  },
   "homepage": "https://github.com/ethereum/solidity-examples#readme",
   "devDependencies": {
+    "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.28",
+    "jest": "^21.2.1",
+    "ts-jest": "^21.0.1",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "@types/jest": "^21.1.2",
+    "@types/jest-matchers": "^20.0.0",
     "chalk": "^2.1.0",
     "inquirer": "^3.2.3",
     "jsondiffpatch": "^0.2.4",
     "marked": "^0.3.6",
     "marked-terminal": "^2.0.0",
-    "mkdirp": "^0.5.1",
-    "z-schema": "^3.18.3"
+    "mkdirp": "^0.5.1"
   }
 }

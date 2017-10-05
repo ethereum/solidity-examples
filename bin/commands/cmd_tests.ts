@@ -2,6 +2,8 @@ import {Command} from "./command";
 import {UNITS, UNITS_EXTENDED} from "../../script/constants";
 import {test} from "../../script/tests";
 import TestLogger from "../../script/utils/test_logger";
+import {printTestLog} from "../../script/utils/logs";
+import {latestTestLog} from "../../script/utils/io";
 
 export class TestsCommand extends Command {
 
@@ -16,6 +18,7 @@ export class TestsCommand extends Command {
         }
         let optAndUnopt = false;
         let extended = false;
+        let silent = false;
         for (const opt of options) {
             switch (opt) {
                 case 'optAndUnopt':
@@ -24,12 +27,18 @@ export class TestsCommand extends Command {
                 case 'extended':
                     extended = true;
                     break;
-                case 'silentTests':
-                    TestLogger.setSilent(true);
+                case 'silent':
+                    silent = true;
             }
         }
         const units = extended ? UNITS_EXTENDED : UNITS;
-        await test(units, optAndUnopt);
+        const result = await test(units, optAndUnopt);
+        if (!silent) {
+            printTestLog(latestTestLog());
+        }
+        if (!result) {
+            throw new Error(`At least one test failed.`);
+        }
     }
 
     public name(): string {
@@ -41,7 +50,7 @@ export class TestsCommand extends Command {
     }
 
     public validOptions(): string[] {
-        return ['optAndUnopt', 'extended', 'silentTests'];
+        return ['optAndUnopt', 'extended', 'silent'];
     }
 
     public parent(): string {

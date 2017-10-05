@@ -9,8 +9,7 @@ import {STLTest} from "../STLTest.sol";
 /*******************************************************/
 
 contract BytesTest is STLTest {
-    using Bytes for bytes;
-    using Bytes for bytes32;
+    using Bytes for *;
 
     uint constant ZERO = uint(0);
     uint constant ONE = uint(1);
@@ -19,7 +18,7 @@ contract BytesTest is STLTest {
     bytes32 constant B32_ZERO = bytes32(0);
 }
 
-/*******************************************************/
+/************************** Equals ***************************/
 
 contract TestBytesEqualsItselfWhenNull is BytesTest {
     function testImpl() internal {
@@ -72,6 +71,7 @@ contract TestBytesEqualsNotEqualCommutative is BytesTest {
     }
 }
 
+/************************** EqualsRef ***************************/
 
 contract TestBytesEqualsRef is BytesTest {
     function testImpl() internal {
@@ -98,6 +98,7 @@ contract TestBytesEqualsRefFailNotEqualCommutative is BytesTest {
     }
 }
 
+/************************** Copy ***************************/
 
 contract TestBytesCopyNull is BytesTest {
     function testImpl() internal {
@@ -139,6 +140,7 @@ contract TestBytesCopyDoesNotMutate is BytesTest {
     }
 }
 
+/************************** Copy with start index ***************************/
 
 contract TestBytesCopyWithStartIndex is BytesTest {
     function testImpl() internal {
@@ -172,6 +174,7 @@ contract TestBytesCopyWithStartIndexThrowsIndexOOB is BytesTest {
     }
 }
 
+/************************** Copy with start index and length ***************************/
 
 contract TestBytesCopyWithStartIndexAndLen is BytesTest {
     function testImpl() internal {
@@ -233,6 +236,7 @@ contract TestBytesCopyWithStartIndexAndLenThrowsIndexPlusLengthOOB is BytesTest 
     }
 }
 
+/************************** Concat ***************************/
 
 contract TestBytesConcatNull is BytesTest {
     function testImpl() internal {
@@ -307,75 +311,130 @@ contract TestBytesConcatDoesNotMutate is BytesTest {
 }
 
 
-contract TestBytesLowestByteSetAllHigherSet is BytesTest {
+/******************* bytes32 highest/lowest byte set ******************/
+
+contract TestBytesBytes32HighestByteSetWithAllLowerSet is BytesTest {
     function testImpl() internal {
         for (uint8 i = 0; i < 32; i++) {
-            assert(bytes32(ONES << 8*i).lowestByteSet() == i);
+            assert(bytes32(ONES << 8*i).highestByteSet() == 31 - i);
         }
     }
 }
 
 
-contract TestBytesLowestByteSetSingleByte is BytesTest {
+contract TestBytesBytes32HighestByteSetWithSingleByte is BytesTest {
     function testImpl() internal {
         for (uint8 i = 0; i < 32; i++) {
-            assert(bytes32(ONE << 8*i).lowestByteSet() == i);
+            assert(bytes32(ONE << 8*i).highestByteSet() == 31 - i);
         }
     }
 }
 
 
-contract TestBytesLowestByteSetThrowsBytes32IsZero is BytesTest {
-    function testImpl() internal {
-        B32_ZERO.lowestByteSet();
-    }
-}
-
-
-contract TestBytesHighestByteSetAllLowerSet is BytesTest {
-    function testImpl() internal {
-        for (uint8 i = 0; i < 31; i++) {
-            assert(bytes32(ONES >> 8*i).highestByteSet() == (31 - i));
-        }
-    }
-}
-
-
-contract TestBytesHighestByteSetSingleByte is BytesTest {
-    function testImpl() internal {
-        for (uint8 i = 0; i < 32; i++) {
-            assert(bytes32(ONE << 8*i).highestByteSet() == i);
-        }
-    }
-}
-
-
-contract TestBytesHighestByteSetThrowsBytes32IsZero is BytesTest {
+contract TestBytesBytes32HighestByteSetThrowsBytes32IsZero is BytesTest {
     function testImpl() internal {
         B32_ZERO.highestByteSet();
     }
 }
 
 
-contract TestBytesToBytes32HighOrderBytes is BytesTest {
+contract TestBytesBytes32LowestByteSetWithAllHigherSet is BytesTest {
     function testImpl() internal {
-        var bts = bytes32(hex"11223344").toBytes();
-        bytes memory btsExp = hex"11223344";
-        assert(bts.equals(btsExp));
+        for (uint8 i = 0; i < 31; i++) {
+            assert(bytes32(ONES >> 8*i).lowestByteSet() == i);
+        }
     }
 }
 
 
-contract TestBytesToBytes32LowOrderBytes is BytesTest {
+contract TestBytesBytes32LowestByteSetWithSingleByte is BytesTest {
     function testImpl() internal {
-        var bts = bytes32(0x11223344).toBytes();
-        bytes memory btsExp = hex"0000000000000000000000000000000000000000000000000000000011223344";
-        assert(bts.equals(btsExp));
+        for (uint8 i = 0; i < 32; i++) {
+            assert(bytes32(ONE << 8*i).lowestByteSet() == 31 - i);
+        }
     }
 }
 
 
-contract TestBytesToBytes32Zero is BytesTest {
+contract TestBytesBytes32LowestByteSetThrowsBytes32IsZero is BytesTest {
+    function testImpl() internal {
+        B32_ZERO.lowestByteSet();
+    }
+}
+
+/******************* uint highest/lowest byte set ******************/
+
+
+contract TestBytesUintHighestByteSetWithAllLowerSet is BytesTest {
+    function testImpl() internal {
+        for (uint8 i = 0; i < 31; i++) {
+            assert((ONES >> 8*i).highestByteSet() == (31 - i));
+        }
+    }
+}
+
+
+contract TestBytesUintHighestByteSetWithSingleByte is BytesTest {
+    function testImpl() internal {
+        for (uint8 i = 0; i < 32; i++) {
+            assert((ONE << 8*i).highestByteSet() == i);
+        }
+    }
+}
+
+
+contract TestBytesUintHighestByteSetThrowsBytes32IsZero is BytesTest {
+    function testImpl() internal {
+        ZERO.highestByteSet();
+    }
+}
+
+
+contract TestBytesUintLowestByteSetWithAllHigherSet is BytesTest {
+    function testImpl() internal {
+        for (uint8 i = 0; i < 32; i++) {
+            assert((ONES << 8*i).lowestByteSet() == i);
+        }
+    }
+}
+
+
+contract TestBytesUintLowestByteSetWithSingleByte is BytesTest {
+    function testImpl() internal {
+        for (uint8 i = 0; i < 32; i++) {
+            assert((ONE << 8*i).lowestByteSet() == i);
+        }
+    }
+}
+
+
+contract TestBytesUintLowestByteSetThrowsBytes32IsZero is BytesTest {
+    function testImpl() internal {
+        ZERO.lowestByteSet();
+    }
+}
+
+/******************* bytes32 toBytes ******************/
+
+contract TestBytesBytes32ToBytesHighOrder is BytesTest {
+    function testImpl() internal {
+        var bts = bytes32("abc").toBytes();
+        string memory str = "abc";
+        assert(bts.equals(bytes(str)));
+    }
+}
+
+
+contract TestBytesBytes32ToBytesLowOrder is BytesTest {
+    function testImpl() internal {
+        var bts = bytes32(0x112233).toBytes();
+        bytes memory btsExpctd = hex"0000000000000000000000000000000000000000000000000000000000112233";
+        assert(bts.equals(btsExpctd));
+    }
+}
+
+
+contract TestBytesBytes32ToBytesZero is BytesTest {
     function testImpl() internal {
         var bts = B32_ZERO.toBytes();
         bytes memory btsExp = new bytes(0);

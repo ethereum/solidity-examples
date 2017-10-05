@@ -40,6 +40,7 @@ var utils_1 = require("./utils");
 var docs_prompt_1 = require("./docs_prompt");
 var tests_prompt_1 = require("./tests_prompt");
 var perf_prompt_1 = require("./perf_prompt");
+var logs_prompt_1 = require("./logs_prompt");
 exports.mainPrompt = {
     type: 'list',
     name: 'main',
@@ -79,28 +80,29 @@ exports.mainMenu = function () { return __awaiter(_this, void 0, void 0, functio
                     case "tests": return [3 /*break*/, 2];
                     case "perf": return [3 /*break*/, 4];
                     case "logs": return [3 /*break*/, 6];
-                    case "docs": return [3 /*break*/, 7];
-                    case "exit": return [3 /*break*/, 9];
+                    case "docs": return [3 /*break*/, 8];
+                    case "exit": return [3 /*break*/, 10];
                 }
-                return [3 /*break*/, 10];
+                return [3 /*break*/, 11];
             case 2: return [4 /*yield*/, tests_prompt_1.testsMenu()];
             case 3:
                 _b.sent();
-                return [3 /*break*/, 11];
+                return [3 /*break*/, 12];
             case 4: return [4 /*yield*/, perf_prompt_1.perfMenu()];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 11];
-            case 6: 
-            // await logsMenu();
-            return [3 /*break*/, 11];
-            case 7: return [4 /*yield*/, docs_prompt_1.docsMenu()];
-            case 8:
+                return [3 /*break*/, 12];
+            case 6: return [4 /*yield*/, logs_prompt_1.logsMenu()];
+            case 7:
                 _b.sent();
-                return [3 /*break*/, 11];
-            case 9: return [2 /*return*/, true];
-            case 10: return [2 /*return*/, false];
+                return [3 /*break*/, 12];
+            case 8: return [4 /*yield*/, docs_prompt_1.docsMenu()];
+            case 9:
+                _b.sent();
+                return [3 /*break*/, 12];
+            case 10: return [2 /*return*/, true];
             case 11: return [2 /*return*/, false];
+            case 12: return [2 /*return*/, false];
         }
     });
 }); };

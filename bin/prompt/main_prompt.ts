@@ -2,6 +2,7 @@ import {EXIT_CHOICE, prompt, SEPARATOR} from "./utils";
 import {docsMenu} from "./docs_prompt";
 import {testsMenu} from "./tests_prompt";
 import {perfMenu} from "./perf_prompt";
+import {logsMenu} from "./logs_prompt";
 
 export const mainPrompt = {
     type: 'list',
@@ -41,7 +42,7 @@ export const mainMenu = async (): Promise<boolean> => {
             await perfMenu();
             break;
         case "logs":                             // Options
-            // await logsMenu();
+            await logsMenu();
             break;
         case "docs":                             // Options
             await docsMenu();

@@ -75,10 +75,8 @@ exports.test = function (tests, optAndUnopt) { return __awaiter(_this, void 0, v
                 io_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
                 _a.label = 3;
             case 3:
-                if (!ret.success && (!optAndUnopt || retU.success)) {
-                    throw new Error("One or more tests failed.");
-                }
-                return [2 /*return*/];
+                io_1.writeLatest(constants_1.TEST_LOGS, logsPath);
+                return [2 /*return*/, ret.success && (!optAndUnopt || retU.success)];
         }
     });
 }); };
@@ -114,7 +112,7 @@ exports.runTests = function (optimize) {
     var results = {};
     var tests = 0;
     var failed = 0;
-    test_logger_1.default.header("Running tests...");
+    test_logger_1.default.header('Running tests...');
     for (var _i = 0, sigfiles_1 = sigfiles; _i < sigfiles_1.length; _i++) {
         var sigfile = sigfiles_1[_i];
         if (!io_1.isSigInHashes(constants_1.TEST_BIN, sigfile, constants_1.TEST_FUN_HASH)) {
@@ -127,28 +125,16 @@ exports.runTests = function (optimize) {
         var passed = true;
         tests++;
         if (throws && result) {
+            failed++;
             passed = false;
         }
         else if (!throws && !result) {
-            passed = false;
-        }
-        if (passed) {
-            test_logger_1.default.success(name + ": PASSED");
-        }
-        else {
             failed++;
-            test_logger_1.default.fail(name + ": FAILED");
+            passed = false;
         }
         results[name] = { passed: passed };
     }
-    test_logger_1.default.header('');
-    test_logger_1.default.header("Ran " + tests + " tests.");
-    if (failed !== 0) {
-        test_logger_1.default.fail(failed + " tests FAILED.");
-    }
-    else {
-        test_logger_1.default.success("All tests PASSED");
-    }
+    test_logger_1.default.header("Done");
     return {
         success: failed === 0,
         results: results

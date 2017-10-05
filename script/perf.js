@@ -42,11 +42,11 @@ var constants_1 = require("./constants");
 var io_1 = require("./utils/io");
 var solc_1 = require("./exec/solc");
 var evm_1 = require("./exec/evm");
-var jsondiffpatch = require("jsondiffpatch");
+var test_logger_1 = require("./utils/test_logger");
 exports.perf = function (units, optAndUnopt) {
     if (optAndUnopt === void 0) { optAndUnopt = false; }
     return __awaiter(_this, void 0, void 0, function () {
-        var solcV, evmV, ret, log, logsPath, retU, logU, latest, latestResults, diff, output;
+        var solcV, evmV, ret, log, logsPath, retU, logU;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -76,16 +76,6 @@ exports.perf = function (units, optAndUnopt) {
                     io_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
                     _a.label = 3;
                 case 3:
-                    latest = io_1.readLatest(constants_1.PERF_LOGS);
-                    if (latest !== '') {
-                        latestResults = io_1.readLog(latest, constants_1.RESULTS_NAME_OPTIMIZED);
-                        diff = jsondiffpatch.diff(latestResults, log);
-                        if (diff) {
-                            output = jsondiffpatch.formatters.console.format(diff);
-                            console.log("Changes since last run:");
-                            console.log(output);
-                        }
-                    }
                     io_1.writeLatest(constants_1.PERF_LOGS, logsPath);
                     return [2 /*return*/];
             }
@@ -122,6 +112,7 @@ exports.runPerf = function () {
         return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
     });
     var results = {};
+    test_logger_1.default.header("Running perf...");
     for (var _i = 0, sigfiles_1 = sigfiles; _i < sigfiles_1.length; _i++) {
         var sigfile = sigfiles_1[_i];
         if (!io_1.isSigInHashes(constants_1.PERF_BIN, sigfile, constants_1.PERF_FUN_HASH)) {
@@ -133,6 +124,7 @@ exports.runPerf = function () {
         var gasUsed = parseData(result);
         results[name] = { gasUsed: gasUsed };
     }
+    test_logger_1.default.header("Done");
     return results;
 };
 var parseData = function (output) { return parseInt(output, 16); };
