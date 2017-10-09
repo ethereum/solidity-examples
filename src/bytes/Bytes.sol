@@ -4,17 +4,13 @@ pragma experimental "ABIEncoderV2";
 
 import {Memory} from "../unsafe/Memory.sol";
 
-/*
- * title: Bytes
- * author: Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
+
+/**
+ * @title: Bytes
+ * @author: Andreas Olofsson (androlo@tutanota.de)
  */
 library Bytes {
 
-    // Check if two 'bytes memory' are equal. Equality is defined as such:
-    // firstBytes.length == secondBytes.length (= length)
-    // for 0 <= i < length, firstBytes[i] == secondBytes[i]
     function equals(bytes memory self, bytes memory other) internal pure returns (bool equal) {
         if (self.length != other.length) {
             return false;
@@ -117,10 +113,6 @@ library Bytes {
         return ret;
     }
 
-    // Find the lowest byte set of a uint. This function counts from the least
-    // significant byte.
-    // highestByteSet(0x01) = 0;
-    // highestByteSet(0xbb00aa00) = 3; (bb)
     function highestByteSet(uint self) internal pure returns (uint) {
         require(self != 0);
         uint ret;
@@ -146,7 +138,6 @@ library Bytes {
         return ret;
     }
 
-    // Shaves of trailing 0-bytes and writes the remaining string to a 'memory bytes'
     function toBytes(bytes32 b32) internal pure returns (bytes memory bts) {
         if (b32 == 0) {
             return;
@@ -158,5 +149,4 @@ library Bytes {
         }
         return bts;
     }
-
 }

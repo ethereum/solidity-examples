@@ -1,0 +1,19 @@
+{
+  "extends": "default",
+  "rules": {
+    "no-complex-fallback": "warn",
+    "indent": [
+      "error",
+      4
+    ],
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "max-line-length": [
+      "error",
+      140
+    ],
+    "compiler-fixed": false
+  }
+}

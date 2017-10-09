@@ -81,7 +81,7 @@ exports.compilePerf = function (subdir, perf, optimize) {
 exports.compile = function (filePath, outDir, optimize) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) {
-                var cmd = "solc .= --bin-runtime --hashes --overwrite " + (optimize ? "--optimize" : "") + " -o " + outDir + " " + filePath;
+                var cmd = "solc .= --bin-runtime --hashes --metadata --overwrite " + (optimize ? "--optimize" : "") + " -o " + outDir + " " + filePath;
                 exec(cmd, { cwd: constants_1.ROOT_PATH }, function (err, stdoud, stderr) {
                     var ret = stderr.toString();
                     logger_1.default.debug(ret);

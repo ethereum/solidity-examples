@@ -6,6 +6,7 @@ import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
 import {PatriciaTree} from "./PatriciaTree.sol";
 
+
 /*
  * title: Data
  * author:
@@ -28,10 +29,10 @@ contract PatriciaTreeImpl is PatriciaTree {
     // The current root hash, keccak256(node(path_M('')), path_M(''))
     bytes32 public root;
 
-    Data.Edge rootEdge;
+    Data.Edge internal rootEdge;
 
     // Particia tree nodes (hash to decoded contents)
-    mapping (bytes32 => Data.Node) nodes;
+    mapping(bytes32 => Data.Node) internal nodes;
 
     function getNode(bytes32 hash) public view returns (Data.Node n) {
         n = nodes[hash];
@@ -39,15 +40,6 @@ contract PatriciaTreeImpl is PatriciaTree {
 
     function getRootEdge() public view returns (Data.Edge e) {
         e = rootEdge;
-    }
-
-    function edgeHash(Data.Edge memory e) internal pure returns (bytes32) {
-        return keccak256(e.node, e.label.length, e.label.data);
-    }
-
-    // Returns the hash of the encoding of a node.
-    function hash(Data.Node memory n) internal pure returns (bytes32) {
-        return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
     }
 
     // Returns the Merkle-proof for the given key
@@ -113,8 +105,7 @@ contract PatriciaTreeImpl is PatriciaTree {
             // Empty Trie
             e.label = k;
             e.node = valueHash;
-        }
-        else {
+        } else {
             e = insertAtEdge(rootEdge, k, valueHash);
         }
         root = edgeHash(e);
@@ -136,12 +127,10 @@ contract PatriciaTreeImpl is PatriciaTree {
         if (suffix.length == 0) {
             // Full match with the key, update operation
             newNodeHash = value;
-        }
-        else if (prefix.length >= e.label.length) {
+        } else if (prefix.length >= e.label.length) {
             // Partial match, just follow the path
             newNodeHash = insertAtNode(e.node, suffix, value);
-        }
-        else {
+        } else {
             // Mismatch, so let us create a new branch node.
             var (head, tail) = suffix.chopFirstBit();
             Data.Node memory branchNode;
@@ -162,5 +151,14 @@ contract PatriciaTreeImpl is PatriciaTree {
     function replaceNode(bytes32 oldHash, Data.Node memory n) internal returns (bytes32 newHash) {
         delete nodes[oldHash];
         return insertNode(n);
+    }
+
+    function edgeHash(Data.Edge memory e) internal pure returns (bytes32) {
+        return keccak256(e.node, e.label.length, e.label.data);
+    }
+
+    // Returns the hash of the encoding of a node.
+    function hash(Data.Node memory n) internal pure returns (bytes32) {
+        return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
     }
 }

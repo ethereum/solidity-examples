@@ -2,14 +2,7 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
-/*
- * title: Memory
- * author: Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
- *
- * Library for working with memory.
- */
+
 library Memory {
 
     function equals(uint addr, uint addr2, uint len) internal pure returns (bool equal) {
@@ -27,8 +20,6 @@ library Memory {
         return equals(addr, addr2, len);
     }
 
-    // Allocates 'numBytes' bytes of memory and returns a pointer to the starting address.
-    // Additionally, all allocated bytes are equal to 0.
     function allocate(uint numBytes) internal pure returns (uint addr) {
         // Take the current value of the free memory pointer, and update.
         assembly {
@@ -43,9 +34,6 @@ library Memory {
         }
     }
 
-    // Copies 'len' bytes of memory from address 'src' to address 'dest'
-    // UNSAFE because there is no checking that the destination has been
-    // properly allocated.
     function copy(uint src, uint dest, uint len) internal pure {
         // Copy word-length chunks while possible
         for (; len >= 32; len -= 32) {
@@ -66,7 +54,6 @@ library Memory {
     }
 
     /******************** get memory address from types **********************/
-
     function ptr(bytes memory bts) internal pure returns (uint addr) {
         assembly {
             addr := bts
@@ -106,7 +93,6 @@ library Memory {
     }
 
     /******************** to types **********************/
-
     function toBytes(uint addr, uint len) internal pure returns (bytes memory bts) {
         bts = new bytes(len);
         uint btsptr;
@@ -137,8 +123,6 @@ library Memory {
         }
     }
 
-    // Returns the byte at index 'index' of memory address 'addr'
-    // Equivalent to 'toBytes32(addr)[index]'.
     function toByte(uint addr, uint8 index) internal pure returns (byte b) {
         require(index < 32);
         uint8 n;
@@ -147,5 +131,4 @@ library Memory {
         }
         b = byte(n);
     }
-
 }

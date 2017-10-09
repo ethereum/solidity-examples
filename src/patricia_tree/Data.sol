@@ -2,6 +2,7 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
+
 /*
  * title: Data
  * author:
@@ -32,7 +33,10 @@ library Data {
 
     /// Returns a label containing the longest common prefix of `self` and `label`
     /// and a label consisting of the remaining part of `label`.
-    function splitCommonPrefix(Label memory self, Label memory label) internal pure returns (Label memory prefix, Label memory labelSuffix) {
+    function splitCommonPrefix(Label memory self, Label memory label) internal pure returns (
+        Label memory prefix,
+        Label memory labelSuffix
+    ) {
         return splitAt(self, commonPrefix(label, self));
     }
 
@@ -43,8 +47,7 @@ library Data {
         prefix.length = pos;
         if (pos == 0) {
             prefix.data = bytes32(0);
-        }
-        else {
+        } else {
             prefix.data = self.data & ~bytes32((uint(1) << (256 - pos)) - 1);
         }
         suffix.length = self.length - pos;

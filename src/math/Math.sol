@@ -1,32 +1,22 @@
-/*
 
-
- */
-/*
- * title: Math
- * author: Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
- *
- * Various different math operations.
- *
- * Inspiration is taken from the SafeMath library in zeppelin-solidity:
- * https://github.com/OpenZeppelin/zeppelin-solidity/blob/353285e5d96477b4abb86f7cde9187e84ed251ac/contracts/math/SafeMath.sol
+/**
+ * @title: Math
+ * @author: Andreas Olofsson (androlo@tutanota.de)
  */
 library Math {
 
-    uint constant UINT_ZERO = 0;
-    uint constant UINT_ONE = 1;
-    uint constant UINT_TWO = 2;
-    uint constant UINT_MAX = ~uint(0);
-    uint constant UINT_MIN = 0;
+    uint constant internal UINT_ZERO = 0;
+    uint constant internal UINT_ONE = 1;
+    uint constant internal UINT_TWO = 2;
+    uint constant internal UINT_MAX = ~uint(0);
+    uint constant internal UINT_MIN = 0;
 
-    int constant INT_ZERO = 0;
-    int constant INT_ONE = 1;
-    int constant INT_TWO = 2;
-    int constant INT_MINUS_ONE = -1;
-    int constant INT_MAX = int(2**255 - 1);
-    int constant INT_MIN = int(2**255);
+    int constant internal INT_ZERO = 0;
+    int constant internal INT_ONE = 1;
+    int constant internal INT_TWO = 2;
+    int constant internal INT_MINUS_ONE = -1;
+    int constant internal INT_MAX = int(2**255 - 1);
+    int constant internal INT_MIN = int(2**255);
 
     // For when a Uint needs to be passed by reference.
     struct Uint {
@@ -39,7 +29,6 @@ library Math {
     }
 
     // Some math ops with overflow guards.
-
     function exactAdd(uint a, uint b) internal pure returns (uint sum) {
         sum = a + b;
         require(sum >= a);
