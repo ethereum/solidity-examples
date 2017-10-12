@@ -34,18 +34,18 @@
   "homepage": "https://github.com/ethereum/solidity-examples#readme",
   "devDependencies": {
     "@types/mkdirp": "^0.5.1",
-    "@types/node": "^8.0.28",
+    "@types/node": "^8.0.33",
     "jest": "^21.2.1",
     "solhint": "^1.1.5",
-    "ts-jest": "^21.0.1",
+    "ts-jest": "^21.1.2",
     "tslint": "^5.7.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.3"
   },
   "dependencies": {
     "@types/jest": "^21.1.2",
     "@types/jest-matchers": "^20.0.0",
     "chalk": "^2.1.0",
-    "inquirer": "^3.2.3",
+    "inquirer": "^3.3.0",
     "jsondiffpatch": "^0.2.4",
     "marked": "^0.3.6",
     "marked-terminal": "^2.0.0",

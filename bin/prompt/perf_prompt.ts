@@ -20,4 +20,5 @@ export const perfMenu = async (): Promise<void> => {
     }
     await perf(units, false);
     printPerfLog(latestPerfLog());
+    await perfMenu();
 };

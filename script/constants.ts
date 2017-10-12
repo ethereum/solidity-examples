@@ -12,6 +12,12 @@ export const PERF_CONTRACT_PATH = path.join(ROOT_PATH, 'perf');
 export const PERF_LOGS = path.join(LOGS, 'perf');
 export const PERF_BIN = path.join(ROOT_PATH, 'perf_bin');
 
+export const EXAMPLES_FOLDER = path.join(ROOT_PATH, 'examples');
+
+export const DOCS_FOLDER = path.join(ROOT_PATH, 'docs');
+export const PACKAGE_DOCS_FOLDER = path.join(DOCS_FOLDER, 'packages');
+export const PACKAGE_DOCS_DATA_FOLDER = path.join(PACKAGE_DOCS_FOLDER, 'data');
+
 // Function hashes.
 export const TEST_FUN_HASH = 'f8a8fd6d';
 export const PERF_FUN_HASH = '1c4af786';

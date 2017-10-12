@@ -8,13 +8,6 @@ import {PatriciaTree} from "./PatriciaTree.sol";
 
 
 /*
- * title: Data
- * author:
- * Christian Reitwiessner (chris@ethereum.org)
- * Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
- *
  * Patricia tree implementation.
  *
  * More info at: https://github.com/chriseth/patricia-trie

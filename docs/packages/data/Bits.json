@@ -1,0 +1,411 @@
+{
+  "name": "Bits",
+  "package": "bits",
+  "type": "Static library",
+  "intro": "Bits_intro.md",
+  "functions": [
+    {
+      "name": "setBit",
+      "desc": "Sets the bit at position `index` to `1`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint",
+          "desc": "A new `uint` with the operation applied to it."
+        }
+      ],
+      "ensures": [
+        "`self.setBit(index) >> index & 1 == 1`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsSetBit"
+        ]
+      ]
+    },
+    {
+      "name": "clearBit",
+      "desc": "Sets the bit at position `index` to `0`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint",
+          "desc": "A new `uint` with the operation applied to it."
+        }
+      ],
+      "ensures": [
+        "`self.setBit(index) >> index & 1 == 0`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsClearBit"
+        ]
+      ]
+    },
+    {
+      "name": "toggleBit",
+      "desc": "Toggles the bit at position `index`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint",
+          "desc": "A new `uint` with the operation applied to it."
+        }
+      ],
+      "ensures": [
+        "`newField = self.toggleBit(index) => newField.bit(index) == 1 - self.bit(index)`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsToggleBit"
+        ]
+      ]
+    },
+    {
+      "name": "bit",
+      "desc": "Returns the bit at `index`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The value of the bit at `index` (`0` or `1`)."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBit"
+        ]
+      ]
+    },
+    {
+      "name": "bitSet",
+      "desc": "Check if the bit at `index` is set.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "bool",
+          "desc": "`true` if the value of the bit at `index` is `1`, otherwise `false`."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBitSet"
+        ]
+      ]
+    },
+    {
+      "name": "bitEqual",
+      "desc": "Checks if the bit at `index` in `self` is the same as the corresponding bit in `other`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first bitfield."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "bool",
+          "desc": "`true` if the value of the bits at `index` is the same for both bitfields, otherwise `false`."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBitEqual"
+        ]
+      ]
+    },
+    {
+      "name": "bitAnd",
+      "desc": "Calculates the bitwise `AND` of the bit at position `index` in `self` and the corresponding bit in `other`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first bitfield."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The bitwise `AND` of the bit at position `index` in `self` and the corresponding bit in `other` (`0` or `1`)."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBitAnd"
+        ]
+      ]
+    },
+    {
+      "name": "bitOr",
+      "desc": "Calculates the bitwise `OR` of the bit at position `index` in `self` and the corresponding bit in `other`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first bitfield."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The bitwise `OR` of the bit at position `index` in `self` and the corresponding bit in `other` (`0` or `1`)."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBitOr"
+        ]
+      ]
+    },
+    {
+      "name": "bitXor",
+      "desc": "Calculates the bitwise `XOR` of the bit at position `index` in `self` and the corresponding bit in `other`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first bitfield."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second bitfield."
+        },
+        {
+          "name": "index",
+          "type": "uint8",
+          "desc": "The index of the bit."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The bitwise `XOR` of the bit at position `index` in `self` and the corresponding bit in `other` (`0` or `1`)."
+        }
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBitXor"
+        ]
+      ]
+    },
+    {
+      "name": "bits",
+      "desc": "Extracts `numBits` bits from `self`, starting at `startIndex`.\n\nTo get all the bits: `self.bits(0, 256)`",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first bitfield."
+        },
+        {
+          "name": "startIndex",
+          "type": "uint8",
+          "desc": "The index of the starting bit."
+        },
+        {
+          "name": "numBits",
+          "type": "uint16",
+          "desc": "The number of bits."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint",
+          "desc": "The bits from `startIndex` to `startIndex + numBits` (inclusive) as a `uint`."
+        }
+      ],
+      "requires": [
+        "`0 < numBits`",
+        "`startIndex < 256`",
+        "`startIndex + numBits <= 256`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfBitsBits"
+        ]
+      ]
+    },
+    {
+      "name": "highestBitSet",
+      "desc": "Calculates the index of the highest bit set in `self`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The index of the highest bit set in `self` as a `uint8`."
+        }
+      ],
+      "requires": [
+        "`self != 0`"
+      ],
+      "gas": [
+        [
+          "For highest bit set == 0",
+          "PerfBitsHighestBitSetLow"
+        ],
+        [
+          "For highest bit set == 31",
+          "PerfBitsHighestBitSetHigh"
+        ]
+      ]
+    },
+    {
+      "name": "lowestBitSet",
+      "desc": "Calculates the index of the lowest bit set in `self`.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The bitfield."
+        }
+      ],
+      "outParams": [
+        {
+          "type": "uint8",
+          "desc": "The index of the lowest bit set in `self` as a `uint8`."
+        }
+      ],
+      "requires": [
+        "`self != 0`"
+      ],
+      "gas": [
+        [
+          "For lowest bit set == 0",
+          "PerfBitsLowestBitSetLow"
+        ],
+        [
+          "For lowest bit set == 31",
+          "PerfBitsLowestBitSetHigh"
+        ]
+      ]
+    }
+  ]
+}

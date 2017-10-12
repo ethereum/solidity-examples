@@ -64,6 +64,9 @@ exports.testsMenu = function () { return __awaiter(_this, void 0, void 0, functi
             case 2:
                 _b.sent();
                 logs_1.printTestLog(io_1.latestTestLog());
+                return [4 /*yield*/, exports.testsMenu()];
+            case 3:
+                _b.sent();
                 return [2 /*return*/];
         }
     });

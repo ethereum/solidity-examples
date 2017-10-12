@@ -4,13 +4,6 @@ pragma experimental "ABIEncoderV2";
 
 
 /*
- * title: Data
- * author:
- * Christian Reitwiessner (chris@ethereum.org)
- * Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
- *
  * Data structures and utilities used in the Patricia Tree.
  *
  * More info at: https://github.com/chriseth/patricia-trie

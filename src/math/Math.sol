@@ -1,8 +1,7 @@
+pragma solidity ^0.4.16;
+pragma experimental "v0.5.0";
+pragma experimental "ABIEncoderV2";
 
-/**
- * @title: Math
- * @author: Andreas Olofsson (androlo@tutanota.de)
- */
 library Math {
 
     uint constant internal UINT_ZERO = 0;

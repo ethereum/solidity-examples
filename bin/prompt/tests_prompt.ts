@@ -20,4 +20,5 @@ export const testsMenu = async (): Promise<void> => {
     }
     await test(units, false);
     printTestLog(latestTestLog());
+    await testsMenu();
 };

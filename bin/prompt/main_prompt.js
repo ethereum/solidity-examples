@@ -84,23 +84,28 @@ exports.mainMenu = function () { return __awaiter(_this, void 0, void 0, functio
                     case "exit": return [3 /*break*/, 10];
                 }
                 return [3 /*break*/, 11];
-            case 2: return [4 /*yield*/, tests_prompt_1.testsMenu()];
+            case 2: // Options
+            return [4 /*yield*/, tests_prompt_1.testsMenu()];
             case 3:
                 _b.sent();
                 return [3 /*break*/, 12];
-            case 4: return [4 /*yield*/, perf_prompt_1.perfMenu()];
+            case 4: // Options
+            return [4 /*yield*/, perf_prompt_1.perfMenu()];
             case 5:
                 _b.sent();
                 return [3 /*break*/, 12];
-            case 6: return [4 /*yield*/, logs_prompt_1.logsMenu()];
+            case 6: // Options
+            return [4 /*yield*/, logs_prompt_1.logsMenu()];
             case 7:
                 _b.sent();
                 return [3 /*break*/, 12];
-            case 8: return [4 /*yield*/, docs_prompt_1.docsMenu()];
+            case 8: // Options
+            return [4 /*yield*/, docs_prompt_1.docsMenu()];
             case 9:
                 _b.sent();
                 return [3 /*break*/, 12];
-            case 10: return [2 /*return*/, true];
+            case 10: // Navigation
+            return [2 /*return*/, true];
             case 11: return [2 /*return*/, false];
             case 12: return [2 /*return*/, false];
         }

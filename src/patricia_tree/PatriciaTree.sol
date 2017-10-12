@@ -6,13 +6,6 @@ import {Data} from "./Data.sol";
 
 
 /*
- * title: PatriciaTree
- * author:
- * Christian Reitwiessner (chris@ethereum.org)
- * Andreas Olofsson (androlo@tutanota.de)
- *
- * description:
- *
  * Interface for patricia trees.
  *
  * More info at: https://github.com/chriseth/patricia-trie

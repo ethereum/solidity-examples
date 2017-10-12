@@ -64,6 +64,9 @@ exports.perfMenu = function () { return __awaiter(_this, void 0, void 0, functio
             case 2:
                 _b.sent();
                 logs_1.printPerfLog(io_1.latestPerfLog());
+                return [4 /*yield*/, exports.perfMenu()];
+            case 3:
+                _b.sent();
                 return [2 /*return*/];
         }
     });
