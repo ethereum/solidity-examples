@@ -6,12 +6,10 @@ import {Bytes} from "../../src/bytes/Bytes.sol";
 import {STLPerf} from "../STLPerf.sol";
 
 
-// bytes memory bts1 = hex"aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899";
-// bytes memory bts2 = hex"aabbccddeeffaabbccddeeffaabbcc";
-
 contract BytesPerf is STLPerf {
     using Bytes for *;
 }
+
 
 contract PerfBytesEqualsOneWordSuccess is BytesPerf {
     function perf() public payable returns (uint) {
@@ -64,6 +62,17 @@ contract PerfBytesEqualsOneWordFail is BytesPerf {
         bytes memory bts2 = hex"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         uint gasPre = msg.gas;
         Bytes.equals(bts1, bts2);
+        uint gasPost = msg.gas;
+        return gasPre - gasPost;
+    }
+}
+
+
+contract PerfBytesEqualsRef is BytesPerf {
+    function perf() public payable returns (uint) {
+        bytes memory bts = hex"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        uint gasPre = msg.gas;
+        Bytes.equalsRef(bts, bts);
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
@@ -157,7 +166,8 @@ contract PerfBytesConcatEmpty is BytesPerf {
     }
 }
 
-contract PerfBytesBytes32SubstrOneWord is BytesPerf {
+
+contract PerfBytesBytes32Substr is BytesPerf {
     function perf() public payable returns (uint) {
         bytes32 b32 = 0;
         uint gasPre = msg.gas;
@@ -168,7 +178,7 @@ contract PerfBytesBytes32SubstrOneWord is BytesPerf {
 }
 
 
-contract PerfBytesBytes32SubstrWithLengthOneWord is BytesPerf {
+contract PerfBytesBytes32SubstrWithLength is BytesPerf {
     function perf() public payable returns (uint) {
         bytes32 b32 = 0;
         uint gasPre = msg.gas;
@@ -189,6 +199,7 @@ contract PerfBytesBytes32ToBytes is BytesPerf {
     }
 }
 
+
 contract PerfBytesBytes32ToBytesWithLength is BytesPerf {
     function perf() public payable returns (uint) {
         bytes32 b32 = 0x10203040;
@@ -198,6 +209,7 @@ contract PerfBytesBytes32ToBytesWithLength is BytesPerf {
         return gasPre - gasPost;
     }
 }
+
 
 contract PerfBytesAddressToBytes is BytesPerf {
     function perf() public payable returns (uint) {
@@ -209,6 +221,7 @@ contract PerfBytesAddressToBytes is BytesPerf {
     }
 }
 
+
 contract PerfBytesUintToBytes is BytesPerf {
     function perf() public payable returns (uint) {
         uint n = 0x10203040;
@@ -219,6 +232,7 @@ contract PerfBytesUintToBytes is BytesPerf {
     }
 }
 
+
 contract PerfBytesUintToBytesWithBitsize is BytesPerf {
     function perf() public payable returns (uint) {
         uint n = 0x10203040;
@@ -228,6 +242,7 @@ contract PerfBytesUintToBytesWithBitsize is BytesPerf {
         return gasPre - gasPost;
     }
 }
+
 
 contract PerfBytesBooleanToBytes is BytesPerf {
     function perf() public payable returns (uint) {

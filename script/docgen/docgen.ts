@@ -73,7 +73,25 @@ const headLine = (str: string, level: number = 0) => {
 
 const paragraph = (str: string) => `${str}\n\n`;
 
-const funcName = (func: IFunc) => `${func.name}(${func.inParams.map((elem) => elem.type).join(', ')})`;
+const paramTypeAndRefType = (p: IParam) => {
+    let ret = p.type;
+    if (p.refType) {
+        ret += ` ${p.refType}`;
+    }
+    return ret;
+};
+
+const paramTypeAndRefTypeAnchor = (p: IParam) => {
+    let ret = p.type.toLowerCase();
+    if (p.refType) {
+        ret += `-${p.refType}`;
+    }
+    return ret;
+};
+
+const funcName = (func: IFunc) => `${func.name}(${func.inParams.map(paramTypeAndRefType).join(', ')})`;
+
+const funcNameAnchor = (func: IFunc) => `${func.name.toLowerCase()}${func.inParams.map(paramTypeAndRefTypeAnchor).join('-')}`;
 
 const paramTypeAndName = (param: IParam) => {
     let str = param.type;
@@ -110,11 +128,11 @@ const funcSig = (func: IFunc) => {
     return `\`${str}\``;
 };
 
-const writeFunction = (aw: AnchorWriter, perf: object, func: IFunc, level: number = 3) => {
+const writeFunction = (perf: object, func: IFunc, level: number = 3) => {
     const lines = [];
     lines.push(divider());
     const name = funcName(func);
-    lines.push(headLine(`<a name="${aw.getAnchor(func.name)}"/>${name}`, level));
+    lines.push(headLine(`${name}`, level));
     lines.push(funcSig(func) + '\n\n');
     lines.push(paragraph(func.desc));
     if (func.inParams && func.inParams.length > 0) {
@@ -151,25 +169,25 @@ const writeFunction = (aw: AnchorWriter, perf: object, func: IFunc, level: numbe
             if (prf === undefined) {
                 throw new Error(`No perf acailable for: ${g[1]}`);
             }
-            lines.push(`- ${g[0]}: ${prf.gasUsed}\n`);
+            lines.push(`- ${g[0]}: **${prf.gasUsed}**\n`);
         }
     }
     lines.push(newline());
     return lines;
 };
 
-const createFunctions = (aw: AnchorWriter, perf: object, funcs: IFunc[], level: number = 3) => {
+const createFunctions = (perf: object, funcs: IFunc[], level: number = 3) => {
     let lines = [];
     for (const func of funcs) {
-        lines = lines.concat(writeFunction(aw, perf, func, level));
+        lines = lines.concat(writeFunction(perf, func, level));
     }
     return lines;
 };
 
-const createFuncTOC = (aw: AnchorWriter, funcs: IFunc[]) => {
+const createFuncTOC = (funcs: IFunc[]) => {
     const lines = [];
     for (const f of funcs) {
-        lines.push(`- [${funcName(f)}](#${aw.getAnchor(f.name)})\n`);
+        lines.push(`- [${funcName(f)}](#${funcNameAnchor(f)})\n`);
     }
     lines.push(newline());
     return lines;
@@ -179,8 +197,8 @@ const createFuncSection = (funcs: IFunc[], level: number = 2) => {
     const perf = latestPerfLog();
     let lines = [];
     lines.push(headLine("Functions", level));
-    lines = lines.concat(createFuncTOC(new AnchorWriter(), funcs));
-    lines = lines.concat(createFunctions(new AnchorWriter(), perf, funcs, level + 1));
+    lines = lines.concat(createFuncTOC(funcs));
+    lines = lines.concat(createFunctions(perf, funcs, level + 1));
     return lines;
 };
 
@@ -189,20 +207,31 @@ const createPackageDocs = (docJson: object, intro: string) => {
     root.push(`${headLine(docJson["name"], 1)}\n\n`);
     root.push(`**Package:** ${docJson["package"]}\n\n`);
     root.push(`**Contract type:** ${docJson["type"]}\n\n`);
+    const sourceName = docJson["name"] + ".sol";
+    root.push(`**Source file:** [${sourceName}](../../src/${docJson["package"]}/${sourceName})\n\n`);
+    const examplesName = docJson["name"] + "Examples.sol";
+    root.push(`**Example usage:** [${examplesName}](../../examples/${docJson["package"]}/${examplesName})\n\n`);
+    const testName = docJson["package"] + "_tests.sol";
+    root.push(`**Tests source file:** [${testName}](../../test/${docJson["package"]}/${testName})\n\n`);
+    const perfName = docJson["package"] + "_perfs.sol";
+    root.push(`**Perf (gas usage) source file:** [${perfName}](../../perf/${docJson["package"]}/${perfName})\n\n`);
+    root.push(newline());
+    root.push(headLine("description", 2));
     root.push(intro);
     root.push(newline());
     root.push(newline());
-    const name = docJson["name"] + "Examples.sol";
-    root.push(`**Example usage:** [${name}](../../examples/${docJson["package"]}/${name})})\n\n`);
     root = root.concat(createFuncSection(docJson["functions"]));
     return root.join('');
 };
 
 const writeDocs = () => {
-    const bitsJson = JSON.parse(readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, "bits.json")).toString());
-    const intro = readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, bitsJson["intro"])).toString();
-    const bitsMd = createPackageDocs(bitsJson, intro);
-    writeFileSync(join(PACKAGE_DOCS_PATH, bitsJson.name + '.md'), bitsMd);
+    const docs = ["Bits", "Bytes", "Math", "Strings"];
+    for (const doc of docs) {
+        const docJson = JSON.parse(readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());
+        const intro = readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, docJson["intro"])).toString();
+        const docMd = createPackageDocs(docJson, intro);
+        writeFileSync(join(PACKAGE_DOCS_PATH, docJson.name + '.md'), docMd);
+    }
 };
 
 writeDocs();

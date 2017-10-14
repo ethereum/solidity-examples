@@ -2,7 +2,7 @@
   "name": "Bits",
   "package": "bits",
   "type": "Static library",
-  "intro": "Bits_intro.md",
+  "intro": "Bits_description.md",
   "functions": [
     {
       "name": "setBit",

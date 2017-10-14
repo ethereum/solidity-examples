@@ -1,0 +1,242 @@
+{
+  "name": "Math",
+  "package": "math",
+  "type": "Static library",
+  "intro": "Math_description.md",
+  "functions": [
+    {
+      "name": "exactAdd",
+      "desc": "Adds two unsigned integers. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "sum",
+          "type": "uint",
+          "desc": "The sum."
+        }
+      ],
+      "requires": [
+        "`sum >= self`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactAddUint"
+        ]
+      ]
+    },{
+      "name": "exactSub",
+      "desc": "Subtracts `other` from `self`. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "diff",
+          "type": "uint",
+          "desc": "The difference."
+        }
+      ],
+      "requires": [
+        "`other <= self`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactSubUint"
+        ]
+      ]
+    },{
+      "name": "exactMul",
+      "desc": "Multiplies two numbers. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "uint",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "uint",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "prod",
+          "type": "uint",
+          "desc": "The product."
+        }
+      ],
+      "requires": [
+        "`self == 0 || prod / self == other`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactMulUint"
+        ]
+      ]
+    },{
+      "name": "exactAdd",
+      "desc": "Adds two signed integers. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "int",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "int",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "sum",
+          "type": "int",
+          "desc": "The sum."
+        }
+      ],
+      "requires": [
+        "`if (self > 0 && other > 0): 0 <= sum && sum <= INT_MAX`",
+        "`if (self < 0 && other < 0): INT_MIN <= sum && sum <= 0`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactAddInt"
+        ]
+      ]
+    },{
+      "name": "exactSub",
+      "desc": "Subtracts `other` from `self`. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "int",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "int",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "diff",
+          "type": "int",
+          "desc": "The difference."
+        }
+      ],
+      "requires": [
+        "`if (self > 0 && other < 0): 0 <= diff && diff <= INT_MAX`",
+        "`if (self < 0 && other > 0): INT_MIN <= diff && diff <= 0`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactSubInt"
+        ]
+      ]
+    },{
+      "name": "exactMul",
+      "desc": "Multiplies two numbers. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "int",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "int",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "mul",
+          "type": "int",
+          "desc": "The product."
+        }
+      ],
+      "requires": [
+        "`self == 0 || ((other != INT_MIN || self != INT_MINUS_ONE) && prod / self == other)`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactMulInt"
+        ]
+      ]
+    },{
+      "name": "exactDiv",
+      "desc": "Divides `self` with `other`. Throws if the result is not inside the allowed range.",
+      "visibility": "internal",
+      "qualifier": "pure",
+      "inParams": [
+        {
+          "name": "self",
+          "type": "int",
+          "desc": "The first number."
+        },
+        {
+          "name": "other",
+          "type": "int",
+          "desc": "The second number."
+        }
+      ],
+      "outParams": [
+        {
+          "name": "quot",
+          "type": "int",
+          "desc": "The quota."
+        }
+      ],
+      "requires": [
+        "`self != INT_MIN || other != INT_MINUS_ONE`"
+      ],
+      "gas": [
+        [
+          "Fixed",
+          "PerfMathExactDivInt"
+        ]
+      ]
+    }
+  ]
+}

@@ -229,6 +229,7 @@ contract TestBytesSubstrWithLenThrowsIndexOOB is BytesTest {
     }
 }
 
+
 contract TestBytesSubstrWithLenThrowsIndexPlusLengthOOB is BytesTest {
     function testImpl() internal {
          bytes memory bts = new bytes(1);
@@ -309,7 +310,6 @@ contract TestBytesConcatDoesNotMutate is BytesTest {
          assert(bts2.equals(bts2Eq));
     }
 }
-
 
 /************************** bytes32 substr ***************************/
 
@@ -413,6 +413,7 @@ contract TestBytesBytes32ToBytesWithLenLowOrder is BytesTest {
     }
 }
 
+
 contract TestBytesBytes32ToBytesWithLenThrowsLenOOB is BytesTest {
     function testImpl() internal {
         bytes32(0).toBytes(33);
@@ -460,17 +461,20 @@ contract TestBytesUintToBytesWithBitsize is BytesTest {
     }
 }
 
+
 contract TestBytesUintToBytesWithBitsizeThrowsBitsizeLow is BytesTest {
     function testImpl() internal {
         uint(0).toBytes(0);
     }
 }
 
+
 contract TestBytesUintToBytesWithBitsizeThrowsBitsizeHigh is BytesTest {
     function testImpl() internal {
         uint(0).toBytes(264);
     }
 }
+
 
 contract TestBytesUintToBytesWithBitsizeThrowsBitsizeNotMultipleOf8 is BytesTest {
     function testImpl() internal {

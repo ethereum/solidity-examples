@@ -52,7 +52,22 @@ var headLine = function (str, level) {
     }
 };
 var paragraph = function (str) { return str + "\n\n"; };
-var funcName = function (func) { return func.name + "(" + func.inParams.map(function (elem) { return elem.type; }).join(', ') + ")"; };
+var paramTypeAndRefType = function (p) {
+    var ret = p.type;
+    if (p.refType) {
+        ret += " " + p.refType;
+    }
+    return ret;
+};
+var paramTypeAndRefTypeAnchor = function (p) {
+    var ret = p.type.toLowerCase();
+    if (p.refType) {
+        ret += "-" + p.refType;
+    }
+    return ret;
+};
+var funcName = function (func) { return func.name + "(" + func.inParams.map(paramTypeAndRefType).join(', ') + ")"; };
+var funcNameAnchor = function (func) { return "" + func.name.toLowerCase() + func.inParams.map(paramTypeAndRefTypeAnchor).join('-'); };
 var paramTypeAndName = function (param) {
     var str = param.type;
     if (param.refType) {
@@ -87,12 +102,12 @@ var funcSig = function (func) {
     }
     return "`" + str + "`";
 };
-var writeFunction = function (aw, perf, func, level) {
+var writeFunction = function (perf, func, level) {
     if (level === void 0) { level = 3; }
     var lines = [];
     lines.push(divider());
     var name = funcName(func);
-    lines.push(headLine("<a name=\"" + aw.getAnchor(func.name) + "\"/>" + name, level));
+    lines.push(headLine("" + name, level));
     lines.push(funcSig(func) + '\n\n');
     lines.push(paragraph(func.desc));
     if (func.inParams && func.inParams.length > 0) {
@@ -134,26 +149,26 @@ var writeFunction = function (aw, perf, func, level) {
             if (prf === undefined) {
                 throw new Error("No perf acailable for: " + g[1]);
             }
-            lines.push("- " + g[0] + ": " + prf.gasUsed + "\n");
+            lines.push("- " + g[0] + ": **" + prf.gasUsed + "**\n");
         }
     }
     lines.push(newline());
     return lines;
 };
-var createFunctions = function (aw, perf, funcs, level) {
+var createFunctions = function (perf, funcs, level) {
     if (level === void 0) { level = 3; }
     var lines = [];
     for (var _i = 0, funcs_1 = funcs; _i < funcs_1.length; _i++) {
         var func = funcs_1[_i];
-        lines = lines.concat(writeFunction(aw, perf, func, level));
+        lines = lines.concat(writeFunction(perf, func, level));
     }
     return lines;
 };
-var createFuncTOC = function (aw, funcs) {
+var createFuncTOC = function (funcs) {
     var lines = [];
     for (var _i = 0, funcs_2 = funcs; _i < funcs_2.length; _i++) {
         var f = funcs_2[_i];
-        lines.push("- [" + funcName(f) + "](#" + aw.getAnchor(f.name) + ")\n");
+        lines.push("- [" + funcName(f) + "](#" + funcNameAnchor(f) + ")\n");
     }
     lines.push(newline());
     return lines;
@@ -163,8 +178,8 @@ var createFuncSection = function (funcs, level) {
     var perf = io_1.latestPerfLog();
     var lines = [];
     lines.push(headLine("Functions", level));
-    lines = lines.concat(createFuncTOC(new AnchorWriter(), funcs));
-    lines = lines.concat(createFunctions(new AnchorWriter(), perf, funcs, level + 1));
+    lines = lines.concat(createFuncTOC(funcs));
+    lines = lines.concat(createFunctions(perf, funcs, level + 1));
     return lines;
 };
 var createPackageDocs = function (docJson, intro) {
@@ -172,18 +187,30 @@ var createPackageDocs = function (docJson, intro) {
     root.push(headLine(docJson["name"], 1) + "\n\n");
     root.push("**Package:** " + docJson["package"] + "\n\n");
     root.push("**Contract type:** " + docJson["type"] + "\n\n");
+    var sourceName = docJson["name"] + ".sol";
+    root.push("**Source file:** [" + sourceName + "](../../src/" + docJson["package"] + "/" + sourceName + ")\n\n");
+    var examplesName = docJson["name"] + "Examples.sol";
+    root.push("**Example usage:** [" + examplesName + "](../../examples/" + docJson["package"] + "/" + examplesName + ")\n\n");
+    var testName = docJson["package"] + "_tests.sol";
+    root.push("**Tests source file:** [" + testName + "](../../test/" + docJson["package"] + "/" + testName + ")\n\n");
+    var perfName = docJson["package"] + "_perfs.sol";
+    root.push("**Perf (gas usage) source file:** [" + perfName + "](../../perf/" + docJson["package"] + "/" + perfName + ")\n\n");
+    root.push(newline());
+    root.push(headLine("description", 2));
     root.push(intro);
     root.push(newline());
     root.push(newline());
-    var name = docJson["name"] + "Examples.sol";
-    root.push("**Example usage:** [" + name + "](../../examples/" + docJson["package"] + "/" + name + ")})\n\n");
     root = root.concat(createFuncSection(docJson["functions"]));
     return root.join('');
 };
 var writeDocs = function () {
-    var bitsJson = JSON.parse(fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, "bits.json")).toString());
-    var intro = fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, bitsJson["intro"])).toString();
-    var bitsMd = createPackageDocs(bitsJson, intro);
-    fs_1.writeFileSync(path_1.join(utils_1.PACKAGE_DOCS_PATH, bitsJson.name + '.md'), bitsMd);
+    var docs = ["Bits", "Bytes", "Math", "Strings"];
+    for (var _i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
+        var doc = docs_1[_i];
+        var docJson = JSON.parse(fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());
+        var intro = fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, docJson["intro"])).toString();
+        var docMd = createPackageDocs(docJson, intro);
+        fs_1.writeFileSync(path_1.join(utils_1.PACKAGE_DOCS_PATH, docJson.name + '.md'), docMd);
+    }
 };
 writeDocs();

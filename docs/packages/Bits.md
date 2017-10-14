@@ -6,28 +6,37 @@
 
 **Contract type:** Static library
 
-The `Bits` library is used for working with the individual bits of a `uint`.
+**Source file:** [Bits.sol](../../src/bits/Bits.sol)
 
-**Example usage:** [BitsExamples.sol](../../examples/bits/BitsExamples.sol)})
+**Example usage:** [BitsExamples.sol](../../examples/bits/BitsExamples.sol)
+
+**Tests source file:** [bits_tests.sol](../../test/bits/bits_tests.sol)
+
+**Perf (gas usage) source file:** [bits_perfs.sol](../../perf/bits/bits_perfs.sol)
+
+
+## description
+
+The `Bits` library is used for working with the individual bits of a `uint`.
 
 ## Functions
 
-- [setBit(uint, uint8)](#setBit)
-- [clearBit(uint, uint8)](#clearBit)
-- [toggleBit(uint, uint8)](#toggleBit)
-- [bit(uint, uint8)](#bit)
-- [bitSet(uint, uint8)](#bitSet)
-- [bitEqual(uint, uint, uint8)](#bitEqual)
-- [bitAnd(uint, uint, uint8)](#bitAnd)
-- [bitOr(uint, uint, uint8)](#bitOr)
-- [bitXor(uint, uint, uint8)](#bitXor)
-- [bits(uint, uint8, uint16)](#bits)
-- [highestBitSet(uint)](#highestBitSet)
-- [lowestBitSet(uint)](#lowestBitSet)
+- [setBit(uint, uint8)](#setbituint-uint8)
+- [clearBit(uint, uint8)](#clearbituint-uint8)
+- [toggleBit(uint, uint8)](#togglebituint-uint8)
+- [bit(uint, uint8)](#bituint-uint8)
+- [bitSet(uint, uint8)](#bitsetuint-uint8)
+- [bitEqual(uint, uint, uint8)](#bitequaluint-uint-uint8)
+- [bitAnd(uint, uint, uint8)](#bitanduint-uint-uint8)
+- [bitOr(uint, uint, uint8)](#bitoruint-uint-uint8)
+- [bitXor(uint, uint, uint8)](#bitxoruint-uint-uint8)
+- [bits(uint, uint8, uint16)](#bitsuint-uint8-uint16)
+- [highestBitSet(uint)](#highestbitsetuint)
+- [lowestBitSet(uint)](#lowestbitsetuint)
 
 ***
 
-### <a name="setBit"/>setBit(uint, uint8)
+### setBit(uint, uint8)
 
 `function setBit(uint, uint8) internal pure returns (uint)`
 
@@ -48,11 +57,11 @@ Sets the bit at position `index` to `1`.
 - `self.setBit(index) >> index & 1 == 1`
 ##### gascosts
 
-- Fixed: 161
+- Fixed: **161**
 
 ***
 
-### <a name="clearBit"/>clearBit(uint, uint8)
+### clearBit(uint, uint8)
 
 `function clearBit(uint, uint8) internal pure returns (uint)`
 
@@ -73,11 +82,11 @@ Sets the bit at position `index` to `0`.
 - `self.setBit(index) >> index & 1 == 0`
 ##### gascosts
 
-- Fixed: 164
+- Fixed: **164**
 
 ***
 
-### <a name="toggleBit"/>toggleBit(uint, uint8)
+### toggleBit(uint, uint8)
 
 `function toggleBit(uint, uint8) internal pure returns (uint)`
 
@@ -98,11 +107,11 @@ Toggles the bit at position `index`.
 - `newField = self.toggleBit(index) => newField.bit(index) == 1 - self.bit(index)`
 ##### gascosts
 
-- Fixed: 161
+- Fixed: **161**
 
 ***
 
-### <a name="bit"/>bit(uint, uint8)
+### bit(uint, uint8)
 
 `function bit(uint, uint8) internal pure returns (uint8)`
 
@@ -120,11 +129,11 @@ Returns the bit at `index`.
 
 ##### gascosts
 
-- Fixed: 164
+- Fixed: **164**
 
 ***
 
-### <a name="bitSet"/>bitSet(uint, uint8)
+### bitSet(uint, uint8)
 
 `function bitSet(uint, uint8) internal pure returns (bool)`
 
@@ -142,11 +151,11 @@ Check if the bit at `index` is set.
 
 ##### gascosts
 
-- Fixed: 170
+- Fixed: **170**
 
 ***
 
-### <a name="bitEqual"/>bitEqual(uint, uint, uint8)
+### bitEqual(uint, uint, uint8)
 
 `function bitEqual(uint, uint, uint8) internal pure returns (bool)`
 
@@ -165,11 +174,11 @@ Checks if the bit at `index` in `self` is the same as the corresponding bit in `
 
 ##### gascosts
 
-- Fixed: 184
+- Fixed: **184**
 
 ***
 
-### <a name="bitAnd"/>bitAnd(uint, uint, uint8)
+### bitAnd(uint, uint, uint8)
 
 `function bitAnd(uint, uint, uint8) internal pure returns (uint8)`
 
@@ -188,11 +197,11 @@ Calculates the bitwise `AND` of the bit at position `index` in `self` and the co
 
 ##### gascosts
 
-- Fixed: 178
+- Fixed: **178**
 
 ***
 
-### <a name="bitOr"/>bitOr(uint, uint, uint8)
+### bitOr(uint, uint, uint8)
 
 `function bitOr(uint, uint, uint8) internal pure returns (uint8)`
 
@@ -211,11 +220,11 @@ Calculates the bitwise `OR` of the bit at position `index` in `self` and the cor
 
 ##### gascosts
 
-- Fixed: 178
+- Fixed: **178**
 
 ***
 
-### <a name="bitXor"/>bitXor(uint, uint, uint8)
+### bitXor(uint, uint, uint8)
 
 `function bitXor(uint, uint, uint8) internal pure returns (uint8)`
 
@@ -234,11 +243,11 @@ Calculates the bitwise `XOR` of the bit at position `index` in `self` and the co
 
 ##### gascosts
 
-- Fixed: 178
+- Fixed: **178**
 
 ***
 
-### <a name="bits"/>bits(uint, uint8, uint16)
+### bits(uint, uint8, uint16)
 
 `function bits(uint, uint8, uint16) internal pure returns (uint)`
 
@@ -264,11 +273,11 @@ To get all the bits: `self.bits(0, 256)`
 
 ##### gascosts
 
-- Fixed: 330
+- Fixed: **385**
 
 ***
 
-### <a name="highestBitSet"/>highestBitSet(uint)
+### highestBitSet(uint)
 
 `function highestBitSet(uint) internal pure returns (uint8)`
 
@@ -288,12 +297,12 @@ Calculates the index of the highest bit set in `self`.
 
 ##### gascosts
 
-- For highest bit set == 0: 2845
-- For highest bit set == 31: 3759
+- For highest bit set == 0: **2845**
+- For highest bit set == 31: **3759**
 
 ***
 
-### <a name="lowestBitSet"/>lowestBitSet(uint)
+### lowestBitSet(uint)
 
 `function lowestBitSet(uint) internal pure returns (uint8)`
 
@@ -313,6 +322,6 @@ Calculates the index of the lowest bit set in `self`.
 
 ##### gascosts
 
-- For lowest bit set == 0: 2181
-- For lowest bit set == 31: 3095
+- For lowest bit set == 0: **2181**
+- For lowest bit set == 31: **3095**
 

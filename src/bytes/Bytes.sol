@@ -21,7 +21,9 @@ library Bytes {
     }
 
     function equalsRef(bytes memory self, bytes memory other) internal pure returns (bool equal) {
-        equal = Memory.ptr(self) == Memory.ptr(other);
+        assembly {
+            equal := eq(self, other)
+        }
     }
 
     function copy(bytes memory self) internal pure returns (bytes memory) {
@@ -32,20 +34,20 @@ library Bytes {
         return Memory.toBytes(addr, self.length);
     }
 
-    function substr(bytes memory self, uint startIdx) internal pure returns (bytes memory) {
-        require(startIdx < self.length);
-        var len = self.length - startIdx;
+    function substr(bytes memory self, uint startIndex) internal pure returns (bytes memory) {
+        require(startIndex < self.length);
+        var len = self.length - startIndex;
         var addr = Memory.dataPtr(self);
-        return Memory.toBytes(addr + startIdx, len);
+        return Memory.toBytes(addr + startIndex, len);
     }
 
-    function substr(bytes memory self, uint startIdx, uint len) internal pure returns (bytes memory) {
-        require(startIdx < self.length && startIdx + len <= self.length);
+    function substr(bytes memory self, uint startIndex, uint len) internal pure returns (bytes memory) {
+        require(startIndex < self.length && startIndex + len <= self.length);
         if (len == 0) {
             return;
         }
         var addr = Memory.dataPtr(self);
-        return Memory.toBytes(addr + startIdx, len);
+        return Memory.toBytes(addr + startIndex, len);
     }
 
     function concat(bytes memory self, bytes memory other) internal pure returns (bytes memory) {
@@ -59,49 +61,51 @@ library Bytes {
         return ret;
     }
 
-    function substr(bytes32 b32, uint8 startIndex) internal pure returns (bytes32) {
+    function substr(bytes32 self, uint8 startIndex) internal pure returns (bytes32) {
         require(startIndex < 32);
-        return bytes32(uint(b32) << startIndex*8);
+        return bytes32(uint(self) << startIndex*8);
     }
 
-    function substr(bytes32 b32, uint8 startIndex, uint8 len) internal pure returns (bytes32) {
+    function substr(bytes32 self, uint8 startIndex, uint8 len) internal pure returns (bytes32) {
         require(startIndex < 32 && startIndex + len <= 32);
-        return bytes32(uint(b32) << startIndex*8 & ~uint(0) << (32 - len)*8);
+        return bytes32(uint(self) << startIndex*8 & ~uint(0) << (32 - len)*8);
     }
 
-    function toBytes(bytes32 b32) internal pure returns (bytes memory bts) {
+    function toBytes(bytes32 self) internal pure returns (bytes memory bts) {
         bts = new bytes(32);
         assembly {
-            mstore(add(bts, 0x20), b32)
+            mstore(add(bts, 0x20), self)
         }
     }
 
-    function toBytes(bytes32 b32, uint8 length) internal pure returns (bytes memory bts) {
-        require(length <= 32);
-        bts = new bytes(length);
+    function toBytes(bytes32 self, uint8 len) internal pure returns (bytes memory bts) {
+        require(len <= 32);
+        bts = new bytes(len);
+        // Even though the bytes will allocate a full word, we don't want
+        // any potential garbage bytes in there.
+        uint data = uint(self) & ~uint(0) << len*8;
         assembly {
-            mstore(add(bts, 0x20), b32)
+            mstore(add(bts, 0x20), data)
         }
     }
 
-    function toBytes(address addr) internal pure returns (bytes memory bts) {
-        bytes32 b32 = substr(bytes32(addr), 12);
-        bts = toBytes(b32, 20);
+    function toBytes(address self) internal pure returns (bytes memory bts) {
+        bts = toBytes(bytes32(uint(self) << 96), 20);
     }
 
-    function toBytes(uint n) internal pure returns (bytes memory bts) {
-        bts = toBytes(bytes32(n), 32);
+    function toBytes(uint self) internal pure returns (bytes memory bts) {
+        bts = toBytes(bytes32(self), 32);
     }
 
-    function toBytes(uint n, uint16 bitsize) internal pure returns (bytes memory bts) {
+    function toBytes(uint self, uint16 bitsize) internal pure returns (bytes memory bts) {
         require(8 <= bitsize && bitsize <= 256 && bitsize % 8 == 0);
-        n <<= 256 - bitsize;
-        bts = toBytes(bytes32(n), uint8(bitsize / 8));
+        self <<= 256 - bitsize;
+        bts = toBytes(bytes32(self), uint8(bitsize / 8));
     }
 
-    function toBytes(bool b) internal pure returns (bytes memory bts) {
+    function toBytes(bool self) internal pure returns (bytes memory bts) {
         bts = new bytes(1);
-        bts[0] = b ? byte(1) : byte(0);
+        bts[0] = self ? byte(1) : byte(0);
     }
 
     function highestByteSet(bytes32 self) internal pure returns (uint8 highest) {

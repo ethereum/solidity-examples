@@ -28,43 +28,46 @@ library Math {
     }
 
     // Some math ops with overflow guards.
-    function exactAdd(uint a, uint b) internal pure returns (uint sum) {
-        sum = a + b;
-        require(sum >= a);
+    function exactAdd(uint self, uint other) internal pure returns (uint sum) {
+        sum = self + other;
+        require(sum >= self);
     }
 
-    function exactSub(uint a, uint b) internal pure returns (uint diff) {
-        require(b <= a);
-        diff = a - b;
+    function exactSub(uint self, uint other) internal pure returns (uint diff) {
+        require(other <= self);
+        diff = self - other;
     }
 
-    function exactMul(uint a, uint b) internal pure returns (uint prod) {
-        prod = a * b;
-        require(a == 0 || prod / a == b);
+    function exactMul(uint self, uint other) internal pure returns (uint prod) {
+        prod = self * other;
+        require(self == 0 || prod / self == other);
     }
 
-    function exactAdd(int a, int b) internal pure returns (int sum) {
-        sum = a + b;
-        if (a > 0 && b > 0) {
+    function exactAdd(int self, int other) internal pure returns (int sum) {
+        sum = self + other;
+        if (self > 0 && other > 0) {
             require(0 <= sum && sum <= INT_MAX);
-        } else if (a < 0 && b < 0) {
+        } else if (self < 0 && other < 0) {
             require(INT_MIN <= sum && sum <= 0);
         }
     }
 
-    function exactSub(int a, int b) internal pure returns (int diff) {
-        require(b != INT_MIN);
-        return exactAdd(a, -b);
+    function exactSub(int self, int other) internal pure returns (int diff) {
+        diff = self - other;
+        if (self > 0 && other < 0) {
+            require(0 <= diff && diff <= INT_MAX);
+        } else if (self < 0 && other > 0) {
+            require(INT_MIN <= diff && diff <= 0);
+        }
     }
 
-    function exactMul(int a, int b) internal pure returns (int prod) {
-        prod = a * b;
-        require((a != INT_MIN || b != INT_MINUS_ONE) && (b != INT_MIN || a != INT_MINUS_ONE));
-        require(a == 0 || prod / a == b);
+    function exactMul(int self, int other) internal pure returns (int prod) {
+        prod = self * other;
+        require(self == 0 || ((other != INT_MIN || self != INT_MINUS_ONE) && prod / self == other));
     }
 
-    function exactDiv(int a, int b) internal pure returns (int quot) {
-        require(a != INT_MIN || b != INT_MINUS_ONE);
-        quot = a / b;
+    function exactDiv(int self, int other) internal pure returns (int quot) {
+        require(self != INT_MIN || other != INT_MINUS_ONE);
+        quot = self / other;
     }
 }

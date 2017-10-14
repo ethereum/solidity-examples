@@ -115,7 +115,14 @@ contract TestBitsBitsThrowsNumBitsZero is BitsTest {
 }
 
 
-contract TestBitsBitsThrowsOutOfRange is BitsTest {
+contract TestBitsBitsThrowsIndexOOB is BitsTest {
+    function testImpl() internal {
+        ONES.bits(256, 12);
+    }
+}
+
+
+contract TestBitsBitsThrowsIndexAndLengthOOB is BitsTest {
     function testImpl() internal {
         ONES.bits(5, 252);
     }
