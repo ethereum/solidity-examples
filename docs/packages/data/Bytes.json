@@ -520,35 +520,6 @@
         ]
       ]
     },{
-      "name": "toBytes",
-      "desc": "Create a new `bytes memory` from a boolean.",
-      "visibility": "internal",
-      "qualifier": "pure",
-      "inParams": [
-        {
-          "name": "self",
-          "type": "bool",
-          "desc": "The source boolean."
-        }
-      ],
-      "outParams": [
-        {
-          "type": "bytes",
-          "refType": "memory",
-          "desc": "The boolean as a `bytes memory`. Note that the bytes array will be of length 1."
-        }
-      ],
-      "ensures": [
-        "`bts = self.toBytes() => bts.length = 1`.",
-        "`bts = self.toBytes() => if self == true: bts = [1], else bts = [0]."
-      ],
-      "gas": [
-        [
-          "Fixed",
-          "PerfBytesBooleanToBytes"
-        ]
-      ]
-    },{
       "name": "highestByteSet",
       "desc": "Calculates the index of the highest non-zero byte in a `bytes32`. Note that bytes uses big endian ordering (the most significant byte is the lowest).",
       "visibility": "internal",
