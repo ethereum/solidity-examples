@@ -38,7 +38,7 @@ The `Bits` library is used for working with the individual bits of a `uint`.
 
 ### setBit(uint, uint8)
 
-`function setBit(uint, uint8) internal pure returns (uint)`
+`function setBit(uint self, uint8 index) internal pure returns (uint)`
 
 Sets the bit at position `index` to `1`.
 
@@ -63,7 +63,7 @@ Sets the bit at position `index` to `1`.
 
 ### clearBit(uint, uint8)
 
-`function clearBit(uint, uint8) internal pure returns (uint)`
+`function clearBit(uint self, uint8 index) internal pure returns (uint)`
 
 Sets the bit at position `index` to `0`.
 
@@ -88,7 +88,7 @@ Sets the bit at position `index` to `0`.
 
 ### toggleBit(uint, uint8)
 
-`function toggleBit(uint, uint8) internal pure returns (uint)`
+`function toggleBit(uint self, uint8 index) internal pure returns (uint)`
 
 Toggles the bit at position `index`.
 
@@ -113,7 +113,7 @@ Toggles the bit at position `index`.
 
 ### bit(uint, uint8)
 
-`function bit(uint, uint8) internal pure returns (uint8)`
+`function bit(uint self, uint8 index) internal pure returns (uint8)`
 
 Returns the bit at `index`.
 
@@ -135,7 +135,7 @@ Returns the bit at `index`.
 
 ### bitSet(uint, uint8)
 
-`function bitSet(uint, uint8) internal pure returns (bool)`
+`function bitSet(uint self, uint8 index) internal pure returns (bool)`
 
 Check if the bit at `index` is set.
 
@@ -157,7 +157,7 @@ Check if the bit at `index` is set.
 
 ### bitEqual(uint, uint, uint8)
 
-`function bitEqual(uint, uint, uint8) internal pure returns (bool)`
+`function bitEqual(uint self, uint other, uint8 index) internal pure returns (bool)`
 
 Checks if the bit at `index` in `self` is the same as the corresponding bit in `other`.
 
@@ -180,7 +180,7 @@ Checks if the bit at `index` in `self` is the same as the corresponding bit in `
 
 ### bitAnd(uint, uint, uint8)
 
-`function bitAnd(uint, uint, uint8) internal pure returns (uint8)`
+`function bitAnd(uint self, uint other, uint8 index) internal pure returns (uint8)`
 
 Calculates the bitwise `AND` of the bit at position `index` in `self` and the corresponding bit in `other`.
 
@@ -203,7 +203,7 @@ Calculates the bitwise `AND` of the bit at position `index` in `self` and the co
 
 ### bitOr(uint, uint, uint8)
 
-`function bitOr(uint, uint, uint8) internal pure returns (uint8)`
+`function bitOr(uint self, uint other, uint8 index) internal pure returns (uint8)`
 
 Calculates the bitwise `OR` of the bit at position `index` in `self` and the corresponding bit in `other`.
 
@@ -226,7 +226,7 @@ Calculates the bitwise `OR` of the bit at position `index` in `self` and the cor
 
 ### bitXor(uint, uint, uint8)
 
-`function bitXor(uint, uint, uint8) internal pure returns (uint8)`
+`function bitXor(uint self, uint other, uint8 index) internal pure returns (uint8)`
 
 Calculates the bitwise `XOR` of the bit at position `index` in `self` and the corresponding bit in `other`.
 
@@ -249,7 +249,7 @@ Calculates the bitwise `XOR` of the bit at position `index` in `self` and the co
 
 ### bits(uint, uint8, uint16)
 
-`function bits(uint, uint8, uint16) internal pure returns (uint)`
+`function bits(uint self, uint8 startIndex, uint16 numBits) internal pure returns (uint)`
 
 Extracts `numBits` bits from `self`, starting at `startIndex`.
 
@@ -279,7 +279,7 @@ To get all the bits: `self.bits(0, 256)`
 
 ### highestBitSet(uint)
 
-`function highestBitSet(uint) internal pure returns (uint8)`
+`function highestBitSet(uint self) internal pure returns (uint8)`
 
 Calculates the index of the highest bit set in `self`.
 
@@ -304,7 +304,7 @@ Calculates the index of the highest bit set in `self`.
 
 ### lowestBitSet(uint)
 
-`function lowestBitSet(uint) internal pure returns (uint8)`
+`function lowestBitSet(uint self) internal pure returns (uint8)`
 
 Calculates the index of the lowest bit set in `self`.
 

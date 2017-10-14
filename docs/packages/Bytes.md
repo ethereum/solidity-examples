@@ -131,7 +131,7 @@ Finally, **note** that these sections deal with bytes in memory and on the stack
 
 ### equals(bytes memory, bytes memory)
 
-`function equals(bytes memory, bytes memory) internal pure returns (bool)`
+`function equals(bytes memory self, bytes memory other) internal pure returns (bool)`
 
 Checks if two `bytes memory` are equal. This is a more efficient method then checking each index manually.
 
@@ -159,7 +159,7 @@ Checks if two `bytes memory` are equal. This is a more efficient method then che
 
 ### equalsRef(bytes memory, bytes memory)
 
-`function equalsRef(bytes memory, bytes memory) internal pure returns (bool)`
+`function equalsRef(bytes memory self, bytes memory other) internal pure returns (bool)`
 
 Checks if two `bytes memory` are the same by comparing their internal references.
 
@@ -185,7 +185,7 @@ Checks if two `bytes memory` are the same by comparing their internal references
 
 ### copy(bytes memory)
 
-`function copy(bytes memory) internal pure returns (bytes)`
+`function copy(bytes memory self) internal pure returns (bytes)`
 
 Copies a `bytes memory` array.
 
@@ -213,7 +213,7 @@ Copies a `bytes memory` array.
 
 ### substr(bytes memory, uint)
 
-`function substr(bytes memory, uint) internal pure returns (bytes)`
+`function substr(bytes memory self, uint startIndex) internal pure returns (bytes)`
 
 Same as `copy(bytes memory)` but starts copying at position `startIndex`.
 
@@ -233,7 +233,7 @@ Same as `copy(bytes memory)` but starts copying at position `startIndex`.
 ##### ensures
 
 - `sst = self.substr(startIndex) => sst.length = self.length - startIndex`.
-- `sst = self.substr(startIndex) => sst = [self[startIdx], self[startIdx + 1], ... , self[self.length - 1]`.
+- `sst = self.substr(startIndex) => sst = [self[startIdx], self[startIdx + 1], ... , self[self.length - 1]]`.
 ##### gascosts
 
 - Copy one word: **883**
@@ -242,7 +242,7 @@ Same as `copy(bytes memory)` but starts copying at position `startIndex`.
 
 ### substr(bytes memory, uint, uint)
 
-`function substr(bytes memory, uint, uint) internal pure returns (bytes)`
+`function substr(bytes memory self, uint startIndex, uint len) internal pure returns (bytes)`
 
 This function copies `len` number of bytes from `self`, starting at `startIndex`.
 
@@ -275,7 +275,7 @@ Calling `bts.copy()` is the same as calling `bts.substr(0, bts.length)`.
 
 ### concat(bytes memory, bytes memory)
 
-`function concat(bytes memory, bytes memory) internal pure returns (bytes memory)`
+`function concat(bytes memory self, bytes memory other) internal pure returns (bytes memory)`
 
 Concatenates two `bytes memory` arrays into one single array.
 
@@ -303,7 +303,7 @@ Concatenates two `bytes memory` arrays into one single array.
 
 ### substr(bytes32, uint8)
 
-`function substr(bytes32, uint8) internal pure returns (bytes32)`
+`function substr(bytes32 self, uint8 startIndex) internal pure returns (bytes32)`
 
 Create a substring of a `bytes32`, starting at `startIndex`.
 
@@ -331,7 +331,7 @@ Create a substring of a `bytes32`, starting at `startIndex`.
 
 ### substr(bytes32, uint8, uint8)
 
-`function substr(bytes32, uint8, uint8) internal pure returns (bytes32)`
+`function substr(bytes32 self, uint8 startIndex, uint8 len) internal pure returns (bytes32)`
 
 Create a substring of a `bytes32`, starting at `startIndex`.
 
@@ -361,7 +361,7 @@ Create a substring of a `bytes32`, starting at `startIndex`.
 
 ### toBytes(bytes32)
 
-`function toBytes(bytes32) internal pure returns (bytes memory)`
+`function toBytes(bytes32 self) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from a `bytes32`.
 
@@ -386,7 +386,7 @@ Create a new `bytes memory` from a `bytes32`.
 
 ### toBytes(bytes32, uint8)
 
-`function toBytes(bytes32, uint8) internal pure returns (bytes memory)`
+`function toBytes(bytes32 self, uint8 len) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` by copying `len` bytes from the source `bytes32`.
 
@@ -412,7 +412,7 @@ Create a new `bytes memory` by copying `len` bytes from the source `bytes32`.
 
 ### toBytes(address)
 
-`function toBytes(address) internal pure returns (bytes memory)`
+`function toBytes(address self) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from an `address`. Note that bytes use big endian formatting, i.e. resultBytes[0] is the highest order byte.
 
@@ -437,7 +437,7 @@ Create a new `bytes memory` from an `address`. Note that bytes use big endian fo
 
 ### toBytes(uint)
 
-`function toBytes(uint) internal pure returns (bytes memory)`
+`function toBytes(uint self) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from a `uint`. Note that bytes use big endian formatting, i.e. resultBytes[0] is the highest order byte.
 
@@ -462,7 +462,7 @@ Create a new `bytes memory` from a `uint`. Note that bytes use big endian format
 
 ### toBytes(uint, uint16)
 
-`function toBytes(uint, uint16) internal pure returns (bytes memory)`
+`function toBytes(uint self, uint16 bitsize) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from a `uint`. Only `bitsize` bits are copied. Note that bytes use big endian formatting, i.e. resultBytes[0] is the highest order byte.
 
@@ -493,7 +493,7 @@ Create a new `bytes memory` from a `uint`. Only `bitsize` bits are copied. Note 
 
 ### toBytes(bool)
 
-`function toBytes(bool) internal pure returns (bytes memory)`
+`function toBytes(bool self) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from a `boolean`.
 
@@ -518,7 +518,7 @@ Create a new `bytes memory` from a `boolean`.
 
 ### toBytes(bool)
 
-`function toBytes(bool) internal pure returns (bytes memory)`
+`function toBytes(bool self) internal pure returns (bytes memory)`
 
 Create a new `bytes memory` from a boolean.
 
@@ -543,7 +543,7 @@ Create a new `bytes memory` from a boolean.
 
 ### highestByteSet(bytes32)
 
-`function highestByteSet(bytes32) internal pure returns (uint8 highest)`
+`function highestByteSet(bytes32 self) internal pure returns (uint8 highest)`
 
 Calculates the index of the highest non-zero byte in a `bytes32`. Note that bytes uses big endian ordering (the most significant byte is the lowest).
 
@@ -571,7 +571,7 @@ Calculates the index of the highest non-zero byte in a `bytes32`. Note that byte
 
 ### lowestByteSet(bytes32)
 
-`function lowestByteSet(bytes32) internal pure returns (uint8 lowest)`
+`function lowestByteSet(bytes32 self) internal pure returns (uint8 lowest)`
 
 Calculates the index of the lowest non-zero byte in a `bytes32`. Note that bytes uses big endian ordering (the most significant byte is the lowest).
 
@@ -599,7 +599,7 @@ Calculates the index of the lowest non-zero byte in a `bytes32`. Note that bytes
 
 ### highestByteSet(uint)
 
-`function highestByteSet(uint) internal pure returns (uint8 highest)`
+`function highestByteSet(uint self) internal pure returns (uint8 highest)`
 
 Calculates the index of the highest non-zero byte in a `uint`. Note that integers uses little endian ordering (the least significant byte is the lowest).
 
@@ -627,7 +627,7 @@ Calculates the index of the highest non-zero byte in a `uint`. Note that integer
 
 ### lowestByteSet(uint)
 
-`function lowestByteSet(uint) internal pure returns (uint8 lowest)`
+`function lowestByteSet(uint self) internal pure returns (uint8 lowest)`
 
 Calculates the index of the lowest non-zero byte in a `uint`. Note that bytes uses little endian ordering (the most significant byte is the lowest).
 

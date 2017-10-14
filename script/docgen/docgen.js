@@ -52,6 +52,16 @@ var headLine = function (str, level) {
     }
 };
 var paragraph = function (str) { return str + "\n\n"; };
+var paramFull = function (p) {
+    var ret = p.type;
+    if (p.refType) {
+        ret += " " + p.refType;
+    }
+    if (p.name) {
+        ret += " " + p.name;
+    }
+    return ret;
+};
 var paramTypeAndRefType = function (p) {
     var ret = p.type;
     if (p.refType) {
@@ -66,6 +76,7 @@ var paramTypeAndRefTypeAnchor = function (p) {
     }
     return ret;
 };
+var funcNameFull = function (func) { return func.name + "(" + func.inParams.map(paramFull).join(', ') + ")"; };
 var funcName = function (func) { return func.name + "(" + func.inParams.map(paramTypeAndRefType).join(', ') + ")"; };
 var funcNameAnchor = function (func) { return "" + func.name.toLowerCase() + func.inParams.map(paramTypeAndRefTypeAnchor).join('-'); };
 var paramTypeAndName = function (param) {
@@ -87,7 +98,7 @@ var paramDisp = function (param) {
     }
 };
 var funcSig = function (func) {
-    var str = "function " + funcName(func) + " " + func.visibility + " " + func.qualifier;
+    var str = "function " + funcNameFull(func) + " " + func.visibility + " " + func.qualifier;
     if (func.modifiers && func.modifiers.length > 0) {
         str += func.modifiers.join(' ');
     }

@@ -37,7 +37,7 @@ Inspiration for adding this library was taken from the SafeMath library in zeppe
 
 ### exactAdd(uint, uint)
 
-`function exactAdd(uint, uint) internal pure returns (uint sum)`
+`function exactAdd(uint self, uint other) internal pure returns (uint sum)`
 
 Adds two unsigned integers. Throws if the result is not inside the allowed range.
 
@@ -62,7 +62,7 @@ Adds two unsigned integers. Throws if the result is not inside the allowed range
 
 ### exactSub(uint, uint)
 
-`function exactSub(uint, uint) internal pure returns (uint diff)`
+`function exactSub(uint self, uint other) internal pure returns (uint diff)`
 
 Subtracts `other` from `self`. Throws if the result is not inside the allowed range.
 
@@ -87,7 +87,7 @@ Subtracts `other` from `self`. Throws if the result is not inside the allowed ra
 
 ### exactMul(uint, uint)
 
-`function exactMul(uint, uint) internal pure returns (uint prod)`
+`function exactMul(uint self, uint other) internal pure returns (uint prod)`
 
 Multiplies two numbers. Throws if the result is not inside the allowed range.
 
@@ -112,7 +112,7 @@ Multiplies two numbers. Throws if the result is not inside the allowed range.
 
 ### exactAdd(int, int)
 
-`function exactAdd(int, int) internal pure returns (int sum)`
+`function exactAdd(int self, int other) internal pure returns (int sum)`
 
 Adds two signed integers. Throws if the result is not inside the allowed range.
 
@@ -138,7 +138,7 @@ Adds two signed integers. Throws if the result is not inside the allowed range.
 
 ### exactSub(int, int)
 
-`function exactSub(int, int) internal pure returns (int diff)`
+`function exactSub(int self, int other) internal pure returns (int diff)`
 
 Subtracts `other` from `self`. Throws if the result is not inside the allowed range.
 
@@ -164,7 +164,7 @@ Subtracts `other` from `self`. Throws if the result is not inside the allowed ra
 
 ### exactMul(int, int)
 
-`function exactMul(int, int) internal pure returns (int mul)`
+`function exactMul(int self, int other) internal pure returns (int mul)`
 
 Multiplies two numbers. Throws if the result is not inside the allowed range.
 
@@ -189,7 +189,7 @@ Multiplies two numbers. Throws if the result is not inside the allowed range.
 
 ### exactDiv(int, int)
 
-`function exactDiv(int, int) internal pure returns (int quot)`
+`function exactDiv(int self, int other) internal pure returns (int quot)`
 
 Divides `self` with `other`. Throws if the result is not inside the allowed range.
 

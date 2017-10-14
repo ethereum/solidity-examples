@@ -73,6 +73,17 @@ const headLine = (str: string, level: number = 0) => {
 
 const paragraph = (str: string) => `${str}\n\n`;
 
+const paramFull = (p: IParam) => {
+    let ret = p.type;
+    if (p.refType) {
+        ret += ` ${p.refType}`;
+    }
+    if (p.name) {
+        ret += ` ${p.name}`;
+    }
+    return ret;
+};
+
 const paramTypeAndRefType = (p: IParam) => {
     let ret = p.type;
     if (p.refType) {
@@ -88,6 +99,8 @@ const paramTypeAndRefTypeAnchor = (p: IParam) => {
     }
     return ret;
 };
+
+const funcNameFull = (func: IFunc) => `${func.name}(${func.inParams.map(paramFull).join(', ')})`;
 
 const funcName = (func: IFunc) => `${func.name}(${func.inParams.map(paramTypeAndRefType).join(', ')})`;
 
@@ -113,7 +126,7 @@ const paramDisp = (param: IParam) => {
 };
 
 const funcSig = (func: IFunc) => {
-    let str = `function ${funcName(func)} ${func.visibility} ${func.qualifier}`;
+    let str = `function ${funcNameFull(func)} ${func.visibility} ${func.qualifier}`;
     if (func.modifiers && func.modifiers.length > 0) {
         str += func.modifiers.join(' ');
     }

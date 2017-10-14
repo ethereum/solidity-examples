@@ -154,7 +154,7 @@
       ],
       "ensures": [
         "`sst = self.substr(startIndex) => sst.length = self.length - startIndex`.",
-        "`sst = self.substr(startIndex) => sst = [self[startIdx], self[startIdx + 1], ... , self[self.length - 1]`."
+        "`sst = self.substr(startIndex) => sst = [self[startIdx], self[startIdx + 1], ... , self[self.length - 1]]`."
       ],
       "gas": [
         [
