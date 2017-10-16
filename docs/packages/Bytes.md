@@ -121,7 +121,6 @@ Finally, **note** that these sections deal with bytes in memory and on the stack
 - [toBytes(uint)](#tobytesuint)
 - [toBytes(uint, uint16)](#tobytesuint-uint16)
 - [toBytes(bool)](#tobytesbool)
-- [toBytes(bool)](#tobytesbool)
 - [highestByteSet(bytes32)](#highestbytesetbytes32)
 - [lowestByteSet(bytes32)](#lowestbytesetbytes32)
 - [highestByteSet(uint)](#highestbytesetuint)
@@ -513,31 +512,6 @@ Create a new `bytes memory` from a `boolean`.
 ##### gascosts
 
 - Fixed: **225**
-
-***
-
-### toBytes(bool)
-
-`function toBytes(bool self) internal pure returns (bytes memory)`
-
-Create a new `bytes memory` from a boolean.
-
-##### params
-
-- `bool self`: The source boolean.
-
-
-##### returns
-
-- `bytes memory`: The boolean as a `bytes memory`. Note that the bytes array will be of length 1.
-
-##### ensures
-
-- `bts = self.toBytes() => bts.length = 1`.
-- `bts = self.toBytes() => if self == true: bts = [1], else bts = [0].
-##### gascosts
-
-- Fixed: **318**
 
 ***
 
