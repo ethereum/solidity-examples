@@ -25,20 +25,20 @@ The idea to add a UTF string validation library came from Arachnid's (Nick Johns
 
 ## Functions
 
-- [validate(string)](#validatestring)
+- [validate(string memory)](#validatestring-memory)
 - [parseRune(uint)](#parseruneuint)
 
 ***
 
-### validate(string)
+### validate(string memory)
 
-`function validate(string self) internal pure returns (bool)`
+`function validate(string memory self) internal pure returns (bool)`
 
 Check that a string is proper UTF-8. No gas benchmark as it is simply an aggregate of the cost of validating each rune (benchmarks for that can be found in the docs for [parseRune(uint)](#parseruneuint).
 
 ##### params
 
-- `string self`: The string.
+- `string memory self`: The string.
 
 
 ##### returns
