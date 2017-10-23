@@ -8,9 +8,12 @@
 
 **Source file:** [Bits.sol](../../src/bits/Bits.sol)
 
+
 **Example usage:** [BitsExamples.sol](../../examples/bits/BitsExamples.sol)
 
+
 **Tests source file:** [bits_tests.sol](../../test/bits/bits_tests.sol)
+
 
 **Perf (gas usage) source file:** [bits_perfs.sol](../../perf/bits/bits_perfs.sol)
 

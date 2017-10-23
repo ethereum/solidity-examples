@@ -137,7 +137,7 @@ var writeFunction = function (perf, func, level) {
         }
     }
     lines.push(newline());
-    if (func.inParams && func.inParams.length > 0) {
+    if (func.outParams && func.outParams.length > 0) {
         lines.push(headLine("returns", level + 2));
         for (var _d = 0, _e = func.outParams; _d < _e.length; _d++) {
             var p = _e[_d];
@@ -200,22 +200,33 @@ var createPackageDocs = function (docJson, intro) {
     root.push("**Contract type:** " + docJson["type"] + "\n\n");
     var sourceName = docJson["name"] + ".sol";
     root.push("**Source file:** [" + sourceName + "](../../src/" + docJson["package"] + "/" + sourceName + ")\n\n");
-    var examplesName = docJson["name"] + "Examples.sol";
-    root.push("**Example usage:** [" + examplesName + "](../../examples/" + docJson["package"] + "/" + examplesName + ")\n\n");
-    var testName = docJson["package"] + "_tests.sol";
-    root.push("**Tests source file:** [" + testName + "](../../test/" + docJson["package"] + "/" + testName + ")\n\n");
-    var perfName = docJson["package"] + "_perfs.sol";
-    root.push("**Perf (gas usage) source file:** [" + perfName + "](../../perf/" + docJson["package"] + "/" + perfName + ")\n\n");
     root.push(newline());
+    if (docJson["examples"]) {
+        var examplesName = docJson["examples"] + ".sol";
+        root.push("**Example usage:** [" + examplesName + "](../../examples/" + docJson["package"] + "/" + examplesName + ")\n\n");
+        root.push(newline());
+    }
+    if (docJson["tests"]) {
+        var testName = docJson["tests"] + ".sol";
+        root.push("**Tests source file:** [" + testName + "](../../test/" + docJson["package"] + "/" + testName + ")\n\n");
+        root.push(newline());
+    }
+    if (docJson["perfs"]) {
+        var perfName = docJson["perfs"] + ".sol";
+        root.push("**Perf (gas usage) source file:** [" + perfName + "](../../perf/" + docJson["package"] + "/" + perfName + ")\n\n");
+        root.push(newline());
+    }
     root.push(headLine("description", 2));
     root.push(intro);
     root.push(newline());
     root.push(newline());
-    root = root.concat(createFuncSection(docJson["functions"]));
+    if (docJson["functions"]) {
+        root = root.concat(createFuncSection(docJson["functions"]));
+    }
     return root.join('');
 };
 var writeDocs = function () {
-    var docs = ["Bits", "Bytes", "Math", "Strings"];
+    var docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "Token"];
     for (var _i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
         var doc = docs_1[_i];
         var docJson = JSON.parse(fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());

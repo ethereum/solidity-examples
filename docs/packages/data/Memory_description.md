@@ -1,0 +1,3 @@
+The `unsafe` package contains code that performs potentially unsafe operations, for example reading and writing directly from memory. The memory library is used to work with memory directly; there are methods for copying memory, equals-checks, and converting from and to Solidity types.
+
+In these docs, the word stored at memory address `n` is denoted `Memory[n]`. It is implicitly of type `uint`, but the regular index access syntax is used to point to individual bytes, e.g. byte number `m` of the word stored at address `n` is `Memory[n][m]`. Additionally, the free memory pointer is referred to `FMP`.

@@ -138,31 +138,6 @@ contract TestMemoryDataPtrBytes is MemoryTest {
 }
 
 
-contract TestMemoryPtrString is MemoryTest {
-    function testImpl() internal {
-        string memory str = "Terry A. Davis";
-        var addr = Memory.ptr(str);
-        uint strAddr;
-        assembly {
-            strAddr := str
-        }
-        assert(addr == strAddr);
-    }
-}
-
-contract TestMemoryDataPtrString is MemoryTest {
-    function testImpl() internal {
-        string memory str = "Terry A. Davis";
-        var addr = Memory.dataPtr(str);
-        uint strDataAddr;
-        assembly {
-            strDataAddr := add(str, 0x20)
-        }
-        assert(addr == strDataAddr);
-    }
-}
-
-
 contract TestMemoryFromBytes is MemoryTest {
     function testImpl() internal {
         bytes memory bts = hex"0102030405060708090a0b";
@@ -173,20 +148,6 @@ contract TestMemoryFromBytes is MemoryTest {
             btsDataAddr := add(bts, 0x20)
         }
         assert(addr == btsDataAddr);
-    }
-}
-
-
-contract TestMemoryFromString is MemoryTest {
-    function testImpl() internal {
-        string memory str = "Terry A. Davis";
-        var (addr, len) = Memory.fromString(str);
-        assert(len == bytes(str).length);
-        uint strDataAddr;
-        assembly {
-            strDataAddr := add(str, 0x20)
-        }
-        assert(addr == strDataAddr);
     }
 }
 
@@ -235,21 +196,6 @@ contract TestMemoryToBytes is MemoryTest {
         var (addr, len) = Memory.fromBytes(bts);
         var bts2 = Memory.toBytes(addr, len);
         assert(bts2.length == bts.length);
-        for(uint i = 0; i < bts.length; i++) {
-            assert(bts[i] == bts2[i]);
-        }
-    }
-}
-
-
-contract TestMemoryToString is MemoryTest {
-    function testImpl() internal {
-        string memory str = "Terry A. Davis";
-        var (addr, len) = Memory.fromString(str);
-        var str2 = Memory.toString(addr, len);
-        var bts = bytes(str);
-        var bts2 = bytes(str2);
-        assert(bts.length == bts2.length);
         for(uint i = 0; i < bts.length; i++) {
             assert(bts[i] == bts2[i]);
         }

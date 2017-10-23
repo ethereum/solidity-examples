@@ -8,9 +8,12 @@
 
 **Source file:** [Math.sol](../../src/math/Math.sol)
 
+
 **Example usage:** [MathExamples.sol](../../examples/math/MathExamples.sol)
 
+
 **Tests source file:** [math_tests.sol](../../test/math/math_tests.sol)
+
 
 **Perf (gas usage) source file:** [math_perfs.sol](../../perf/math/math_perfs.sol)
 
@@ -158,7 +161,7 @@ Subtracts `other` from `self`. Throws if the result is not inside the allowed ra
 
 ##### gascosts
 
-- Fixed: **256**
+- Fixed: **170**
 
 ***
 
@@ -183,7 +186,7 @@ Multiplies two numbers. Throws if the result is not inside the allowed range.
 
 ##### gascosts
 
-- Fixed: **256**
+- Fixed: **207**
 
 ***
 

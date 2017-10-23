@@ -3,6 +3,9 @@
   "package": "math",
   "type": "Static library",
   "intro": "Math_description.md",
+  "examples": "MathExamples",
+  "tests": "math_tests",
+  "perfs": "math_perfs",
   "functions": [
     {
       "name": "exactAdd",

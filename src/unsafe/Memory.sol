@@ -66,29 +66,10 @@ library Memory {
         }
     }
 
-    function ptr(string memory str) internal pure returns (uint addr) {
-        assembly {
-            addr := str
-        }
-    }
-
-    function dataPtr(string memory str) internal pure returns (uint addr) {
-        assembly {
-            addr := add(str, 0x20)
-        }
-    }
-
     function fromBytes(bytes memory bts) internal pure returns (uint addr, uint len) {
         assembly {
             len := mload(bts)
             addr := add(bts, 0x20)
-        }
-    }
-
-    function fromString(string memory str) internal pure returns (uint addr, uint len) {
-        assembly {
-            len := mload(str)
-            addr := add(str, 0x20)
         }
     }
 
@@ -100,15 +81,6 @@ library Memory {
             btsptr := add(bts, 0x20)
         }
         copy(addr, btsptr, len);
-    }
-
-    function toString(uint addr, uint len) internal pure returns (string memory str) {
-        str = new string(len);
-        uint strptr;
-        assembly {
-            strptr := add(str, 0x20)
-        }
-        copy(addr, strptr, len);
     }
 
     function toUint(uint addr) internal pure returns (uint n) {

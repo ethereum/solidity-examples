@@ -3,6 +3,9 @@
   "package": "strings",
   "type": "Static library",
   "intro": "Strings_description.md",
+  "examples": "StringsExamples",
+  "tests": "strings_tests",
+  "perfs": "strings_perfs",
   "functions": [
     {
       "name": "validate",

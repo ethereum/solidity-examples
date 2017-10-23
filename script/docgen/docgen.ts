@@ -222,23 +222,34 @@ const createPackageDocs = (docJson: object, intro: string) => {
     root.push(`**Contract type:** ${docJson["type"]}\n\n`);
     const sourceName = docJson["name"] + ".sol";
     root.push(`**Source file:** [${sourceName}](../../src/${docJson["package"]}/${sourceName})\n\n`);
-    const examplesName = docJson["name"] + "Examples.sol";
-    root.push(`**Example usage:** [${examplesName}](../../examples/${docJson["package"]}/${examplesName})\n\n`);
-    const testName = docJson["package"] + "_tests.sol";
-    root.push(`**Tests source file:** [${testName}](../../test/${docJson["package"]}/${testName})\n\n`);
-    const perfName = docJson["package"] + "_perfs.sol";
-    root.push(`**Perf (gas usage) source file:** [${perfName}](../../perf/${docJson["package"]}/${perfName})\n\n`);
     root.push(newline());
+    if (docJson["examples"]) {
+        const examplesName = docJson["examples"] + ".sol";
+        root.push(`**Example usage:** [${examplesName}](../../examples/${docJson["package"]}/${examplesName})\n\n`);
+        root.push(newline());
+    }
+    if (docJson["tests"]) {
+        const testName = docJson["tests"] + ".sol";
+        root.push(`**Tests source file:** [${testName}](../../test/${docJson["package"]}/${testName})\n\n`);
+        root.push(newline());
+    }
+    if (docJson["perfs"]) {
+        const perfName = docJson["perfs"] + ".sol";
+        root.push(`**Perf (gas usage) source file:** [${perfName}](../../perf/${docJson["package"]}/${perfName})\n\n`);
+        root.push(newline());
+    }
     root.push(headLine("description", 2));
     root.push(intro);
     root.push(newline());
     root.push(newline());
-    root = root.concat(createFuncSection(docJson["functions"]));
+    if (docJson["functions"]) {
+        root = root.concat(createFuncSection(docJson["functions"]));
+    }
     return root.join('');
 };
 
 const writeDocs = () => {
-    const docs = ["Bits", "Bytes", "Math", "Strings"];
+    const docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "Token"];
     for (const doc of docs) {
         const docJson = JSON.parse(readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());
         const intro = readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, docJson["intro"])).toString();

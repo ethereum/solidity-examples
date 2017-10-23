@@ -8,9 +8,12 @@
 
 **Source file:** [Bytes.sol](../../src/bytes/Bytes.sol)
 
+
 **Example usage:** [BytesExamples.sol](../../examples/bytes/BytesExamples.sol)
 
+
 **Tests source file:** [bytes_tests.sol](../../test/bytes/bytes_tests.sol)
+
 
 **Perf (gas usage) source file:** [bytes_perfs.sol](../../perf/bytes/bytes_perfs.sol)
 
@@ -205,8 +208,8 @@ Copies a `bytes memory` array.
 ##### gascosts
 
 - Copy empty bytes: **157**
-- Copy one word: **827**
-- Copy ten words: **2785**
+- Copy one word: **738**
+- Copy ten words: **1639**
 
 ***
 
@@ -235,7 +238,7 @@ Same as `copy(bytes memory)` but starts copying at position `startIndex`.
 - `sst = self.substr(startIndex) => sst = [self[startIdx], self[startIdx + 1], ... , self[self.length - 1]]`.
 ##### gascosts
 
-- Copy one word: **883**
+- Copy one word: **788**
 
 ***
 
@@ -268,7 +271,7 @@ Calling `bts.copy()` is the same as calling `bts.substr(0, bts.length)`.
 - `sst = self.copy(startIndex, len) => sst = [self[startIdx], self[startIdx + 1], ... , self[startIdx + len - 1]]`.
 ##### gascosts
 
-- Copy one word: **939**
+- Copy one word: **844**
 
 ***
 
@@ -294,9 +297,9 @@ Concatenates two `bytes memory` arrays into one single array.
 - `btsCnct = self.concat(other) => btsCnct = [self[0], self[1], ... , self[self.length - 1], other[0], other[1], ... , other[other.length - 1]]`.
 ##### gascosts
 
-- Concat two empty bytes: **986**
-- Concat two one-word arrays: **1279**
-- Concat two five-word arrays: **2498**
+- Concat two empty bytes: **993**
+- Concat two one-word arrays: **1190**
+- Concat two five-word arrays: **1979**
 
 ***
 
@@ -379,7 +382,7 @@ Create a new `bytes memory` from a `bytes32`.
 - `bts = self.toBytes() => for i in [0, 32): bts[i] = self[i]`.
 ##### gascosts
 
-- Fixed: **225**
+- Fixed: **232**
 
 ***
 
@@ -405,7 +408,7 @@ Create a new `bytes memory` by copying `len` bytes from the source `bytes32`.
 - `bts = self.toBytes(len) => for i in [0, len): bts[i] = self[i]`.
 ##### gascosts
 
-- Fixed: **289**
+- Fixed: **417**
 
 ***
 
@@ -430,7 +433,7 @@ Create a new `bytes memory` from an `address`. Note that bytes use big endian fo
 - `bts = self.toBytes() => for i in [0, 20): bts[i] = bytes20(self)[i]`.
 ##### gascosts
 
-- Fixed: **467**
+- Fixed: **595**
 
 ***
 
@@ -455,7 +458,7 @@ Create a new `bytes memory` from a `uint`. Note that bytes use big endian format
 - `bts = self.toBytes() => for i in [0, 32): bts[i] = bytes32(self)[i]`.
 ##### gascosts
 
-- Fixed: **381**
+- Fixed: **459**
 
 ***
 
@@ -486,7 +489,7 @@ Create a new `bytes memory` from a `uint`. Only `bitsize` bits are copied. Note 
 - `bts = self.toBytes(bitsize) => for i in [0, bitsize / 8): bts[i] = byte(self >> bitsize - 8 - i*8 & 0xFF)`.
 ##### gascosts
 
-- Fixed: **684**
+- Fixed: **812**
 
 ***
 
@@ -511,7 +514,7 @@ Create a new `bytes memory` from a `boolean`.
 - `bts = self.toBytes() => if self == true: bts = [1], else bts = [0].
 ##### gascosts
 
-- Fixed: **225**
+- Fixed: **232**
 
 ***
 

@@ -160,53 +160,10 @@ contract PerfMemoryFromBytes is STLPerf {
 }
 
 
-contract PerfMemoryPtrString is STLPerf {
-    function perf() public payable returns (uint) {
-        string memory str = new string(0);
-        uint gasPre = msg.gas;
-        Memory.ptr(str);
-        uint gasPost = msg.gas;
-        return gasPre - gasPost;
-    }
-}
-
-
-contract PerfMemoryDataPtrString is STLPerf {
-    function perf() public payable returns (uint) {
-        string memory str = new string(0);
-        uint gasPre = msg.gas;
-        Memory.dataPtr(str);
-        uint gasPost = msg.gas;
-        return gasPre - gasPost;
-    }
-}
-
-
-contract PerfMemoryFromString is STLPerf {
-    function perf() public payable returns (uint) {
-        string memory str = new string(0);
-        uint gasPre = msg.gas;
-        Memory.fromString(str);
-        uint gasPost = msg.gas;
-        return gasPre - gasPost;
-    }
-}
-
-
 contract PerfMemoryToBytesOneWord is STLPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
         Memory.toBytes(0, 32);
-        uint gasPost = msg.gas;
-        return gasPre - gasPost;
-    }
-}
-
-
-contract PerfMemoryToStringOneWord is STLPerf {
-    function perf() public payable returns (uint) {
-        uint gasPre = msg.gas;
-        Memory.toString(0, 32);
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }

@@ -3,6 +3,9 @@
   "package": "bytes",
   "type": "Static library",
   "intro": "Bytes_description.md",
+  "examples": "BytesExamples",
+  "tests": "bytes_tests",
+  "perfs": "bytes_perfs",
   "functions": [
     {
       "name": "equals",

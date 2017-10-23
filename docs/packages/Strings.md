@@ -8,9 +8,12 @@
 
 **Source file:** [Strings.sol](../../src/strings/Strings.sol)
 
+
 **Example usage:** [StringsExamples.sol](../../examples/strings/StringsExamples.sol)
 
+
 **Tests source file:** [strings_tests.sol](../../test/strings/strings_tests.sol)
+
 
 **Perf (gas usage) source file:** [strings_perfs.sol](../../perf/strings/strings_perfs.sol)
 

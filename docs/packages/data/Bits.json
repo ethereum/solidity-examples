@@ -3,6 +3,9 @@
   "package": "bits",
   "type": "Static library",
   "intro": "Bits_description.md",
+  "examples": "BitsExamples",
+  "tests": "bits_tests",
+  "perfs": "bits_perfs",
   "functions": [
     {
       "name": "setBit",
