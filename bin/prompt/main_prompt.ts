@@ -3,12 +3,18 @@ import {docsMenu} from "./docs_prompt";
 import {testsMenu} from "./tests_prompt";
 import {perfMenu} from "./perf_prompt";
 import {logsMenu} from "./logs_prompt";
+import {compileMenu} from "./compile_prompt";
 
 export const mainPrompt = {
     type: 'list',
     name: 'main',
     message: 'Select an action to perform',
     choices: [
+        {
+            key: 'c',
+            name: 'Compile contracts',
+            value: 'compile'
+        },
         {
             key: 't',
             name: 'Run tests',
@@ -35,7 +41,7 @@ export const mainPrompt = {
 export const mainMenu = async (): Promise<boolean> => {
     const selected = await prompt(mainPrompt);
     switch (selected.main) {
-        case "tests":                             // Options
+        case "tests":                            // Options
             await testsMenu();
             break;
         case "perf":                             // Options
@@ -46,6 +52,9 @@ export const mainMenu = async (): Promise<boolean> => {
             break;
         case "docs":                             // Options
             await docsMenu();
+            break;
+        case "compile":                          // Options
+            await compileMenu();
             break;
         case "exit":                             // Navigation
             return true;

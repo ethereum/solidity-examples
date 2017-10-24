@@ -6,9 +6,11 @@
     "solstl": "./bin/main.js"
   },
   "scripts": {
-    "lint": "tslint",
     "test": "jest && node ./bin/main.js tests --silent",
+    "js-lint": "tslint -p .",
+    "js-test": "jest",
     "contract-lint": "solhint src/**/*.sol",
+    "contract-compile": "node ./bin/main.js compile",
     "contract-tests": "node ./bin/main.js tests",
     "contract-perf": "node ./bin/main.js perf"
   },

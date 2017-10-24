@@ -30,7 +30,7 @@ export const OPTIONS: { [name: string]: Option } = {
     optAndUnopt: new Option('optAndUnopt', 'O', 'Run the suit both with optimized and un-opttimized code.'),
     extended: new Option('extended', 'E', 'Include the extended tests/performance units.'),
     silent: new Option('silent', 'S', 'Do not show a detailed results from tests or perf.'),
-    diff: new Option('diff', 'D', 'Compare perf results with the results from the previous perf (if any).')
+    diff: new Option('diff', 'I', 'Compare perf results with the results from the previous perf (if any).')
 };
 
 export const GLOBAL_OPTIONS: { [name: string]: Option } = {

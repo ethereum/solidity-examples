@@ -37,89 +37,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
-var docs_prompt_1 = require("./docs_prompt");
-var tests_prompt_1 = require("./tests_prompt");
-var perf_prompt_1 = require("./perf_prompt");
-var logs_prompt_1 = require("./logs_prompt");
-var compile_prompt_1 = require("./compile_prompt");
-exports.mainPrompt = {
-    type: 'list',
-    name: 'main',
-    message: 'Select an action to perform',
-    choices: [
-        {
-            key: 'c',
-            name: 'Compile contracts',
-            value: 'compile'
-        },
-        {
-            key: 't',
-            name: 'Run tests',
-            value: 'tests'
-        },
-        {
-            key: 'p',
-            name: 'Run perf',
-            value: 'perf'
-        },
-        {
-            key: 'l',
-            name: 'Check logs',
-            value: 'logs'
-        },
-        {
-            key: 'd',
-            name: 'View docs',
-            value: 'docs'
-        }
-    ].concat(utils_1.SEPARATOR).concat(utils_1.EXIT_CHOICE)
-};
-exports.mainMenu = function () { return __awaiter(_this, void 0, void 0, function () {
-    var selected, _a;
+var compile_1 = require("../../script/compile");
+exports.compileMenu = function () { return __awaiter(_this, void 0, void 0, function () {
+    var selected, units, _i, _a, cmpl;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, utils_1.prompt(exports.mainPrompt)];
+            case 0: return [4 /*yield*/, utils_1.prompt(utils_1.librarySelectionData('compile'))];
             case 1:
                 selected = _b.sent();
-                _a = selected.main;
-                switch (_a) {
-                    case "tests": return [3 /*break*/, 2];
-                    case "perf": return [3 /*break*/, 4];
-                    case "logs": return [3 /*break*/, 6];
-                    case "docs": return [3 /*break*/, 8];
-                    case "compile": return [3 /*break*/, 10];
-                    case "exit": return [3 /*break*/, 12];
+                if (selected.compile.length === 0) {
+                    return [2 /*return*/];
                 }
-                return [3 /*break*/, 13];
-            case 2: // Options
-            return [4 /*yield*/, tests_prompt_1.testsMenu()];
+                units = [];
+                for (_i = 0, _a = selected.compile; _i < _a.length; _i++) {
+                    cmpl = _a[_i];
+                    if (cmpl[0] instanceof Array) {
+                        units = units.concat(cmpl);
+                    }
+                    else {
+                        units.push(cmpl);
+                    }
+                }
+                return [4 /*yield*/, compile_1.compile(units)];
+            case 2:
+                _b.sent();
+                return [4 /*yield*/, exports.compileMenu()];
             case 3:
                 _b.sent();
-                return [3 /*break*/, 14];
-            case 4: // Options
-            return [4 /*yield*/, perf_prompt_1.perfMenu()];
-            case 5:
-                _b.sent();
-                return [3 /*break*/, 14];
-            case 6: // Options
-            return [4 /*yield*/, logs_prompt_1.logsMenu()];
-            case 7:
-                _b.sent();
-                return [3 /*break*/, 14];
-            case 8: // Options
-            return [4 /*yield*/, docs_prompt_1.docsMenu()];
-            case 9:
-                _b.sent();
-                return [3 /*break*/, 14];
-            case 10: // Options
-            return [4 /*yield*/, compile_prompt_1.compileMenu()];
-            case 11:
-                _b.sent();
-                return [3 /*break*/, 14];
-            case 12: // Navigation
-            return [2 /*return*/, true];
-            case 13: return [2 /*return*/, false];
-            case 14: return [2 /*return*/, false];
+                return [2 /*return*/];
         }
     });
 }); };
