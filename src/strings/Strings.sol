@@ -58,7 +58,12 @@ library Strings {
     uint constant internal B92H = 0x8F;
 
     function validate(string memory self) internal pure {
-        var (addr, len) = Memory.fromString(self);
+        uint addr;
+        uint len;
+        assembly {
+            addr := add(self, 0x20)
+            len := mload(self)
+        }
         if (len == 0) {
             return;
         }

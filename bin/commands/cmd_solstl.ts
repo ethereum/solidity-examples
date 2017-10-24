@@ -40,7 +40,7 @@ export class SolStlCommand extends Command {
     }
 
     public subcommands(): string[] {
-        return ['perf', 'tests', 'interactive'];
+        return ['perf', 'tests', 'interactive', 'compile'];
     }
 
     public arguments(): string[] {

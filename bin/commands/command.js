@@ -42,11 +42,11 @@ var Command = /** @class */ (function () {
         }
         var opts = this.validOptions();
         var help = '\n';
-        help += chalk.bold.white('Command:') + " " + chalk.magentaBright(this.name()) + "\n\n";
+        help += chalk['bold']['white']('Command:') + " " + chalk['magentaBright'](this.name()) + "\n\n";
         help += "\t" + this.description() + "\n\n";
-        help += chalk.bold.white('Usage:') + " " + cmdStr + " [OPTION]...\n\n";
+        help += chalk['bold']['white']('Usage:') + " " + cmdStr + " [OPTION]...\n\n";
         if (subcommands.length > 0) {
-            help += chalk.bold.white('Subcommands:') + "\n\n";
+            help += chalk['bold']['white']('Subcommands:') + "\n\n";
             for (var _i = 0, subcommands_1 = subcommands; _i < subcommands_1.length; _i++) {
                 var subcommand = subcommands_1[_i];
                 var scObj = commands_1.COMMANDS[subcommand];
@@ -56,7 +56,7 @@ var Command = /** @class */ (function () {
             help += '\n';
         }
         if (opts.length > 0) {
-            help += chalk.bold.white('Options:') + "\n\n";
+            help += chalk['bold']['white']('Options:') + "\n\n";
             for (var _a = 0, opts_1 = opts; _a < opts_1.length; _a++) {
                 var opt = opts_1[_a];
                 var optObj = option_1.OPTIONS[opt];
@@ -67,7 +67,7 @@ var Command = /** @class */ (function () {
             help += "\t" + helpStr + "\n";
             help += '\n';
         }
-        help += chalk.bold.white('Global Options:') + "\n\n";
+        help += chalk['bold']['white']('Global Options:') + "\n\n";
         for (var opt in option_1.GLOBAL_OPTIONS) {
             if (option_1.GLOBAL_OPTIONS.hasOwnProperty(opt)) {
                 var optObj = option_1.GLOBAL_OPTIONS[opt];

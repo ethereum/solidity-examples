@@ -6,21 +6,21 @@ var Logger = /** @class */ (function () {
     function Logger() {
     }
     Logger.error = function (text) {
-        io_1.println(chalk.redBright("[Error] " + text));
+        io_1.println(chalk['redBright']("[Error] " + text));
     };
     Logger.warn = function (text) {
         if (Logger.__level >= 1 /* Warn */) {
-            io_1.println(chalk.yellowBright("[Warning] " + text));
+            io_1.println(chalk['yellowBright']("[Warning] " + text));
         }
     };
     Logger.info = function (text) {
         if (Logger.__level >= 2 /* Info */) {
-            io_1.println(chalk.whiteBright("[Info] " + text));
+            io_1.println(chalk['whiteBright']("[Info] " + text));
         }
     };
     Logger.debug = function (text) {
         if (Logger.__level === 3 /* Debug */) {
-            io_1.println(chalk.blueBright("[Debug] " + text));
+            io_1.println(chalk['blueBright']("[Debug] " + text));
         }
     };
     Logger.setLevel = function (level) {

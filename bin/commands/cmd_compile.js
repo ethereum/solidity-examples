@@ -46,52 +46,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
-var fs = require("fs");
-var path = require("path");
-var packageFile = fs.readFileSync(path.join(__dirname, '..', '..', 'package.json')).toString();
-var packageObj = JSON.parse(packageFile);
-var version = packageObj.version;
-var SolStlCommand = /** @class */ (function (_super) {
-    __extends(SolStlCommand, _super);
-    function SolStlCommand() {
+var compile_1 = require("../../script/compile");
+var CompileCommand = /** @class */ (function (_super) {
+    __extends(CompileCommand, _super);
+    function CompileCommand() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    SolStlCommand.prototype.execute = function (args, options) {
+    CompileCommand.prototype.execute = function (args, options) {
         return __awaiter(this, void 0, void 0, function () {
+            var extended, _i, options_1, opt;
             return __generator(this, function (_a) {
-                if (!this.checkOptions(options)) {
-                    this.printHelp();
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (!this.checkOptions(options)) {
+                            this.printHelp();
+                            return [2 /*return*/];
+                        }
+                        if (args.length !== 0) {
+                            this.printHelp();
+                            return [2 /*return*/];
+                        }
+                        extended = false;
+                        for (_i = 0, options_1 = options; _i < options_1.length; _i++) {
+                            opt = options_1[_i];
+                            switch (opt) {
+                                case 'extended':
+                                    extended = true;
+                                    break;
+                            }
+                        }
+                        return [4 /*yield*/, compile_1.compileAll(extended)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
-                if (args.length !== 0) {
-                    this.printHelp();
-                    return [2 /*return*/];
-                }
-                if (options[0] === 'version') {
-                    console.log('Solidity Standard Library, version: ' + version);
-                }
-                return [2 /*return*/];
             });
         });
     };
-    SolStlCommand.prototype.name = function () {
+    CompileCommand.prototype.name = function () {
+        return 'compile';
+    };
+    CompileCommand.prototype.description = function () {
+        return 'Compile all contracts.';
+    };
+    CompileCommand.prototype.validOptions = function () {
+        return ['extended'];
+    };
+    CompileCommand.prototype.parent = function () {
         return 'solstl';
     };
-    SolStlCommand.prototype.description = function () {
-        return 'Root command.';
-    };
-    SolStlCommand.prototype.validOptions = function () {
-        return ['version'];
-    };
-    SolStlCommand.prototype.parent = function () {
-        return '';
-    };
-    SolStlCommand.prototype.subcommands = function () {
-        return ['perf', 'tests', 'interactive', 'compile'];
-    };
-    SolStlCommand.prototype.arguments = function () {
+    CompileCommand.prototype.subcommands = function () {
         return [];
     };
-    return SolStlCommand;
+    CompileCommand.prototype.arguments = function () {
+        return [];
+    };
+    return CompileCommand;
 }(command_1.Command));
-exports.SolStlCommand = SolStlCommand;
+exports.CompileCommand = CompileCommand;

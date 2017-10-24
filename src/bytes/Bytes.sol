@@ -83,7 +83,7 @@ library Bytes {
         bts = new bytes(len);
         // Even though the bytes will allocate a full word, we don't want
         // any potential garbage bytes in there.
-        uint data = uint(self) & ~uint(0) << len*8;
+        uint data = uint(self) & ~uint(0) << (32 - len)*8;
         assembly {
             mstore(add(bts, 0x20), data)
         }

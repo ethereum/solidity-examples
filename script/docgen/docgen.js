@@ -137,7 +137,7 @@ var writeFunction = function (perf, func, level) {
         }
     }
     lines.push(newline());
-    if (func.outParams && func.outParams.length > 0) {
+    if (func.inParams && func.inParams.length > 0) {
         lines.push(headLine("returns", level + 2));
         for (var _d = 0, _e = func.outParams; _d < _e.length; _d++) {
             var p = _e[_d];

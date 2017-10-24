@@ -53,11 +53,11 @@ export abstract class Command {
         const opts = this.validOptions();
 
         let help = '\n';
-        help += `${chalk.bold.white('Command:')} ${chalk.magentaBright(this.name())}\n\n`;
+        help += `${chalk['bold']['white']('Command:')} ${chalk['magentaBright'](this.name())}\n\n`;
         help += `\t${this.description()}\n\n`;
-        help += `${chalk.bold.white('Usage:')} ${cmdStr} [OPTION]...\n\n`;
+        help += `${chalk['bold']['white']('Usage:')} ${cmdStr} [OPTION]...\n\n`;
         if (subcommands.length > 0) {
-            help += `${chalk.bold.white('Subcommands:')}\n\n`;
+            help += `${chalk['bold']['white']('Subcommands:')}\n\n`;
             for (const subcommand of subcommands) {
                 const scObj = COMMANDS[subcommand];
                 const scStr = `${subcommand}                                                                        `.substr(0, 30) + scObj.description();
@@ -66,7 +66,7 @@ export abstract class Command {
             help += '\n';
         }
         if (opts.length > 0) {
-            help += `${chalk.bold.white('Options:')}\n\n`;
+            help += `${chalk['bold']['white']('Options:')}\n\n`;
             for (const opt of opts) {
                 const optObj = OPTIONS[opt];
                 const objStr = `--${optObj.name()}, -${optObj.shortForm()}                                          `.substr(0, 30) + optObj.info();
@@ -76,7 +76,7 @@ export abstract class Command {
             help += `\t${helpStr}\n`;
             help += '\n';
         }
-        help += `${chalk.bold.white('Global Options:')}\n\n`;
+        help += `${chalk['bold']['white']('Global Options:')}\n\n`;
         for (const opt in GLOBAL_OPTIONS) {
             if (GLOBAL_OPTIONS.hasOwnProperty(opt)) {
                 const optObj = GLOBAL_OPTIONS[opt];

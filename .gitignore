@@ -371,6 +371,5 @@ ENV/
 testeth
 .idea
 node_modules
-perf_bin
-test_bin
+bin_output
 logs

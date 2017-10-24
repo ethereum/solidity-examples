@@ -13,24 +13,24 @@ export default class Logger {
     private static __level: Level = Level.Info;
 
     public static error(text: string) {
-        println(chalk.redBright(`[Error] ${text}`));
+        println(chalk['redBright'](`[Error] ${text}`));
     }
 
     public static warn(text: string) {
         if (Logger.__level >= Level.Warn) {
-            println(chalk.yellowBright(`[Warning] ${text}`));
+            println(chalk['yellowBright'](`[Warning] ${text}`));
         }
     }
 
     public static info(text: string) {
         if (Logger.__level >= Level.Info) {
-            println(chalk.whiteBright(`[Info] ${text}`));
+            println(chalk['whiteBright'](`[Info] ${text}`));
         }
     }
 
     public static debug(text: string) {
         if (Logger.__level === Level.Debug) {
-            println(chalk.blueBright(`[Debug] ${text}`));
+            println(chalk['blueBright'](`[Debug] ${text}`));
         }
     }
 

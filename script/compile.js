@@ -36,98 +36,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var path = require("path");
-var constants_1 = require("./constants");
 var io_1 = require("./utils/io");
+var constants_1 = require("./constants");
 var solc_1 = require("./exec/solc");
-var evm_1 = require("./exec/evm");
-var test_logger_1 = require("./utils/test_logger");
-exports.perf = function (units, optAndUnopt) {
-    if (optAndUnopt === void 0) { optAndUnopt = false; }
+exports.compileAll = function (extended) {
+    if (extended === void 0) { extended = false; }
     return __awaiter(_this, void 0, void 0, function () {
-        var solcV, evmV, ret, log, logsPath, retU, logU;
+        var units, _i, units_1, unit;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    solcV = solc_1.version();
-                    evmV = evm_1.version();
                     io_1.ensureAndClear(constants_1.BIN_OUTPUT);
-                    return [4 /*yield*/, exports.compileAndRunPerf(units, optAndUnopt)];
+                    units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
+                    _i = 0, units_1 = units;
+                    _a.label = 1;
                 case 1:
-                    ret = _a.sent();
-                    log = {
-                        solcVersion: solcV,
-                        evmVersion: evmV,
-                        results: ret
-                    };
-                    logsPath = io_1.createTimestampSubfolder(constants_1.PERF_LOGS);
-                    io_1.writeLog(log, logsPath, constants_1.RESULTS_NAME_OPTIMIZED);
-                    if (!optAndUnopt) return [3 /*break*/, 3];
-                    io_1.ensureAndClear(constants_1.BIN_OUTPUT);
-                    return [4 /*yield*/, exports.compileAndRunPerf(units, false)];
+                    if (!(_i < units_1.length)) return [3 /*break*/, 4];
+                    unit = units_1[_i];
+                    if (unit[1] === '') {
+                        return [3 /*break*/, 3];
+                    }
+                    return [4 /*yield*/, solc_1.compileUnit(unit[0], unit[1], true)];
                 case 2:
-                    retU = _a.sent();
-                    logU = {
-                        solcVersion: solcV,
-                        evmVersion: evmV,
-                        results: retU
-                    };
-                    io_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
+                    _a.sent();
                     _a.label = 3;
                 case 3:
-                    io_1.writeLatest(constants_1.PERF_LOGS, logsPath);
-                    return [2 /*return*/];
+                    _i++;
+                    return [3 /*break*/, 1];
+                case 4: return [2 /*return*/];
             }
         });
     });
 };
-exports.compileAndRunPerf = function (units, optimize) { return __awaiter(_this, void 0, void 0, function () {
-    var _i, units_1, unit, subDir, prf;
+exports.compile = function (units) { return __awaiter(_this, void 0, void 0, function () {
+    var _i, units_2, unit;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _i = 0, units_1 = units;
+                io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                _i = 0, units_2 = units;
                 _a.label = 1;
             case 1:
-                if (!(_i < units_1.length)) return [3 /*break*/, 4];
-                unit = units_1[_i];
-                subDir = unit[0];
-                prf = unit[2];
-                if (prf === '') {
+                if (!(_i < units_2.length)) return [3 /*break*/, 4];
+                unit = units_2[_i];
+                if (unit[1] === '') {
                     return [3 /*break*/, 3];
                 }
-                return [4 /*yield*/, solc_1.compilePerf(subDir, prf, optimize)];
+                return [4 /*yield*/, solc_1.compileUnit(unit[0], unit[1], true)];
             case 2:
                 _a.sent();
                 _a.label = 3;
             case 3:
                 _i++;
                 return [3 /*break*/, 1];
-            case 4: return [2 /*return*/, exports.runPerf()];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.runPerf = function () {
-    var files = fs.readdirSync(constants_1.BIN_OUTPUT);
-    var sigfiles = files.filter(function (file) {
-        var f = file.trim();
-        return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
-    });
-    var results = {};
-    test_logger_1.default.header("Running perf...");
-    for (var _i = 0, sigfiles_1 = sigfiles; _i < sigfiles_1.length; _i++) {
-        var sigfile = sigfiles_1[_i];
-        if (!io_1.isSigInHashes(constants_1.BIN_OUTPUT, sigfile, constants_1.PERF_FUN_HASH)) {
-            throw new Error("No perf function in signature file: " + sigfile);
-        }
-        var name = sigfile.substr(0, sigfile.length - 11);
-        var binRuntimePath = path.join(constants_1.BIN_OUTPUT, name + ".bin-runtime");
-        var result = evm_1.run(binRuntimePath, constants_1.PERF_FUN_HASH);
-        var gasUsed = parseData(result);
-        results[name] = { gasUsed: gasUsed };
-    }
-    test_logger_1.default.header("Done");
-    return results;
-};
-var parseData = function (output) { return parseInt(output, 16); };

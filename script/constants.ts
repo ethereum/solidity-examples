@@ -2,15 +2,15 @@ import path = require('path');
 
 // Paths.
 export const ROOT_PATH = path.join(__dirname, '..');
+export const SRC_PATH = path.join(ROOT_PATH, 'src');
 export const LOGS = path.join(ROOT_PATH, 'logs');
+export const BIN_OUTPUT = path.join(ROOT_PATH, 'bin_output');
 
 export const TEST_CONTRACT_PATH = path.join(ROOT_PATH, 'test');
 export const TEST_LOGS = path.join(LOGS, 'test');
-export const TEST_BIN = path.join(ROOT_PATH, 'test_bin');
 
 export const PERF_CONTRACT_PATH = path.join(ROOT_PATH, 'perf');
 export const PERF_LOGS = path.join(LOGS, 'perf');
-export const PERF_BIN = path.join(ROOT_PATH, 'perf_bin');
 
 export const EXAMPLES_FOLDER = path.join(ROOT_PATH, 'examples');
 
@@ -26,15 +26,15 @@ export const PERF_FUN_HASH = '1c4af786';
 export const RESULTS_NAME_OPTIMIZED = "results_optimized.json";
 export const RESULTS_NAME_UNOPTIMIZED = "results_unoptimized.json";
 
-export const UNITS: Array<[string, string]> = [
-    ['bits', 'bits'],
-    ['bytes', 'bytes'],
-    ['math', 'math'],
-    ['patricia_tree', 'patricia_tree'],
-    ['strings', 'strings'],
-    ['unsafe', 'memory']
+export const UNITS: Array<[string, string, string]> = [
+    ['bits', 'Bits', 'bits'],
+    ['bytes', 'Bytes', 'bytes'],
+    ['math', 'Math', 'math'],
+    ['patricia_tree', 'PatriciaTreeImpl', 'patricia_tree'],
+    ['strings', 'Strings', 'strings'],
+    ['unsafe', 'Memory', 'memory']
 ];
 
-export const UNITS_EXTENDED: Array<[string, string]> = [
-    ['math', 'math_consistency']
+export const UNITS_EXTENDED: Array<[string, string, string]> = [
+    ['math', '', 'math_consistency']
 ];

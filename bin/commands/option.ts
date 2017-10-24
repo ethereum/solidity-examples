@@ -1,4 +1,6 @@
+
 export class Option {
+
     private __name: string;
     private __shortForm: string;
     private __info: string;
