@@ -6,10 +6,13 @@ import {Strings} from "../../src/strings/Strings.sol";
 import {STLPerf} from "../STLPerf.sol";
 import {Memory} from "../../src/unsafe/Memory.sol";
 
+/* solhint-disable max-line-length */
+
 contract StringsPerf is STLPerf {
     using Strings for string;
     using Strings for uint;
 }
+
 
 contract PerfStringsParseRuneLengthOne is StringsPerf {
 
@@ -97,3 +100,4 @@ contract PerfStringsParseValidateBrut is StringsPerf {
         return gasPre - gasPost;
     }
 }
+/* solhint-enable max-line-length */

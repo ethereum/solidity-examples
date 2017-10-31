@@ -189,7 +189,7 @@ contract PerfMemoryToBytes32 is STLPerf {
     }
 }
 
-
+/*
 contract PerfMemoryToByte is STLPerf {
     function perf() public payable returns (uint) {
         uint gasPre = msg.gas;
@@ -198,3 +198,4 @@ contract PerfMemoryToByte is STLPerf {
         return gasPre - gasPost;
     }
 }
+*/

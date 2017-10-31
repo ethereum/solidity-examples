@@ -5,27 +5,28 @@ pragma experimental "ABIEncoderV2";
 import {Math} from "../../src/math/Math.sol";
 import {STLTest} from "../STLTest.sol";
 
+
 contract MathTest is STLTest {
     using Math for *;
 
-    uint constant UINT_ZERO = 0;
-    uint constant UINT_ONE = 1;
-    uint constant UINT_TWO = 2;
-    uint constant UINT_ONES = ~uint(0);
+    uint internal constant UINT_ZERO = 0;
+    uint internal constant UINT_ONE = 1;
+    uint internal constant UINT_TWO = 2;
+    uint internal constant UINT_ONES = ~uint(0);
 
-    int constant INT_ZERO = 0;
-    int constant INT_ONE = 1;
-    int constant INT_TWO = 2;
-    int constant INT_MINUS_ONE = -1;
-    int constant INT_MAX = int(2**255 - 1);
-    int constant INT_MIN = int(2**255);
+    int internal constant INT_ZERO = 0;
+    int internal constant INT_ONE = 1;
+    int internal constant INT_TWO = 2;
+    int internal constant INT_MINUS_ONE = -1;
+    int internal constant INT_MAX = int(2**255 - 1);
+    int internal constant INT_MIN = int(2**255);
 }
 
 
 contract TestMathExactAddUint is MathTest {
 
-    uint constant TEST_VAL_1 = 937659378456935;
-    uint constant TEST_VAL_2 = 23457722001;
+    uint internal constant TEST_VAL_1 = 937659378456935;
+    uint internal constant TEST_VAL_2 = 23457722001;
 
     function testImpl() internal {
         uint x = UINT_ZERO;
@@ -53,10 +54,11 @@ contract TestMathExactAddUintThrowsOverflow is MathTest {
     }
 }
 
+
 contract TestMathExactSubUint is MathTest {
 
-    uint constant TEST_VAL_1 = 937659378456935;
-    uint constant TEST_VAL_2 = 23457722001;
+    uint internal constant TEST_VAL_1 = 937659378456935;
+    uint internal constant TEST_VAL_2 = 23457722001;
 
     function testImpl() internal {
         uint x = UINT_ZERO;
@@ -71,6 +73,7 @@ contract TestMathExactSubUint is MathTest {
     }
 }
 
+
 contract TestMathExactSubUintThrowsUnderflow is MathTest {
     function testImpl() internal {
         uint x = 3;
@@ -82,8 +85,8 @@ contract TestMathExactSubUintThrowsUnderflow is MathTest {
 
 contract TestMathExactMulUint is MathTest {
 
-    uint constant TEST_VAL_1 = 937659378456935;
-    uint constant TEST_VAL_2 = 23457722001;
+    uint internal constant TEST_VAL_1 = 937659378456935;
+    uint internal constant TEST_VAL_2 = 23457722001;
 
     function testImpl() internal {
         uint x = UINT_ZERO;
@@ -123,10 +126,10 @@ contract TestMathExactMulUintThrowsOverflow is MathTest {
 
 contract TestMathExactAddInt is MathTest {
 
-    int constant TEST_VAL_1 = 937659378456935;
-    int constant TEST_VAL_2 = 23457722001;
-    int constant TEST_VAL_1N = -937659378456935;
-    int constant TEST_VAL_2N = -23457722001;
+    int internal constant TEST_VAL_1 = 937659378456935;
+    int internal constant TEST_VAL_2 = 23457722001;
+    int internal constant TEST_VAL_1N = -937659378456935;
+    int internal constant TEST_VAL_2N = -23457722001;
 
     function testImpl() internal {
         int x = INT_ZERO;
@@ -179,10 +182,10 @@ contract TestMathExactAddIntThrowsUnderflow is MathTest {
 
 contract TestMathExactSubInt is MathTest {
 
-    int constant TEST_VAL_1 = 937659378456935;
-    int constant TEST_VAL_2 = 23457722001;
-    int constant TEST_VAL_1N = -937659378456935;
-    int constant TEST_VAL_2N = -23457722001;
+    int internal constant TEST_VAL_1 = 937659378456935;
+    int internal constant TEST_VAL_2 = 23457722001;
+    int internal constant TEST_VAL_1N = -937659378456935;
+    int internal constant TEST_VAL_2N = -23457722001;
 
     function testImpl() internal {
         int x = INT_ZERO;
@@ -231,10 +234,10 @@ contract TestMathExactSubIntThrowsUnderflow is MathTest {
 
 contract TestMathExactMulInt is MathTest {
 
-    int constant TEST_VAL_1 = 937659378456935;
-    int constant TEST_VAL_2 = 23457722001;
-    int constant TEST_VAL_1N = -937659378456935;
-    int constant TEST_VAL_2N = -23457722001;
+    int internal constant TEST_VAL_1 = 937659378456935;
+    int internal constant TEST_VAL_2 = 23457722001;
+    int internal constant TEST_VAL_1N = -937659378456935;
+    int internal constant TEST_VAL_2N = -23457722001;
 
     function testImpl() internal {
         int x = INT_ZERO;
@@ -311,10 +314,10 @@ contract TestMathExactMulIntThrowsMinusOneAndIntMin is MathTest {
 
 contract TestMathExactDivInt is MathTest {
 
-    int constant TEST_VAL_1 = 937659378456935;
-    int constant TEST_VAL_2 = 23457722001;
-    int constant TEST_VAL_1N = -937659378456935;
-    int constant TEST_VAL_2N = -23457722001;
+    int internal constant TEST_VAL_1 = 937659378456935;
+    int internal constant TEST_VAL_2 = 23457722001;
+    int internal constant TEST_VAL_1N = -937659378456935;
+    int internal constant TEST_VAL_2N = -23457722001;
 
     function testImpl() internal {
         int x = INT_ONE;

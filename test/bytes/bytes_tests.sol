@@ -6,16 +6,17 @@ import {Bytes} from "../../src/bytes/Bytes.sol";
 import {Memory} from "../../src/unsafe/Memory.sol";
 import {STLTest} from "../STLTest.sol";
 
+/* solhint-disable max-line-length */
 /*******************************************************/
 
 contract BytesTest is STLTest {
     using Bytes for *;
 
-    uint constant ZERO = uint(0);
-    uint constant ONE = uint(1);
-    uint constant ONES = uint(~0);
+    uint internal constant ZERO = uint(0);
+    uint internal constant ONE = uint(1);
+    uint internal constant ONES = uint(~0);
 
-    bytes32 constant B32_ZERO = bytes32(0);
+    bytes32 internal constant B32_ZERO = bytes32(0);
 }
 
 /************************** Equals ***************************/
@@ -111,32 +112,32 @@ contract TestBytesCopyNull is BytesTest {
 
 contract TestBytesCopy is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.copy();
-         assert(bts.equals(cpy));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.copy();
+        assert(bts.equals(cpy));
     }
 }
 
 
 contract TestBytesCopyCreatesNew is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.copy();
-         assert(Memory.ptr(bts) != Memory.ptr(cpy));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.copy();
+        assert(Memory.ptr(bts) != Memory.ptr(cpy));
     }
 }
 
 
 contract TestBytesCopyDoesNotMutate is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var btsLen = bts.length;
-         var btsAddr = Memory.ptr(bts);
-         bts.copy();
-         assert(Memory.ptr(bts) == btsAddr);
-         assert(bts.length == btsLen);
-         assert(bts.equals(btsEq));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var btsLen = bts.length;
+        var btsAddr = Memory.ptr(bts);
+        bts.copy();
+        assert(Memory.ptr(bts) == btsAddr);
+        assert(bts.length == btsLen);
+        assert(bts.equals(btsEq));
     }
 }
 
@@ -144,33 +145,32 @@ contract TestBytesCopyDoesNotMutate is BytesTest {
 
 contract TestBytesSubstr is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.substr(1);
-         var sdp = Memory.dataPtr(bts);
-         var cdp = Memory.dataPtr(cpy);
-         assert(bts.length == cpy.length + 1);
-         assert(Memory.equals(sdp + 1, cdp, cpy.length));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.substr(1);
+        var sdp = Memory.dataPtr(bts);
+        var cdp = Memory.dataPtr(cpy);
+        assert(bts.length == cpy.length + 1);
+        assert(Memory.equals(sdp + 1, cdp, cpy.length));
     }
 }
 
 
 contract TestBytesSubstrDoesNotMutate is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var btsLen = bts.length;
-         var btsAddr = Memory.ptr(bts);
-         bts.substr(4);
-         assert(Memory.ptr(bts) == btsAddr);
-         assert(bts.equals(btsEq));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var btsAddr = Memory.ptr(bts);
+        bts.substr(4);
+        assert(Memory.ptr(bts) == btsAddr);
+        assert(bts.equals(btsEq));
     }
 }
 
 
 contract TestBytesSubstrThrowsIndexOOB is BytesTest {
     function testImpl() internal {
-         bytes memory bts = new bytes(0);
-         bts.substr(1);
+        bytes memory bts = new bytes(0);
+        bts.substr(1);
     }
 }
 
@@ -178,62 +178,61 @@ contract TestBytesSubstrThrowsIndexOOB is BytesTest {
 
 contract TestBytesSubstrWithLen is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.substr(7, 12);
-         var sdp = Memory.dataPtr(bts);
-         var cdp = Memory.dataPtr(cpy);
-         assert(cpy.length == 12);
-         assert(Memory.equals(sdp + 7, cdp, 12));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.substr(7, 12);
+        var sdp = Memory.dataPtr(bts);
+        var cdp = Memory.dataPtr(cpy);
+        assert(cpy.length == 12);
+        assert(Memory.equals(sdp + 7, cdp, 12));
     }
 }
 
 
 contract TestBytesSubstrWithLenFull is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.substr(0, bts.length);
-         var sdp = Memory.dataPtr(bts);
-         var cdp = Memory.dataPtr(cpy);
-         assert(cpy.length == bts.length);
-         assert(Memory.equals(sdp, cdp, bts.length));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.substr(0, bts.length);
+        var sdp = Memory.dataPtr(bts);
+        var cdp = Memory.dataPtr(cpy);
+        assert(cpy.length == bts.length);
+        assert(Memory.equals(sdp, cdp, bts.length));
     }
 }
 
 
 contract TestBytesSubstrWithLenEmptyBytes is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var cpy = bts.substr(0, 0);
-         assert(cpy.length == 0);
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var cpy = bts.substr(0, 0);
+        assert(cpy.length == 0);
     }
 }
 
 
 contract TestBytesSubstrWithLenDoesNotMutate is BytesTest {
     function testImpl() internal {
-         bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         var btsLen = bts.length;
-         var btsAddr = Memory.ptr(bts);
-         bts.substr(4, 21);
-         assert(Memory.ptr(bts) == btsAddr);
-         assert(bts.equals(btsEq));
+        bytes memory bts = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        bytes memory btsEq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        var btsAddr = Memory.ptr(bts);
+        bts.substr(4, 21);
+        assert(Memory.ptr(bts) == btsAddr);
+        assert(bts.equals(btsEq));
     }
 }
 
 
 contract TestBytesSubstrWithLenThrowsIndexOOB is BytesTest {
     function testImpl() internal {
-         bytes memory bts = new bytes(0);
-         bts.substr(1, 0);
+        bytes memory bts = new bytes(0);
+        bts.substr(1, 0);
     }
 }
 
 
 contract TestBytesSubstrWithLenThrowsIndexPlusLengthOOB is BytesTest {
     function testImpl() internal {
-         bytes memory bts = new bytes(1);
-         bts.substr(0, 2);
+        bytes memory bts = new bytes(1);
+        bts.substr(0, 2);
     }
 }
 
@@ -293,21 +292,21 @@ contract TestBytesConcatCreatesNew is BytesTest {
 
 contract TestBytesConcatDoesNotMutate is BytesTest {
     function testImpl() internal {
-         bytes memory bts1 = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         bytes memory bts1Eq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
-         bytes memory bts2 = hex"ddeeff8899aabbccddeeff8899aabbccaabbccddeeff8899aabbccddeeff8899aa";
-         bytes memory bts2Eq = hex"ddeeff8899aabbccddeeff8899aabbccaabbccddeeff8899aabbccddeeff8899aa";
-         var bts1Len = bts1.length;
-         var bts2Len = bts2.length;
-         var bts1Addr = Memory.ptr(bts1);
-         var bts2Addr = Memory.ptr(bts2);
-         bts1.concat(bts2);
-         assert(bts1.length == bts1Len);
-         assert(bts2.length == bts2Len);
-         assert(Memory.ptr(bts1) == bts1Addr);
-         assert(Memory.ptr(bts2) == bts2Addr);
-         assert(bts1.equals(bts1Eq));
-         assert(bts2.equals(bts2Eq));
+        bytes memory bts1 = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        bytes memory bts1Eq = hex"8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeff8899aabbccddeeffaabb";
+        bytes memory bts2 = hex"ddeeff8899aabbccddeeff8899aabbccaabbccddeeff8899aabbccddeeff8899aa";
+        bytes memory bts2Eq = hex"ddeeff8899aabbccddeeff8899aabbccaabbccddeeff8899aabbccddeeff8899aa";
+        var bts1Len = bts1.length;
+        var bts2Len = bts2.length;
+        var bts1Addr = Memory.ptr(bts1);
+        var bts2Addr = Memory.ptr(bts2);
+        bts1.concat(bts2);
+        assert(bts1.length == bts1Len);
+        assert(bts2.length == bts2Len);
+        assert(Memory.ptr(bts1) == bts1Addr);
+        assert(Memory.ptr(bts2) == bts2Addr);
+        assert(bts1.equals(bts1Eq));
+        assert(bts2.equals(bts2Eq));
     }
 }
 
@@ -359,10 +358,13 @@ contract TestBytesBytes32SubstrWithLenThrowsIndexOOB is BytesTest {
     }
 }
 
+
 contract TestBytesBytes32SubstrWithLenThrowsIndexPlusLengthOOB is BytesTest {
     function testImpl() internal {
+        /* solhint-disable no-unused-vars */
         bytes memory bts = new bytes(1);
         bytes32(0).substr(4, 29);
+        /* solhint-enable no-unused-vars */
     }
 }
 
@@ -546,7 +548,6 @@ contract TestBytesBytes32LowestByteSetThrowsBytes32IsZero is BytesTest {
 
 /******************* uint highest/lowest byte set ******************/
 
-
 contract TestBytesUintHighestByteSetWithAllLowerSet is BytesTest {
     function testImpl() internal {
         for (uint8 i = 0; i < 31; i++) {
@@ -595,3 +596,4 @@ contract TestBytesUintLowestByteSetThrowsBytes32IsZero is BytesTest {
         ZERO.lowestByteSet();
     }
 }
+/* solhint-enable max-line-length */

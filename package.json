@@ -9,7 +9,7 @@
     "test": "jest && node ./bin/main.js tests --silent",
     "js-lint": "tslint -p .",
     "js-test": "jest",
-    "contract-lint": "solhint src/**/*.sol",
+    "contract-lint": "solhint **/*.sol",
     "contract-compile": "node ./bin/main.js compile",
     "contract-tests": "node ./bin/main.js tests",
     "contract-perf": "node ./bin/main.js perf"
@@ -35,13 +35,13 @@
   },
   "homepage": "https://github.com/ethereum/solidity-examples#readme",
   "devDependencies": {
-    "@types/mkdirp": "^0.5.1",
-    "@types/node": "^8.0.46",
-    "@types/jest": "^21.1.4",
+    "@types/jest": "^21.1.5",
     "@types/jest-matchers": "^20.0.0",
+    "@types/mkdirp": "^0.5.1",
+    "@types/node": "^8.0.47",
     "jest": "^21.2.1",
-    "solhint": "^1.1.6",
-    "ts-jest": "^21.1.3",
+    "solhint": "^1.1.7",
+    "ts-jest": "^21.1.4",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3"
   },

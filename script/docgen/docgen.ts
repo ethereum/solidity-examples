@@ -162,7 +162,7 @@ const writeFunction = (perf: object, func: IFunc, level: number = 3) => {
         }
     }
     lines.push(newline());
-    if (func.inParams && func.inParams.length > 0) {
+    if (func.outParams && func.outParams.length > 0) {
         lines.push(headLine("returns", level + 2));
         for (const p of func.outParams) {
             lines.push(`- ${paramDisp(p)}\n`);
@@ -180,7 +180,7 @@ const writeFunction = (perf: object, func: IFunc, level: number = 3) => {
         for (const g of func.gas) {
             const prf = perf["results"][g[1]];
             if (prf === undefined) {
-                throw new Error(`No perf acailable for: ${g[1]}`);
+                throw new Error(`No perf available for: ${g[1]}`);
             }
             lines.push(`- ${g[0]}: **${prf.gasUsed}**\n`);
         }
@@ -220,7 +220,7 @@ const createPackageDocs = (docJson: object, intro: string) => {
     root.push(`${headLine(docJson["name"], 1)}\n\n`);
     root.push(`**Package:** ${docJson["package"]}\n\n`);
     root.push(`**Contract type:** ${docJson["type"]}\n\n`);
-    const sourceName = docJson["name"] + ".sol";
+    const sourceName = (docJson["source"] ? docJson["source"] : docJson["name"]) + ".sol";
     root.push(`**Source file:** [${sourceName}](../../src/${docJson["package"]}/${sourceName})\n\n`);
     root.push(newline());
     if (docJson["examples"]) {
@@ -249,7 +249,7 @@ const createPackageDocs = (docJson: object, intro: string) => {
 };
 
 const writeDocs = () => {
-    const docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "Token"];
+    const docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "TokenFace"];
     for (const doc of docs) {
         const docJson = JSON.parse(readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());
         const intro = readFileSync(join(PACKAGE_DOCS_DATA_FOLDER, docJson["intro"])).toString();

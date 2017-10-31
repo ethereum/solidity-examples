@@ -253,6 +253,7 @@ contract PerfBytesBooleanToBytes is BytesPerf {
     }
 }
 
+
 contract PerfBytesBytes32HighestByteSetLow is BytesPerf {
     function perf() public payable returns (uint) {
         bytes32 b32 = bytes32("a");

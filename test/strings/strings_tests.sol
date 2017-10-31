@@ -3,17 +3,17 @@ pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
 import {Strings} from "../../src/strings/Strings.sol";
-
 import {Memory} from "../../src/unsafe/Memory.sol";
 import {STLTest} from "../STLTest.sol";
+
 
 contract StringsTest is STLTest {
     using Strings for string;
     using Strings for uint;
 }
 
+/* solhint-disable max-line-length */
 /************************ Parsing - success *************************/
-
 // Size one
 
 contract TestStringsParseRuneSizeOne is StringsTest {
@@ -220,6 +220,7 @@ contract TestStringsParseRuneSizeThreeEEtoEFSeveral is StringsTest {
     }
 }
 
+
 contract TestStringsParseRuneSizeFourF0 is StringsTest {
     function testImpl() internal {
         bytes memory bts = hex"F0908080";
@@ -372,9 +373,7 @@ contract TestStringsParseRuneSizeThreeF4Several is StringsTest {
     }
 }
 
-
 /************************ Parsing - fails *************************/
-
 // 1 byte characters
 
 contract TestStringsParseRuneThrows1FBHigh is StringsTest {
@@ -747,3 +746,4 @@ contract TestStringsValidateQuickBrownFoxHiragana is StringsTest {
         str.validate();
     }
 }
+/* solhint-enable max-line-length */

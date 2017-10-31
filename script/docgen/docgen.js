@@ -137,7 +137,7 @@ var writeFunction = function (perf, func, level) {
         }
     }
     lines.push(newline());
-    if (func.inParams && func.inParams.length > 0) {
+    if (func.outParams && func.outParams.length > 0) {
         lines.push(headLine("returns", level + 2));
         for (var _d = 0, _e = func.outParams; _d < _e.length; _d++) {
             var p = _e[_d];
@@ -158,7 +158,7 @@ var writeFunction = function (perf, func, level) {
             var g = _j[_h];
             var prf = perf["results"][g[1]];
             if (prf === undefined) {
-                throw new Error("No perf acailable for: " + g[1]);
+                throw new Error("No perf available for: " + g[1]);
             }
             lines.push("- " + g[0] + ": **" + prf.gasUsed + "**\n");
         }
@@ -198,7 +198,7 @@ var createPackageDocs = function (docJson, intro) {
     root.push(headLine(docJson["name"], 1) + "\n\n");
     root.push("**Package:** " + docJson["package"] + "\n\n");
     root.push("**Contract type:** " + docJson["type"] + "\n\n");
-    var sourceName = docJson["name"] + ".sol";
+    var sourceName = (docJson["source"] ? docJson["source"] : docJson["name"]) + ".sol";
     root.push("**Source file:** [" + sourceName + "](../../src/" + docJson["package"] + "/" + sourceName + ")\n\n");
     root.push(newline());
     if (docJson["examples"]) {
@@ -226,7 +226,7 @@ var createPackageDocs = function (docJson, intro) {
     return root.join('');
 };
 var writeDocs = function () {
-    var docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "Token"];
+    var docs = ["Bits", "Bytes", "Math", "Memory", "Strings", "TokenFace"];
     for (var _i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
         var doc = docs_1[_i];
         var docJson = JSON.parse(fs_1.readFileSync(path_1.join(constants_1.PACKAGE_DOCS_DATA_FOLDER, doc + '.json')).toString());

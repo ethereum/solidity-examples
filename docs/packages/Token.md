@@ -6,7 +6,7 @@
 
 **Contract type:** Interface
 
-**Source file:** [Token.sol](../../src/token/Token.sol)
+**Source file:** [TokenFace.sol](../../src/token/TokenFace.sol)
 
 
 ## description

@@ -408,7 +408,7 @@ Create a new `bytes memory` by copying `len` bytes from the source `bytes32`.
 - `bts = self.toBytes(len) => for i in [0, len): bts[i] = self[i]`.
 ##### gascosts
 
-- Fixed: **417**
+- Fixed: **423**
 
 ***
 
@@ -433,7 +433,7 @@ Create a new `bytes memory` from an `address`. Note that bytes use big endian fo
 - `bts = self.toBytes() => for i in [0, 20): bts[i] = bytes20(self)[i]`.
 ##### gascosts
 
-- Fixed: **595**
+- Fixed: **601**
 
 ***
 
@@ -458,7 +458,7 @@ Create a new `bytes memory` from a `uint`. Note that bytes use big endian format
 - `bts = self.toBytes() => for i in [0, 32): bts[i] = bytes32(self)[i]`.
 ##### gascosts
 
-- Fixed: **459**
+- Fixed: **465**
 
 ***
 
@@ -489,7 +489,7 @@ Create a new `bytes memory` from a `uint`. Only `bitsize` bits are copied. Note 
 - `bts = self.toBytes(bitsize) => for i in [0, bitsize / 8): bts[i] = byte(self >> bitsize - 8 - i*8 & 0xFF)`.
 ##### gascosts
 
-- Fixed: **812**
+- Fixed: **818**
 
 ***
 

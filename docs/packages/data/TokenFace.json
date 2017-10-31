@@ -2,5 +2,6 @@
   "name": "Token",
   "package": "token",
   "type": "Interface",
-  "intro": "Token_description.md"
+  "intro": "TokenFace_description.md",
+  "source": "TokenFace"
 }

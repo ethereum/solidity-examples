@@ -4,162 +4,164 @@ pragma experimental "ABIEncoderV2";
 
 //import {Bits} from "../../bits/Bits.sol";
 import {Data} from "../../src/patricia_tree/Data.sol";
-import {PatriciaTreeImpl} from "../../src/patricia_tree/PatriciaTreeImpl.sol";
+import {PatriciaTree} from "../../src/patricia_tree/PatriciaTree.sol";
 import {STLTest} from "../STLTest.sol";
 
 // TODO seems testing here is a bit over the top.
-
 /*******************************************************/
 
-contract PatriciaUtilsTest is STLTest {
+contract PatriciaTreeDataTest is STLTest {
 
     using Data for Data.Node;
     using Data for Data.Edge;
     using Data for Data.Label;
     
-    uint constant MAX_LENGTH = 256;
-    uint constant UINT256_ZEROES = 0;
-    uint constant UINT256_ONES = ~uint(0);
-    bytes32 constant B32_ZEROES = bytes32(UINT256_ZEROES);
-    bytes32 constant B32_ONES = bytes32(UINT256_ONES);
+    uint internal constant MAX_LENGTH = 256;
+    uint internal constant UINT256_ZEROES = 0;
+    uint internal constant UINT256_ONES = ~uint(0);
+
+    bytes32 internal constant B32_ZEROES = bytes32(UINT256_ZEROES);
+    bytes32 internal constant B32_ONES = bytes32(UINT256_ONES);
 }
 
 
-contract PatriciaTreeTest is STLTest, PatriciaTreeImpl {}
+/* solhint-disable no-empty-blocks */
+contract PatriciaTreeTest is STLTest, PatriciaTree {}
+/* solhint-enable no-empty-blocks */
 
 /*******************************************************/
 
-contract TestPatriciaUtilsChopFirstBitThrowsLengthIsZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataChopFirstBitThrowsLengthIsZero is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l;
-        l.chopFirstBit();
+        Data.Label memory lbl;
+        lbl.chopFirstBit();
     }
 }
 
 
-contract TestPatriciaUtilsChopFirstBitZeroes is PatriciaUtilsTest {
+contract TestPatriciaTreeDataChopFirstBitZeroes is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 256);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 256);
         uint bit;
-        for(uint i = 1; i <= 256; i++) {
-            (bit, l) = l.chopFirstBit();
+        for (uint i = 1; i <= 256; i++) {
+            (bit, lbl) = lbl.chopFirstBit();
             require(bit == 0);
-            require(l.data == B32_ZEROES);
-            require(l.length == MAX_LENGTH - i);
+            require(lbl.data == B32_ZEROES);
+            require(lbl.length == MAX_LENGTH - i);
         }
     }
 }
 
 
-contract TestPatriciaUtilsChopFirstBitOnes is PatriciaUtilsTest {
+contract TestPatriciaTreeDataChopFirstBitOnes is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 256);
+        Data.Label memory lbl = Data.Label(B32_ONES, 256);
         uint bit;
-        for(uint i = 1; i <= 256; i++) {
-            (bit, l) = l.chopFirstBit();
+        for (uint i = 1; i <= 256; i++) {
+            (bit, lbl) = lbl.chopFirstBit();
             require(bit == 1);
-            require(l.data == B32_ONES << i);
-            require(l.length == MAX_LENGTH - i);
+            require(lbl.data == B32_ONES << i);
+            require(lbl.length == MAX_LENGTH - i);
         }
     }
 }
 
 
-contract TestPatriciaUtilsChopFirstBitDoesNotMutate is PatriciaUtilsTest {
+contract TestPatriciaTreeDataChopFirstBitDoesNotMutate is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 256);
-        l.chopFirstBit();
-        require(l.data == B32_ONES);
-        require(l.length == 256);
+        Data.Label memory lbl = Data.Label(B32_ONES, 256);
+        lbl.chopFirstBit();
+        require(lbl.data == B32_ONES);
+        require(lbl.length == 256);
     }
 }
 
 
-contract TestPatriciaUtilsRemovePrefixThrowsLessLengthZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemovePrefixThrowsLessLengthZero is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l;
-        l.removePrefix(1);
+        Data.Label memory lbl;
+        lbl.removePrefix(1);
     }
 }
 
 
-contract TestPatriciaUtilsRemovePrefixThrowsLessLengthNonZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemovePrefixThrowsLessLengthNonZero is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 5);
-        l.removePrefix(6);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 5);
+        lbl.removePrefix(6);
     }
 }
 
 
-contract TestPatriciaUtilsRemoveZeroPrefixLengthZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemoveZeroPrefixLengthZero is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 0);
-        l = l.removePrefix(0);
-        require(l.data == B32_ONES);
-        require(l.length == 0);
+        Data.Label memory lbl = Data.Label(B32_ONES, 0);
+        lbl = lbl.removePrefix(0);
+        require(lbl.data == B32_ONES);
+        require(lbl.length == 0);
     }
 }
 
 
-contract TestPatriciaUtilsRemoveZeroPrefixLength256 is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemoveZeroPrefixLength256 is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 256);
-        l = l.removePrefix(0);
-        require(l.data == B32_ONES);
-        require(l.length == 256);
+        Data.Label memory lbl = Data.Label(B32_ONES, 256);
+        lbl = lbl.removePrefix(0);
+        require(lbl.data == B32_ONES);
+        require(lbl.length == 256);
     }
 }
 
 
-contract TestPatriciaUtilsRemoveFullPrefixLength256 is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemoveFullPrefixLength256 is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 256);
-        l = l.removePrefix(256);
-        require(l.data == B32_ZEROES);
-        require(l.length == 0);
+        Data.Label memory lbl = Data.Label(B32_ONES, 256);
+        lbl = lbl.removePrefix(256);
+        require(lbl.data == B32_ZEROES);
+        require(lbl.length == 0);
     }
 }
 
 
-contract TestPatriciaUtilsRemovePrefix is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemovePrefix is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(hex"ef1230", 20);
-        l = l.removePrefix(4);
-        require(l.length == 16);
-        require(l.data == hex"f123");
-        l = l.removePrefix(15);
-        require(l.length == 1);
-        require(l.data == hex"80");
-        l = l.removePrefix(1);
-        require(l.length == 0);
-        require(l.data == 0);
+        Data.Label memory lbl = Data.Label(hex"ef1230", 20);
+        lbl = lbl.removePrefix(4);
+        require(lbl.length == 16);
+        require(lbl.data == hex"f123");
+        lbl = lbl.removePrefix(15);
+        require(lbl.length == 1);
+        require(lbl.data == hex"80");
+        lbl = lbl.removePrefix(1);
+        require(lbl.length == 0);
+        require(lbl.data == 0);
     }
 }
 
 
-contract TestPatriciaUtilsRemovePrefixOnes is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemovePrefixOnes is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 256);
-        for(uint i = 1; i <= 256; i++) {
-            l = l.removePrefix(1);
-            require(l.data == B32_ONES << i);
-            require(l.length == MAX_LENGTH - i);
+        Data.Label memory lbl = Data.Label(B32_ONES, 256);
+        for (uint i = 1; i <= 256; i++) {
+            lbl = lbl.removePrefix(1);
+            require(lbl.data == B32_ONES << i);
+            require(lbl.length == MAX_LENGTH - i);
         }
     }
 }
 
 
-contract TestPatriciaUtilsRemovePrefixDoesNotMutate is PatriciaUtilsTest {
+contract TestPatriciaTreeDataRemovePrefixDoesNotMutate is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(hex"ef1230", 20);
-        l.removePrefix(4);
-        require(l.data == hex"ef1230");
-        require(l.length == 20);
+        Data.Label memory lbl = Data.Label(hex"ef1230", 20);
+        lbl.removePrefix(4);
+        require(lbl.data == hex"ef1230");
+        require(lbl.length == 20);
     }
 }
 
 
-contract TestPatriciaUtilsCommonPrefixOfZeroLengthLabelsIsZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataCommonPrefixOfZeroLengthLabelsIsZero is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a;
         Data.Label memory b;
@@ -168,7 +170,7 @@ contract TestPatriciaUtilsCommonPrefixOfZeroLengthLabelsIsZero is PatriciaUtilsT
 }
 
 
-contract TestPatriciaUtilsCommonPrefixOfNonZeroAndZeroLabelIsZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataCommonPrefixOfNonZeroAndZeroLabelIsZero is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(B32_ONES, 256);
         Data.Label memory b;
@@ -177,7 +179,7 @@ contract TestPatriciaUtilsCommonPrefixOfNonZeroAndZeroLabelIsZero is PatriciaUti
 }
 
 
-contract TestPatriciaUtilsCommonPrefixOfLabelWithItselfIsLabelLength is PatriciaUtilsTest {
+contract TestPatriciaTreeDataCommonPrefixOfLabelWithItselfIsLabelLength is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(B32_ONES, 164);
         require(a.commonPrefix(a) == 164);
@@ -185,53 +187,52 @@ contract TestPatriciaUtilsCommonPrefixOfLabelWithItselfIsLabelLength is Patricia
 }
 
 
-
-
-contract TestPatriciaUtilsSplitAtThrowsPosGreaterThanLength is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAtThrowsPosGreaterThanLength is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 0);
-        l.splitAt(1);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 0);
+        lbl.splitAt(1);
     }
 }
 
 
-contract TestPatriciaUtilsSplitAtThrowsPosGreaterThan256 is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAtThrowsPosGreaterThan256 is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 0);
-        l.splitAt(257);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 0);
+        lbl.splitAt(257);
     }
 }
 
 
-contract TestPatriciaUtilsSplitAtPosEqualToLengthDoesntFail is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAtPosEqualToLengthDoesntFail is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 2);
-        l.splitAt(2);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 2);
+        lbl.splitAt(2);
     }
 }
 
 
-contract TestPatriciaUtilsSplitAtPosEqualTo256DoesntFail is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAtPosEqualTo256DoesntFail is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ZEROES, 256);
-        l.splitAt(256);
-    }
-}
-
-contract TestPatriciaUtilsSplitAtDoesntMutate is PatriciaUtilsTest {
-    function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 55);
-        l.splitAt(43);
-        require(l.data == B32_ONES);
-        require(l.length == 55);
+        Data.Label memory lbl = Data.Label(B32_ZEROES, 256);
+        lbl.splitAt(256);
     }
 }
 
 
-contract TestPatriciaUtilsSplitAtZero is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAtDoesntMutate is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory l = Data.Label(B32_ONES, 55);
-        var (pre, suf) = l.splitAt(0);
+        Data.Label memory lbl = Data.Label(B32_ONES, 55);
+        lbl.splitAt(43);
+        require(lbl.data == B32_ONES);
+        require(lbl.length == 55);
+    }
+}
+
+
+contract TestPatriciaTreeDataSplitAtZero is PatriciaTreeDataTest {
+    function testImpl() internal {
+        Data.Label memory lbl = Data.Label(B32_ONES, 55);
+        var (pre, suf) = lbl.splitAt(0);
         require(pre.data == B32_ZEROES);
         require(pre.length == 0);
         require(suf.data == B32_ONES);
@@ -240,7 +241,7 @@ contract TestPatriciaUtilsSplitAtZero is PatriciaUtilsTest {
 }
 
 
-contract TestPatriciaUtilsSplitAt is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitAt is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(hex"abcd", 16);
 
@@ -263,7 +264,7 @@ contract TestPatriciaUtilsSplitAt is PatriciaUtilsTest {
 }
 
 
-contract TestPatriciaUtilsSplitCommonPrefixDoesNotMutate is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitCommonPrefixDoesNotMutate is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(hex"abcd", 16);
         Data.Label memory b = Data.Label(hex"a0f570", 20);
@@ -277,7 +278,7 @@ contract TestPatriciaUtilsSplitCommonPrefixDoesNotMutate is PatriciaUtilsTest {
 }
 
 
-contract TestPatriciaUtilsSplitCommonPrefixWithItself is PatriciaUtilsTest {
+contract TestPatriciaTreeDataSplitCommonPrefixWithItself is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(hex"abcd", 16);
         var (pre, suf) = a.splitCommonPrefix(a);
@@ -289,7 +290,8 @@ contract TestPatriciaUtilsSplitCommonPrefixWithItself is PatriciaUtilsTest {
     }
 }
 
-contract TestPatriciaUtilsSplitCommonPrefixWithZeroLabel is PatriciaUtilsTest {
+
+contract TestPatriciaTreeDataSplitCommonPrefixWithZeroLabel is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(B32_ZEROES, 0);
         Data.Label memory b = Data.Label(hex"a0f570", 20);
@@ -302,7 +304,8 @@ contract TestPatriciaUtilsSplitCommonPrefixWithZeroLabel is PatriciaUtilsTest {
     }
 }
 
-contract TestPatriciaUtilsSplitCommonPrefixWithZeroCheck is PatriciaUtilsTest {
+
+contract TestPatriciaTreeDataSplitCommonPrefixWithZeroCheck is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(B32_ZEROES, 0);
         Data.Label memory b = Data.Label(hex"a0f570", 20);
@@ -315,7 +318,8 @@ contract TestPatriciaUtilsSplitCommonPrefixWithZeroCheck is PatriciaUtilsTest {
     }
 }
 
-contract TestPatriciaUtilsSplitCommonPrefix is PatriciaUtilsTest {
+
+contract TestPatriciaTreeDataSplitCommonPrefix is PatriciaTreeDataTest {
     function testImpl() internal {
         Data.Label memory a = Data.Label(hex"abcd", 16);
         Data.Label memory b = Data.Label(hex"a0f570", 20);
@@ -328,9 +332,7 @@ contract TestPatriciaUtilsSplitCommonPrefix is PatriciaUtilsTest {
     }
 }
 
-/*******************************************************/
-
-// These tests has a storage check as part of the validation.
+/************************** Patricia Tree *****************************/
 
 contract TestPatriciaTreeInsert is PatriciaTreeTest {
     function testImpl() internal {
@@ -338,7 +340,7 @@ contract TestPatriciaTreeInsert is PatriciaTreeTest {
         bytes memory keyBts = "val";
         bytes memory valBts = "VAL";
         bytes32 keyHash = keccak256(keyBts); // 749eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a11
-                bytes32 valHash = keccak256(valBts); // 6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07
+        bytes32 valHash = keccak256(valBts); // 6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07
 
         insert("val", "VAL");
 
@@ -348,16 +350,13 @@ contract TestPatriciaTreeInsert is PatriciaTreeTest {
     }
 }
 
+
 contract TestPatriciaTreeInsertTwo is PatriciaTreeTest {
     function testImpl() internal {
-        bytes memory keyBts = "val";
         bytes memory valBts = "VAL";
-        bytes memory key2Bts = "val2";
         bytes memory val2Bts = "VAL2";
 
-        bytes32 keyHash = keccak256(keyBts); // 749eb9a32604a1e3d5563e475f22a54221a22999f274fb5acd84a00d16053a11
         bytes32 valHash = keccak256(valBts); // 6a96595ccfcb78ff3e886e67a3c94a0c6c8fe147c51512c4f9b5e8aa8d636f07
-        bytes32 key2Hash = keccak256(key2Bts); // 0f70e93237e6edac092d1573b606d68d672d920b51559399f352166ae4b4a727
         bytes32 val2Hash = keccak256(val2Bts); // 780f7d9be6b7b221c27f7d5e84ff9ff220b60283dd7d012fbd9195bb6bb472aa
 
         insert("val", "VAL");
@@ -378,8 +377,8 @@ contract TestPatriciaTreeInsertTwo is PatriciaTreeTest {
 
 contract TestPatriciaTreeInsertOrderDoesNotMatter is STLTest {
     function testImpl() internal {
-        var pt1 = new PatriciaTreeImpl();
-        var pt2 = new PatriciaTreeImpl();
+        var pt1 = new PatriciaTree();
+        var pt2 = new PatriciaTree();
         pt1.insert("testkey", "testval");
         pt1.insert("testkey2", "testval2");
         pt1.insert("testkey3", "testval3");

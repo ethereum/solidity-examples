@@ -10,9 +10,9 @@ import {STLTest} from "../STLTest.sol";
 contract BitsTest is STLTest {
     using Bits for uint;
 
-    uint constant ZERO = uint(0);
-    uint constant ONE = uint(1);
-    uint constant ONES = uint(~0);
+    uint internal constant ZERO = uint(0);
+    uint internal constant ONE = uint(1);
+    uint internal constant ONES = uint(~0);
 }
 
 /*******************************************************/
@@ -110,7 +110,7 @@ contract TestBitsBitsGetLowerHalf is BitsTest {
 
 contract TestBitsBitsThrowsNumBitsZero is BitsTest {
     function testImpl() internal {
-        ONES.bits(0,0);
+        ONES.bits(0, 0);
     }
 }
 

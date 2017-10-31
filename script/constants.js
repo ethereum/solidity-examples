@@ -24,7 +24,7 @@ exports.UNITS = [
     ['bits', 'Bits', 'bits'],
     ['bytes', 'Bytes', 'bytes'],
     ['math', 'Math', 'math'],
-    ['patricia_tree', 'PatriciaTreeImpl', 'patricia_tree'],
+    ['patricia_tree', 'PatriciaTree', 'patricia_tree'],
     ['strings', 'Strings', 'strings'],
     ['unsafe', 'Memory', 'memory']
 ];

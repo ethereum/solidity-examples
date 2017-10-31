@@ -4,17 +4,17 @@ pragma experimental "ABIEncoderV2";
 
 import {STLTest} from "../STLTest.sol";
 
+
 contract TestMathUint256Overflow is STLTest {
 
-    uint constant ZERO = 0;
-    uint constant ONE = 1;
-    uint constant TWO = 2;
-    uint constant ONES = ~uint(0);
-    uint constant HALF = uint(1) << 128;
+    uint internal constant ZERO = 0;
+    uint internal constant ONE = 1;
+    uint internal constant TWO = 2;
+    uint internal constant ONES = ~uint(0);
+    uint internal constant HALF = uint(1) << 128;
 
     function testImpl() internal {
         uint n;
-
         // +
         assert(ONES + ONE == ZERO);
         // ++
@@ -56,16 +56,16 @@ contract TestMathUint256Overflow is STLTest {
     }
 }
 
+
 contract TestMathInt256Overflow is STLTest {
 
-    int constant ZERO = 0;
-    int constant ONE = 1;
-    int constant TWO = 2;
-    int constant MINUS_ONE = -1;
-    int constant HALF = int(1) << 128;
-    int constant INT_MAX = int(2**255 - 1);
-    int constant INT_MIN = int(-(2**255));
-
+    int internal constant ZERO = 0;
+    int internal constant ONE = 1;
+    int internal constant TWO = 2;
+    int internal constant MINUS_ONE = -1;
+    int internal constant HALF = int(1) << 128;
+    int internal constant INT_MAX = int(2**255 - 1);
+    int internal constant INT_MIN = int(-(2**255));
 
     function testImpl() internal {
         int n;
@@ -116,7 +116,7 @@ contract TestMathInt256Overflow is STLTest {
         n /= MINUS_ONE;
         assert(n == INT_MIN);
 
-        // <<
+        // << TODO
 
     }
 }

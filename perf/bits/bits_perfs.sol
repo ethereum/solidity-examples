@@ -5,9 +5,11 @@ pragma experimental "ABIEncoderV2";
 import {Bits} from "../../src/bits/Bits.sol";
 import {STLPerf} from "../STLPerf.sol";
 
+
 contract BitsPerf is STLPerf {
     using Bits for uint;
 }
+
 
 contract PerfBitsSetBit is BitsPerf {
     function perf() public payable returns (uint) {

@@ -95,6 +95,7 @@ library Memory {
         }
     }
 
+    /*
     function toByte(uint addr, uint8 index) internal pure returns (byte b) {
         require(index < 32);
         uint8 n;
@@ -103,4 +104,5 @@ library Memory {
         }
         b = byte(n);
     }
+    */
 }

@@ -2,6 +2,8 @@ pragma solidity ^0.4.16;
 pragma experimental "v0.5.0";
 pragma experimental "ABIEncoderV2";
 
+import {Bits} from "../bits/Bits.sol";
+
 
 /*
  * Data structures and utilities used in the Patricia Tree.
@@ -41,13 +43,13 @@ library Data {
         if (pos == 0) {
             prefix.data = bytes32(0);
         } else {
-            prefix.data = self.data & ~bytes32((uint(1) << (256 - pos)) - 1);
+            prefix.data = bytes32(uint(self.data) & ~uint(1) << 255 - pos);
         }
         suffix.length = self.length - pos;
         suffix.data = self.data << pos;
     }
-
     /// Returns the length of the longest common prefix of the two labels.
+    /*
     function commonPrefix(Label memory self, Label memory lbl) internal pure returns (uint prefix) {
         uint length = self.length < lbl.length ? self.length : lbl.length;
         // TODO: This could actually use a "highestBitSet" helper
@@ -59,6 +61,19 @@ library Data {
             }
             diff += diff;
         }
+    }
+    */
+
+    function commonPrefix(Label memory self, Label memory lbl) internal pure returns (uint prefix) {
+        uint length = self.length < lbl.length ? self.length : lbl.length;
+        if (length == 0) {
+            return 0;
+        }
+        uint diff = uint(self.data ^ lbl.data) & ~uint(0) << 256 - length; // TODO Mask should not be needed.
+        if (diff == 0) {
+            return length;
+        }
+        return 255 - Bits.highestBitSet(diff);
     }
 
     /// Returns the result of removing a prefix of length `prefix` bits from the

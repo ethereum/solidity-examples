@@ -5,9 +5,13 @@ pragma experimental "ABIEncoderV2";
 import {STLTest} from "../STLTest.sol";
 import {Memory} from "../../src/unsafe/Memory.sol";
 
+/* solhint-disable max-line-length */
+/* solhint-disable no-unused-vars */
 /*********************** Base test contract ************************/
 
+/* solhint-disable no-empty-blocks */
 contract MemoryTest is STLTest {}
+/* solhint-disable no-empty-blocks */
 
 /*********************** Equality **************************/
 
@@ -20,6 +24,7 @@ contract TestMemoryEqualsZeroLength is MemoryTest {
 
 contract TestMemoryEqualsItselfDifferentAddresses is MemoryTest {
     function testImpl() internal {
+        /* solhint-disable no-unused-vars */
         bytes memory bts = hex"0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f";
         for (uint i = 0; i < 10; i++) {
             assert(Memory.equals(0x15*i, 0x15*i, 50));
@@ -196,7 +201,7 @@ contract TestMemoryToBytes is MemoryTest {
         var (addr, len) = Memory.fromBytes(bts);
         var bts2 = Memory.toBytes(addr, len);
         assert(bts2.length == bts.length);
-        for(uint i = 0; i < bts.length; i++) {
+        for (uint i = 0; i < bts.length; i++) {
             assert(bts[i] == bts2[i]);
         }
     }
@@ -228,7 +233,7 @@ contract TestMemoryToBytes32 is MemoryTest {
     }
 }
 
-
+/*
 contract TestMemoryToByte is MemoryTest {
     function testImpl() internal {
         bytes32 b32 = "abcdefghijklmnopabcdefghijklmnop";
@@ -242,3 +247,6 @@ contract TestMemoryToByte is MemoryTest {
         }
     }
 }
+*/
+/* solhint-enable max-line-length */
+/* solhint-enable no-unused-vars */
