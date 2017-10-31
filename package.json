@@ -7,12 +7,12 @@
   },
   "scripts": {
     "test": "jest && node ./bin/main.js tests --silent",
-    "js-lint": "tslint -p .",
-    "js-test": "jest",
-    "contract-lint": "solhint **/*.sol",
-    "contract-compile": "node ./bin/main.js compile",
-    "contract-tests": "node ./bin/main.js tests",
-    "contract-perf": "node ./bin/main.js perf"
+    "ts-lint": "tslint -p .",
+    "ts-test": "jest",
+    "contracts-lint": "solhint **/*.sol",
+    "contracts-compile": "node ./bin/main.js compile",
+    "contracts-test": "node ./bin/main.js tests",
+    "contracts-perf": "node ./bin/main.js perf"
   },
   "repository": {
     "type": "git",
