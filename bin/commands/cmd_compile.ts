@@ -1,5 +1,4 @@
 import {Command} from "./command";
-import {compileTests} from "../../script/exec/solc";
 import {compileAll} from "../../script/compile";
 
 export class CompileCommand extends Command {
@@ -13,15 +12,7 @@ export class CompileCommand extends Command {
             this.printHelp();
             return;
         }
-        let extended = false;
-        for (const opt of options) {
-            switch (opt) {
-                case 'extended':
-                    extended = true;
-                    break;
-            }
-        }
-        await compileAll(extended);
+        await compileAll();
     }
 
     public name(): string {
@@ -33,7 +24,7 @@ export class CompileCommand extends Command {
     }
 
     public validOptions(): string[] {
-        return ['extended'];
+        return [];
     }
 
     public parent(): string {

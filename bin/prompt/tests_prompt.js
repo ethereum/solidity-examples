@@ -40,33 +40,38 @@ var utils_1 = require("./utils");
 var tests_1 = require("../../script/tests");
 var logs_1 = require("../../script/utils/logs");
 var io_1 = require("../../script/utils/io");
+var data_reader_1 = require("../../script/utils/data_reader");
+exports.testSelectionData = function () {
+    var choices = data_reader_1.getAllTestFiles().map(function (file) {
+        return {
+            name: file[0] + "/" + file[1],
+            value: file
+        };
+    });
+    return {
+        type: 'checkbox',
+        message: 'Select contracts (select none and press <enter> to go back)',
+        name: "tests",
+        choices: choices
+    };
+};
 exports.testsMenu = function () { return __awaiter(_this, void 0, void 0, function () {
-    var selected, units, _i, _a, tst;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, utils_1.prompt(utils_1.librarySelectionData('tests'))];
+    var selected;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, utils_1.prompt(exports.testSelectionData())];
             case 1:
-                selected = _b.sent();
+                selected = _a.sent();
                 if (selected.tests.length === 0) {
                     return [2 /*return*/];
                 }
-                units = [];
-                for (_i = 0, _a = selected.tests; _i < _a.length; _i++) {
-                    tst = _a[_i];
-                    if (tst[0] instanceof Array) {
-                        units = units.concat(tst);
-                    }
-                    else {
-                        units.push(tst);
-                    }
-                }
-                return [4 /*yield*/, tests_1.test(units, false)];
+                return [4 /*yield*/, tests_1.test(selected.tests, false)];
             case 2:
-                _b.sent();
+                _a.sent();
                 logs_1.printTestLog(io_1.latestTestLog());
                 return [4 /*yield*/, exports.testsMenu()];
             case 3:
-                _b.sent();
+                _a.sent();
                 return [2 /*return*/];
         }
     });

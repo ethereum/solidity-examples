@@ -1,0 +1,11 @@
+{
+  "packages": {
+    "bits": "packages/bits.json",
+    "bytes": "packages/bytes.json",
+    "math": "packages/math.json",
+    "patricia_tree": "packages/patricia_tree.json",
+    "strings": "packages/strings.json",
+    "tokens": "packages/tokens.json",
+    "unsafe": "packages/unsafe.json"
+  }
+}

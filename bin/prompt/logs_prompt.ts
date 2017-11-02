@@ -1,10 +1,8 @@
 import {
     NAV_CHOICES, prompt, SEPARATOR} from "./utils";
-import {diff, printLatestDiff, printPerfDiff, printPerfLog, printTestLog} from "../../script/utils/logs";
-import {indexedLogFolders, latestPerfLog, latestTestLog, readLog} from "../../script/utils/io";
+import {printLatestDiff, printPerfLog, printTestLog} from "../../script/utils/logs";
+import {latestPerfLog, latestTestLog} from "../../script/utils/io";
 import Logger from "../../script/utils/logger";
-import {PERF_LOGS, RESULTS_NAME_OPTIMIZED} from "../../script/constants";
-import * as path from 'path';
 
 export const logsPrompt = {
     type: 'list',

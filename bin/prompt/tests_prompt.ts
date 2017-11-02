@@ -1,24 +1,30 @@
-
-import {librarySelectionData, prompt} from "./utils";
+import {prompt} from "./utils";
 import {test} from "../../script/tests";
-import Logger from "../../script/utils/logger";
 import {printTestLog} from "../../script/utils/logs";
 import {latestTestLog} from "../../script/utils/io";
+import {getAllTestFiles} from "../../script/utils/data_reader";
+
+export const testSelectionData = () => {
+    const choices = getAllTestFiles().map((file) => {
+        return {
+            name: `${file[0]}/${file[1]}`,
+            value: file
+        };
+    });
+    return {
+        type: 'checkbox',
+        message: 'Select contracts (select none and press <enter> to go back)',
+        name: "tests",
+        choices
+    };
+};
 
 export const testsMenu = async (): Promise<void> => {
-    const selected = await prompt(librarySelectionData('tests'));
+    const selected = await prompt(testSelectionData());
     if (selected.tests.length === 0) {
         return;
     }
-    let units = [];
-    for (const tst of selected.tests) {
-        if (tst[0] instanceof Array) {
-            units = units.concat(tst);
-        } else {
-            units.push(tst);
-        }
-    }
-    await test(units, false);
+    await test(selected.tests, false);
     printTestLog(latestTestLog());
     await testsMenu();
 };

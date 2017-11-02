@@ -1,0 +1,35 @@
+{
+  "name": "patricia_tree",
+  "contracts": [
+    {
+      "name": "PatriciaTree.sol",
+      "tests": [
+        {
+          "name": "patricia_tree.sol"
+        }
+      ],
+      "perf": [
+        {
+          "name": "patricia_tree.sol"
+        },
+        {
+          "name": "patricia_tree_extended.sol",
+          "extended": true
+        }
+      ]
+    },
+    {
+      "name": "Data.sol",
+      "tests": [
+        {
+          "name": "data.sol"
+        }
+      ],
+      "perf": [
+        {
+          "name": "data.sol"
+        }
+      ]
+    }
+  ]
+}

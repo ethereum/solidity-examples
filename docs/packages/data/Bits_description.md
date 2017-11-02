@@ -1,1 +1,0 @@
-The `Bits` library is used for working with the individual bits of a `uint`.

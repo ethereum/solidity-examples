@@ -50,7 +50,7 @@ exports.test = function (tests, optAndUnopt) { return __awaiter(_this, void 0, v
             case 0:
                 solcV = solc_1.version();
                 evmV = evm_1.version();
-                io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
                 return [4 /*yield*/, exports.compileAndRunTests(tests, true)];
             case 1:
                 ret = _a.sent();
@@ -59,11 +59,11 @@ exports.test = function (tests, optAndUnopt) { return __awaiter(_this, void 0, v
                     evmVersion: evmV,
                     results: ret.results
                 };
-                logsPath = io_1.createTimestampSubfolder(constants_1.TEST_LOGS);
+                logsPath = io_1.createTimestampSubfolder(constants_1.TEST_LOGS_PATH);
                 io_1.writeLog(log, logsPath, constants_1.RESULTS_NAME_OPTIMIZED);
                 retU = null;
                 if (!optAndUnopt) return [3 /*break*/, 3];
-                io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
                 return [4 /*yield*/, exports.compileAndRunTests(tests, false)];
             case 2:
                 retU = _a.sent();
@@ -75,7 +75,7 @@ exports.test = function (tests, optAndUnopt) { return __awaiter(_this, void 0, v
                 io_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
                 _a.label = 3;
             case 3:
-                io_1.writeLatest(constants_1.TEST_LOGS, logsPath);
+                io_1.writeLatest(constants_1.TEST_LOGS_PATH, logsPath);
                 return [2 /*return*/, ret.success && (!optAndUnopt || retU.success)];
         }
     });
@@ -91,7 +91,7 @@ exports.compileAndRunTests = function (units, optimize) { return __awaiter(_this
                 if (!(_i < units_1.length)) return [3 /*break*/, 4];
                 unit = units_1[_i];
                 pckge = unit[0];
-                tst = unit[2];
+                tst = unit[1];
                 if (tst === '') {
                     return [3 /*break*/, 3];
                 }
@@ -107,7 +107,7 @@ exports.compileAndRunTests = function (units, optimize) { return __awaiter(_this
     });
 }); };
 exports.runTests = function () {
-    var files = fs.readdirSync(constants_1.BIN_OUTPUT);
+    var files = fs.readdirSync(constants_1.BIN_OUTPUT_PATH);
     var sigfiles = files.filter(function (file) {
         var f = file.trim();
         return f.length > 4 && f.substr(0, 4) === 'Test' && f.split('.').pop() === 'signatures';
@@ -118,11 +118,11 @@ exports.runTests = function () {
     test_logger_1.default.header('Running tests...');
     for (var _i = 0, sigfiles_1 = sigfiles; _i < sigfiles_1.length; _i++) {
         var sigfile = sigfiles_1[_i];
-        if (!io_1.isSigInHashes(constants_1.BIN_OUTPUT, sigfile, constants_1.TEST_FUN_HASH)) {
+        if (!io_1.isSigInHashes(constants_1.BIN_OUTPUT_PATH, sigfile, constants_1.TEST_FUN_HASH)) {
             throw new Error("No test function in signature file: " + sigfile);
         }
         var name = sigfile.substr(0, sigfile.length - 11);
-        var binRuntimePath = path.join(constants_1.BIN_OUTPUT, name + ".bin-runtime");
+        var binRuntimePath = path.join(constants_1.BIN_OUTPUT_PATH, name + ".bin-runtime");
         var result = parseData(evm_1.run(binRuntimePath, constants_1.TEST_FUN_HASH));
         var throws = /Throws/.test(name);
         var passed = true;

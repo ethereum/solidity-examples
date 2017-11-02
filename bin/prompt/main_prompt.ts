@@ -1,5 +1,4 @@
 import {EXIT_CHOICE, prompt, SEPARATOR} from "./utils";
-import {docsMenu} from "./docs_prompt";
 import {testsMenu} from "./tests_prompt";
 import {perfMenu} from "./perf_prompt";
 import {logsMenu} from "./logs_prompt";
@@ -29,11 +28,6 @@ export const mainPrompt = {
             key: 'l',
             name: 'Check logs',
             value: 'logs'
-        },
-        {
-            key: 'd',
-            name: 'View docs',
-            value: 'docs'
         }
     ].concat(SEPARATOR).concat(EXIT_CHOICE)
 };
@@ -49,9 +43,6 @@ export const mainMenu = async (): Promise<boolean> => {
             break;
         case "logs":                             // Options
             await logsMenu();
-            break;
-        case "docs":                             // Options
-            await docsMenu();
             break;
         case "compile":                          // Options
             await compileMenu();

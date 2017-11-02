@@ -37,32 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var inquirer = require("inquirer");
-var path = require("path");
-var marked = require("marked");
-var TerminalRenderer = require("marked-terminal");
 var io_1 = require("../../script/utils/io");
-var constants_1 = require("../../script/constants");
-marked.setOptions({
-    // Define custom renderer
-    renderer: new TerminalRenderer()
-});
-exports.ROOT_PATH = path.join(__dirname, "..", "..");
-exports.DOCS_PATH = path.join(exports.ROOT_PATH, 'docs');
-exports.MISC_DOCS_PATH = path.join(exports.DOCS_PATH, 'misc');
-exports.PACKAGE_DOCS_PATH = path.join(exports.DOCS_PATH, 'packages');
-exports.README_PATH = path.join(exports.ROOT_PATH, 'README.md');
-exports.LOGO_PATH = path.join(exports.MISC_DOCS_PATH, 'logo.txt');
-exports.INFO_PATH = path.join(exports.MISC_DOCS_PATH, 'info.txt');
-exports.BITS_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'bits.md');
-exports.BYTES_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'bytes.md');
-exports.MATH_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'math.md');
-exports.PATRICIA_TREE_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'patricia_tree.md');
-exports.STRINGS_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'strings.md');
-exports.TOKEN_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'token.md');
-exports.UNSAFE_DOCS_PATH = path.join(exports.PACKAGE_DOCS_PATH, 'unsafe.md');
-exports.markedOptions = {
-    showSectionPrefix: false,
-};
 exports.BACK_CHOICE = {
     key: 'b',
     name: 'Back',
@@ -75,79 +50,6 @@ exports.EXIT_CHOICE = {
 };
 exports.NAV_CHOICES = [exports.BACK_CHOICE, exports.EXIT_CHOICE];
 exports.SEPARATOR = [new inquirer.Separator()];
-exports.LIB_CHOICES = [{
-        key: '1',
-        name: 'Bits',
-        value: 'bits'
-    },
-    {
-        key: '2',
-        name: 'Bytes',
-        value: 'bytes'
-    },
-    {
-        key: '3',
-        name: 'Math',
-        value: 'math'
-    },
-    {
-        key: '4',
-        name: 'Patricia Tree',
-        value: 'patricia_tree'
-    },
-    {
-        key: '5',
-        name: 'Strings',
-        value: 'strings'
-    },
-    {
-        key: '6',
-        name: 'Token',
-        value: 'token'
-    },
-    {
-        key: '7',
-        name: 'Unsafe',
-        value: 'unsafe'
-    }
-];
-exports.librarySelectionData = function (name) {
-    return {
-        type: 'checkbox',
-        message: 'Pick libraries (choose none to go back)',
-        name: name,
-        choices: [
-            {
-                name: 'Bits',
-                value: constants_1.UNITS[0]
-            },
-            {
-                name: 'Bytes',
-                value: constants_1.UNITS[1]
-            },
-            {
-                name: 'Math',
-                value: constants_1.UNITS[2]
-            },
-            {
-                name: 'Patricia Tree',
-                value: constants_1.UNITS[3]
-            },
-            {
-                name: 'Strings',
-                value: constants_1.UNITS[4]
-            },
-            {
-                name: 'Unsafe',
-                value: constants_1.UNITS[5]
-            },
-            {
-                name: 'Extended',
-                value: constants_1.UNITS_EXTENDED
-            },
-        ]
-    };
-};
 exports.printDelim = function (text) {
     io_1.println('-- DOC START --');
     io_1.println(text);
@@ -162,22 +64,6 @@ exports.printFile = function (filePath, delimited) {
     else {
         io_1.println(text);
     }
-};
-exports.printMarkdownFile = function (filePath, delimited) {
-    if (delimited === void 0) { delimited = true; }
-    var text = marked(io_1.readText(filePath), exports.markedOptions);
-    if (delimited) {
-        exports.printDelim(text);
-    }
-    else {
-        io_1.println(text);
-    }
-};
-exports.printLogo = function () {
-    exports.printFile(exports.LOGO_PATH, false);
-};
-exports.printInfo = function () {
-    exports.printFile(exports.INFO_PATH);
 };
 exports.prompt = function (promptData) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {

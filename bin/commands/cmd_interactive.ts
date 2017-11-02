@@ -1,5 +1,4 @@
 import {Command} from "./command";
-import {printLogo} from "../prompt/utils";
 import {mainMenu} from "../prompt/main_prompt";
 
 export class InteractiveCommand extends Command {
@@ -13,7 +12,6 @@ export class InteractiveCommand extends Command {
             this.printHelp();
             return;
         }
-        printLogo();
         // Stops linter from complaining.
         let terminate = false;
         while (!terminate) {

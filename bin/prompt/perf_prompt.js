@@ -40,33 +40,38 @@ var utils_1 = require("./utils");
 var perf_1 = require("../../script/perf");
 var io_1 = require("../../script/utils/io");
 var logs_1 = require("../../script/utils/logs");
+var data_reader_1 = require("../../script/utils/data_reader");
+exports.perfSelectionData = function () {
+    var choices = data_reader_1.getAllPerfFiles().map(function (file) {
+        return {
+            name: file[0] + "/" + file[1],
+            value: file
+        };
+    });
+    return {
+        type: 'checkbox',
+        message: 'Select contracts (select none and press <enter> to go back)',
+        name: "perf",
+        choices: choices
+    };
+};
 exports.perfMenu = function () { return __awaiter(_this, void 0, void 0, function () {
-    var selected, units, _i, _a, prf;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, utils_1.prompt(utils_1.librarySelectionData('perf'))];
+    var selected;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, utils_1.prompt(exports.perfSelectionData())];
             case 1:
-                selected = _b.sent();
+                selected = _a.sent();
                 if (selected.perf.length === 0) {
                     return [2 /*return*/];
                 }
-                units = [];
-                for (_i = 0, _a = selected.perf; _i < _a.length; _i++) {
-                    prf = _a[_i];
-                    if (prf[0] instanceof Array) {
-                        units = units.concat(prf);
-                    }
-                    else {
-                        units.push(prf);
-                    }
-                }
-                return [4 /*yield*/, perf_1.perf(units, false)];
+                return [4 /*yield*/, perf_1.perf(selected.perf, false)];
             case 2:
-                _b.sent();
+                _a.sent();
                 logs_1.printPerfLog(io_1.latestPerfLog());
                 return [4 /*yield*/, exports.perfMenu()];
             case 3:
-                _b.sent();
+                _a.sent();
                 return [2 /*return*/];
         }
     });

@@ -38,32 +38,34 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
 var compile_1 = require("../../script/compile");
+var data_reader_1 = require("../../script/utils/data_reader");
+exports.contractSelectionData = function () {
+    var choices = data_reader_1.getAllContractFiles().map(function (file) {
+        return {
+            name: file[0] + "/" + file[1],
+            value: file
+        };
+    });
+    return {
+        type: 'checkbox',
+        message: 'Select contracts (select none and press <enter> to go back)',
+        name: "compile",
+        choices: choices
+    };
+};
 exports.compileMenu = function () { return __awaiter(_this, void 0, void 0, function () {
-    var selected, units, _i, _a, cmpl;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, utils_1.prompt(utils_1.librarySelectionData('compile'))];
+    var selected;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, utils_1.prompt(exports.contractSelectionData())];
             case 1:
-                selected = _b.sent();
+                selected = _a.sent();
                 if (selected.compile.length === 0) {
                     return [2 /*return*/];
                 }
-                units = [];
-                for (_i = 0, _a = selected.compile; _i < _a.length; _i++) {
-                    cmpl = _a[_i];
-                    if (cmpl[0] instanceof Array) {
-                        units = units.concat(cmpl);
-                    }
-                    else {
-                        units.push(cmpl);
-                    }
-                }
-                return [4 /*yield*/, compile_1.compile(units)];
+                return [4 /*yield*/, compile_1.compile(selected.compile)];
             case 2:
-                _b.sent();
-                return [4 /*yield*/, exports.compileMenu()];
-            case 3:
-                _b.sent();
+                _a.sent();
                 return [2 /*return*/];
         }
     });

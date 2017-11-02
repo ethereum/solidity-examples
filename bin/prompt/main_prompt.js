@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
-var docs_prompt_1 = require("./docs_prompt");
 var tests_prompt_1 = require("./tests_prompt");
 var perf_prompt_1 = require("./perf_prompt");
 var logs_prompt_1 = require("./logs_prompt");
@@ -66,11 +65,6 @@ exports.mainPrompt = {
             key: 'l',
             name: 'Check logs',
             value: 'logs'
-        },
-        {
-            key: 'd',
-            name: 'View docs',
-            value: 'docs'
         }
     ].concat(utils_1.SEPARATOR).concat(utils_1.EXIT_CHOICE)
 };
@@ -86,40 +80,34 @@ exports.mainMenu = function () { return __awaiter(_this, void 0, void 0, functio
                     case "tests": return [3 /*break*/, 2];
                     case "perf": return [3 /*break*/, 4];
                     case "logs": return [3 /*break*/, 6];
-                    case "docs": return [3 /*break*/, 8];
-                    case "compile": return [3 /*break*/, 10];
-                    case "exit": return [3 /*break*/, 12];
+                    case "compile": return [3 /*break*/, 8];
+                    case "exit": return [3 /*break*/, 10];
                 }
-                return [3 /*break*/, 13];
+                return [3 /*break*/, 11];
             case 2: // Options
             return [4 /*yield*/, tests_prompt_1.testsMenu()];
             case 3:
                 _b.sent();
-                return [3 /*break*/, 14];
+                return [3 /*break*/, 12];
             case 4: // Options
             return [4 /*yield*/, perf_prompt_1.perfMenu()];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 14];
+                return [3 /*break*/, 12];
             case 6: // Options
             return [4 /*yield*/, logs_prompt_1.logsMenu()];
             case 7:
                 _b.sent();
-                return [3 /*break*/, 14];
+                return [3 /*break*/, 12];
             case 8: // Options
-            return [4 /*yield*/, docs_prompt_1.docsMenu()];
+            return [4 /*yield*/, compile_prompt_1.compileMenu()];
             case 9:
                 _b.sent();
-                return [3 /*break*/, 14];
-            case 10: // Options
-            return [4 /*yield*/, compile_prompt_1.compileMenu()];
-            case 11:
-                _b.sent();
-                return [3 /*break*/, 14];
-            case 12: // Navigation
+                return [3 /*break*/, 12];
+            case 10: // Navigation
             return [2 /*return*/, true];
-            case 13: return [2 /*return*/, false];
-            case 14: return [2 /*return*/, false];
+            case 11: return [2 /*return*/, false];
+            case 12: return [2 /*return*/, false];
         }
     });
 }); };

@@ -1,15 +1,16 @@
 import * as path from 'path';
 import * as child from 'child_process';
 import {
-    BIN_OUTPUT, PERF_CONTRACT_PATH, ROOT_PATH, SRC_PATH, TEST_CONTRACT_PATH, UNITS, UNITS_EXTENDED
+    BIN_OUTPUT_PATH, PERF_CONTRACT_PATH, ROOT_PATH, SRC_PATH, TEST_CONTRACT_PATH
 } from "../constants";
 import Logger from "../utils/logger";
+import {getAllContractFiles, getAllPerfFiles, getAllTestFiles} from "../utils/data_reader";
 
 const exec = child.exec;
 const execSync = child.execSync;
 
 export const compileTests = async (extended: boolean, optimize: boolean) => {
-    const units = extended ? UNITS_EXTENDED : UNITS;
+    const units = getAllTestFiles(extended);
     for (const test of units) {
         await compileTest(test[0], test[1], optimize);
     }
@@ -17,13 +18,13 @@ export const compileTests = async (extended: boolean, optimize: boolean) => {
 
 export const compileTest = async (subdir: string, test: string, optimize: boolean = true) => {
     Logger.info(`Compiling unit: ${subdir}/${test}`);
-    const filePath = path.join(TEST_CONTRACT_PATH, subdir, test + '_tests.sol');
-    await compile(filePath, BIN_OUTPUT, optimize);
+    const filePath = path.join(TEST_CONTRACT_PATH, subdir, test);
+    await compile(filePath, BIN_OUTPUT_PATH, optimize);
     Logger.info(`Done`);
 };
 
 export const compilePerfs = async (extended: boolean, optimize: boolean) => {
-    const units = extended ? UNITS_EXTENDED : UNITS;
+    const units = getAllPerfFiles(extended);
     for (const test of units) {
         await compilePerf(test[0], test[1], optimize);
     }
@@ -31,13 +32,13 @@ export const compilePerfs = async (extended: boolean, optimize: boolean) => {
 
 export const compilePerf = async (subdir: string, perf: string, optimize: boolean = true) => {
     Logger.info(`Compiling unit: ${subdir}/${perf}`);
-    const filePath = path.join(PERF_CONTRACT_PATH, subdir, perf + '_perfs.sol');
-    await compile(filePath, BIN_OUTPUT, optimize);
+    const filePath = path.join(PERF_CONTRACT_PATH, subdir, perf);
+    await compile(filePath, BIN_OUTPUT_PATH, optimize);
     Logger.info(`Done`);
 };
 
-export const compileUnits = async (extended: boolean, optimize: boolean) => {
-    const units = extended ? UNITS_EXTENDED : UNITS;
+export const compileUnits = async (optimize: boolean = true) => {
+    const units = getAllContractFiles();
     for (const test of units) {
         await compileUnit(test[0], test[1], optimize);
     }
@@ -45,8 +46,8 @@ export const compileUnits = async (extended: boolean, optimize: boolean) => {
 
 export const compileUnit = async (subdir: string, contract: string, optimize: boolean = true) => {
     Logger.info(`Compiling unit: ${subdir}/${contract}`);
-    const filePath = path.join(SRC_PATH, subdir, contract + '.sol');
-    await compile(filePath, BIN_OUTPUT, optimize);
+    const filePath = path.join(SRC_PATH, subdir, contract);
+    await compile(filePath, BIN_OUTPUT_PATH, optimize);
     Logger.info(`Done`);
 };
 

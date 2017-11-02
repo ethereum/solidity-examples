@@ -54,7 +54,6 @@ var CompileCommand = /** @class */ (function (_super) {
     }
     CompileCommand.prototype.execute = function (args, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var extended, _i, options_1, opt;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -66,16 +65,7 @@ var CompileCommand = /** @class */ (function (_super) {
                             this.printHelp();
                             return [2 /*return*/];
                         }
-                        extended = false;
-                        for (_i = 0, options_1 = options; _i < options_1.length; _i++) {
-                            opt = options_1[_i];
-                            switch (opt) {
-                                case 'extended':
-                                    extended = true;
-                                    break;
-                            }
-                        }
-                        return [4 /*yield*/, compile_1.compileAll(extended)];
+                        return [4 /*yield*/, compile_1.compileAll()];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -90,7 +80,7 @@ var CompileCommand = /** @class */ (function (_super) {
         return 'Compile all contracts.';
     };
     CompileCommand.prototype.validOptions = function () {
-        return ['extended'];
+        return [];
     };
     CompileCommand.prototype.parent = function () {
         return 'solstl';

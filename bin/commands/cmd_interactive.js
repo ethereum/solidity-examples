@@ -46,7 +46,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
-var utils_1 = require("../prompt/utils");
 var main_prompt_1 = require("../prompt/main_prompt");
 var InteractiveCommand = /** @class */ (function (_super) {
     __extends(InteractiveCommand, _super);
@@ -67,7 +66,6 @@ var InteractiveCommand = /** @class */ (function (_super) {
                             this.printHelp();
                             return [2 /*return*/];
                         }
-                        utils_1.printLogo();
                         terminate = false;
                         _a.label = 1;
                     case 1:

@@ -1,9 +1,8 @@
 import {Command} from "./command";
-import {UNITS, UNITS_EXTENDED} from "../../script/constants";
 import {test} from "../../script/tests";
-import TestLogger from "../../script/utils/test_logger";
 import {printTestLog} from "../../script/utils/logs";
 import {latestTestLog} from "../../script/utils/io";
+import {getAllTestFiles} from "../../script/utils/data_reader";
 
 export class TestsCommand extends Command {
 
@@ -31,7 +30,7 @@ export class TestsCommand extends Command {
                     silent = true;
             }
         }
-        const units = extended ? UNITS_EXTENDED : UNITS;
+        const units = getAllTestFiles(extended);
         const result = await test(units, optAndUnopt);
         if (!silent) {
             printTestLog(latestTestLog());

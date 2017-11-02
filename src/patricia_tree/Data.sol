@@ -26,8 +26,8 @@ library Data {
         Edge[2] children;
     }
 
-    /// Returns a label containing the longest common prefix of `self` and `label`
-    /// and a label consisting of the remaining part of `label`.
+    // Returns a label containing the longest common prefix of `self` and `label`,
+    // and a label consisting of the remaining part of `label`.
     function splitCommonPrefix(Label memory self, Label memory label) internal pure returns (
         Label memory prefix,
         Label memory labelSuffix
@@ -35,8 +35,8 @@ library Data {
         return splitAt(self, commonPrefix(label, self));
     }
 
-    /// Splits the label at the given position and returns prefix and suffix,
-    /// i.e. prefix.length == pos and prefix.data . suffix.data == l.data.
+    // Splits the label at the given position and returns prefix and suffix,
+    // i.e. 'prefix.length == pos' and 'prefix.data . suffix.data == l.data'.
     function splitAt(Label memory self, uint pos) internal pure returns (Label memory prefix, Label memory suffix) {
         require(pos <= self.length && pos <= 256);
         prefix.length = pos;
@@ -48,7 +48,8 @@ library Data {
         suffix.length = self.length - pos;
         suffix.data = self.data << pos;
     }
-    /// Returns the length of the longest common prefix of the two labels.
+
+    // Returns the length of the longest common prefix of the two labels.
     /*
     function commonPrefix(Label memory self, Label memory lbl) internal pure returns (uint prefix) {
         uint length = self.length < lbl.length ? self.length : lbl.length;
@@ -76,16 +77,16 @@ library Data {
         return 255 - Bits.highestBitSet(diff);
     }
 
-    /// Returns the result of removing a prefix of length `prefix` bits from the
-    /// given label (i.e. shifting its data to the left).
+    // Returns the result of removing a prefix of length `prefix` bits from the
+    // given label (i.e. shifting its data to the left).
     function removePrefix(Label memory self, uint prefix) internal pure returns (Label memory r) {
         require(prefix <= self.length);
         r.length = self.length - prefix;
         r.data = self.data << prefix;
     }
 
-    /// Removes the first bit from a label and returns the bit and a
-    /// label containing the rest of the label (i.e. shifted to the left).
+    // Removes the first bit from a label and returns the bit and a
+    // label containing the rest of the label (shifted to the left).
     function chopFirstBit(Label memory self) internal pure returns (uint firstBit, Label memory tail) {
         require(self.length > 0);
         return (uint(self.data >> 255), Label(self.data << 1, self.length - 1));

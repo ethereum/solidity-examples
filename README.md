@@ -8,6 +8,13 @@ This is a draft document.
 
 - [Purpose](#purpose)
 - [Packages](#packages)
+  - [bits](#bits)
+  - [bytes](#bytes)
+  - [math](#math)
+  - [patricia_tree](#patricia_tree)
+  - [strings](#strings)
+  - [token](#token)
+  - [unsafe](#unsafe)
 - [Quality Assurance](#quality-assurance)
 - [Commandline tool](#commandline-tool)
 
@@ -19,21 +26,61 @@ The standard library should provide Solidity libraries / functions for performin
 
 These are the different packages.
 
-[bits](docs/packages/bits.md)
+### bits
 
-[bytes](docs/packages/bytes.md)
+The `bits` package is used to work with bitfields (uints).
 
-[math](docs/packages/math.md)
+#### contracts
 
-[patricia_tree](docs/packages/patricia_tree.md)
+- [Bits](./docs/packages/Bits.md)
 
-[rlp](docs/packages/rlp.md)
+### bytes
 
-[strings](docs/packages/strings.md)
+The `bytes` package is used to work with `bytes` in memory, and to convert between `bytes` and other types.
 
-[token](docs/packages/tokens.md)
+#### contracts
 
-[unsafe](docs/packages/unsafe.md)
+- [Bytes](./docs/packages/Bytes.md)
+
+### math
+
+The `math` package is used for doing math with signed and unsigned numbers.
+
+#### contracts
+
+- [ExactMath](./docs/packages/ExactMath.md)
+
+### patricia_tree
+
+The `patricia_tree` package is used to work with the standard Solidity Patricia tree implementation, by @chriseth.
+
+#### contracts
+
+- [PatriciaTree](./docs/packages/PatriciaTree.md)
+
+### strings
+
+The `strings` package is used to work with `string` data.
+
+#### contracts
+
+- [Strings](./docs/packages/Strings.md)
+
+### token
+
+The `token` package is used to work with Token contracts.
+
+#### contracts
+
+- [Token](./docs/packages/Token.md)
+
+### unsafe
+
+The `unsafe` package is used to do unsafe operations, like working with memory directly.
+
+#### contracts
+
+- [Memory](./docs/packages/Memory.md)
 
 ## Quality Assurance
 

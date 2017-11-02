@@ -1,19 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var chalk = require("chalk");
+var chlk = require("chalk");
 var io_1 = require("./io");
 var jsondiffpatch = require("jsondiffpatch");
 var constants_1 = require("../constants");
 var path = require("path");
-var PASSED = chalk.greenBright('PASSED');
-var FAILED = chalk.redBright('FAILED');
-var WHITE_ARROW = chalk.white('->');
+var chalk = chlk; // TODO Something going on with this thing.
+var PASSED = chalk["greenBright"]("PASSED");
+var FAILED = chalk["redBright"]("FAILED");
+var WHITE_ARROW = chalk["white"]("->");
 exports.printTestLog = function (jsonObj) {
-    io_1.println('\n' + chalk.cyanBright('Test report') + '\n');
-    io_1.println(chalk.bold.white('Context'));
+    io_1.println('\n' + chalk["cyanBright"]("Test report") + '\n');
+    io_1.println(chalk["bold"]["white"]('Context'));
     io_1.println((_a = ["\t{white Compiler version}: {magentaBright ", "}"], _a.raw = ["\\t{white Compiler version}: {magentaBright ", "}"], chalk(_a, jsonObj.solcVersion)));
     io_1.println((_b = ["\t{white EVM version}: {magentaBright ", "}"], _b.raw = ["\\t{white EVM version}: {magentaBright ", "}"], chalk(_b, jsonObj.evmVersion)));
-    io_1.println(chalk.bold.white('Gas usage'));
+    io_1.println(chalk["bold"]["white"]('Gas usage'));
     var results = jsonObj.results;
     for (var objName in results) {
         if (results.hasOwnProperty(objName)) {
@@ -24,11 +25,11 @@ exports.printTestLog = function (jsonObj) {
     var _a, _b, _c;
 };
 exports.printPerfLog = function (jsonObj) {
-    io_1.println('\n' + chalk.cyanBright('Perf report') + '\n');
-    io_1.println(chalk.bold.white('Context'));
+    io_1.println('\n' + chalk["cyanBright"]('Perf report') + '\n');
+    io_1.println(chalk["bold"]["white"]('Context'));
     io_1.println((_a = ["\t{white Compiler version}: {magentaBright ", "}"], _a.raw = ["\\t{white Compiler version}: {magentaBright ", "}"], chalk(_a, jsonObj.solcVersion)));
     io_1.println((_b = ["\t{white EVM version}: {magentaBright ", "}"], _b.raw = ["\\t{white EVM version}: {magentaBright ", "}"], chalk(_b, jsonObj.evmVersion)));
-    io_1.println(chalk.bold.white('Gas usage'));
+    io_1.println(chalk["bold"]["white"]('Gas usage'));
     var results = jsonObj.results;
     for (var objName in results) {
         if (results.hasOwnProperty(objName)) {
@@ -38,15 +39,15 @@ exports.printPerfLog = function (jsonObj) {
     io_1.println('\n');
     var _a, _b, _c;
 };
-exports.diff = function (oldLog, newLog) { return jsondiffpatch.diff(oldLog, newLog); };
+exports.diff = function (oldLog, newLog) { return jsondiffpatch["diff"](oldLog, newLog); };
 exports.printPerfDiff = function (delta, oldLog, newLog) {
-    io_1.println('\n' + chalk.cyanBright('Perf diff') + '\n');
+    io_1.println('\n' + chalk["cyanBright"]('Perf diff') + '\n');
     if (delta === undefined || delta === null) {
-        io_1.println(chalk.greenBright('No changes'));
+        io_1.println(chalk["greenBright"]('No changes'));
     }
     else {
         if (delta.solcVersion !== undefined || delta.evmVersion !== undefined) {
-            io_1.println(chalk.bold.white('Context diff'));
+            io_1.println(chalk["bold"]["white"]('Context diff'));
             if (delta.solcVersion !== undefined) {
                 io_1.println((_a = ["\t{white Compiler version}: {magentaBright ", " ", " ", "}"], _a.raw = ["\\t{white Compiler version}: {magentaBright ", " ", " ", "}"], chalk(_a, oldLog.solcVersion, WHITE_ARROW, newLog.solcVersion)));
             }
@@ -55,7 +56,7 @@ exports.printPerfDiff = function (delta, oldLog, newLog) {
             }
         }
         if (delta.results !== undefined && Object.keys(delta).length > 0) {
-            io_1.println(chalk.bold.white('Results'));
+            io_1.println(chalk["bold"]["white"]('Results'));
             var results = delta.results;
             for (var objName in results) {
                 if (results.hasOwnProperty(objName)) {
@@ -85,13 +86,13 @@ exports.printPerfDiff = function (delta, oldLog, newLog) {
 };
 exports.printLatestDiff = function (optimized) {
     if (optimized === void 0) { optimized = true; }
-    var logFolders = io_1.indexedLogFolders(constants_1.PERF_LOGS, 2);
+    var logFolders = io_1.indexedLogFolders(constants_1.PERF_LOGS_PATH, 2);
     if (logFolders.length < 2) {
         return false;
     }
     var file = optimized ? constants_1.RESULTS_NAME_OPTIMIZED : constants_1.RESULTS_NAME_UNOPTIMIZED;
-    var newLog = io_1.readLog(path.join(constants_1.PERF_LOGS, logFolders[0]), file);
-    var oldLog = io_1.readLog(path.join(constants_1.PERF_LOGS, logFolders[1]), file);
+    var newLog = io_1.readLog(path.join(constants_1.PERF_LOGS_PATH, logFolders[0]), file);
+    var oldLog = io_1.readLog(path.join(constants_1.PERF_LOGS_PATH, logFolders[1]), file);
     var delta = exports.diff(oldLog, newLog);
     exports.printPerfDiff(delta, oldLog, newLog);
     return true;

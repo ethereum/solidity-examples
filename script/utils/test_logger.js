@@ -6,25 +6,25 @@ var TestLogger = /** @class */ (function () {
     function TestLogger() {
     }
     TestLogger.header = function (text) {
-        io_1.println(chalk.cyanBright(text));
+        io_1.println(chalk["cyanBright"](text));
     };
     TestLogger.info = function (text) {
         if (!TestLogger.__silent) {
-            io_1.println(chalk.blueBright(text));
+            io_1.println(chalk["blueBright"](text));
         }
     };
     TestLogger.success = function (text) {
         if (!TestLogger.__silent) {
-            io_1.println(chalk.greenBright(text));
+            io_1.println(chalk["greenBright"](text));
         }
     };
     TestLogger.moderate = function (text) {
         if (!TestLogger.__silent) {
-            io_1.println(chalk.yellowBright(text));
+            io_1.println(chalk["yellowBright"](text));
         }
     };
     TestLogger.fail = function (text) {
-        io_1.println(chalk.redBright(text));
+        io_1.println(chalk["redBright"](text));
     };
     TestLogger.setSilent = function (silent) {
         TestLogger.__silent = silent;

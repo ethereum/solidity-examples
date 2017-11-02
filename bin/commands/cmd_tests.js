@@ -46,10 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
-var constants_1 = require("../../script/constants");
 var tests_1 = require("../../script/tests");
 var logs_1 = require("../../script/utils/logs");
 var io_1 = require("../../script/utils/io");
+var data_reader_1 = require("../../script/utils/data_reader");
 var TestsCommand = /** @class */ (function (_super) {
     __extends(TestsCommand, _super);
     function TestsCommand() {
@@ -85,7 +85,7 @@ var TestsCommand = /** @class */ (function (_super) {
                                     silent = true;
                             }
                         }
-                        units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
+                        units = data_reader_1.getAllTestFiles(extended);
                         return [4 /*yield*/, tests_1.test(units, optAndUnopt)];
                     case 1:
                         result = _a.sent();

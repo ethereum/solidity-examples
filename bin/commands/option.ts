@@ -1,4 +1,3 @@
-
 export class Option {
 
     private __name: string;

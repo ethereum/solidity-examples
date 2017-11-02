@@ -52,7 +52,7 @@ exports.perf = function (units, optAndUnopt) {
                 case 0:
                     solcV = solc_1.version();
                     evmV = evm_1.version();
-                    io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                    io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
                     return [4 /*yield*/, exports.compileAndRunPerf(units, optAndUnopt)];
                 case 1:
                     ret = _a.sent();
@@ -61,10 +61,10 @@ exports.perf = function (units, optAndUnopt) {
                         evmVersion: evmV,
                         results: ret
                     };
-                    logsPath = io_1.createTimestampSubfolder(constants_1.PERF_LOGS);
+                    logsPath = io_1.createTimestampSubfolder(constants_1.PERF_LOGS_PATH);
                     io_1.writeLog(log, logsPath, constants_1.RESULTS_NAME_OPTIMIZED);
                     if (!optAndUnopt) return [3 /*break*/, 3];
-                    io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                    io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
                     return [4 /*yield*/, exports.compileAndRunPerf(units, false)];
                 case 2:
                     retU = _a.sent();
@@ -76,7 +76,7 @@ exports.perf = function (units, optAndUnopt) {
                     io_1.writeLog(logU, logsPath, constants_1.RESULTS_NAME_UNOPTIMIZED);
                     _a.label = 3;
                 case 3:
-                    io_1.writeLatest(constants_1.PERF_LOGS, logsPath);
+                    io_1.writeLatest(constants_1.PERF_LOGS_PATH, logsPath);
                     return [2 /*return*/];
             }
         });
@@ -93,7 +93,7 @@ exports.compileAndRunPerf = function (units, optimize) { return __awaiter(_this,
                 if (!(_i < units_1.length)) return [3 /*break*/, 4];
                 unit = units_1[_i];
                 subDir = unit[0];
-                prf = unit[2];
+                prf = unit[1];
                 if (prf === '') {
                     return [3 /*break*/, 3];
                 }
@@ -109,7 +109,7 @@ exports.compileAndRunPerf = function (units, optimize) { return __awaiter(_this,
     });
 }); };
 exports.runPerf = function () {
-    var files = fs.readdirSync(constants_1.BIN_OUTPUT);
+    var files = fs.readdirSync(constants_1.BIN_OUTPUT_PATH);
     var sigfiles = files.filter(function (file) {
         var f = file.trim();
         return f.length > 4 && f.substr(0, 4) === 'Perf' && f.split('.').pop() === 'signatures';
@@ -118,11 +118,11 @@ exports.runPerf = function () {
     test_logger_1.default.header("Running perf...");
     for (var _i = 0, sigfiles_1 = sigfiles; _i < sigfiles_1.length; _i++) {
         var sigfile = sigfiles_1[_i];
-        if (!io_1.isSigInHashes(constants_1.BIN_OUTPUT, sigfile, constants_1.PERF_FUN_HASH)) {
+        if (!io_1.isSigInHashes(constants_1.BIN_OUTPUT_PATH, sigfile, constants_1.PERF_FUN_HASH)) {
             throw new Error("No perf function in signature file: " + sigfile);
         }
         var name = sigfile.substr(0, sigfile.length - 11);
-        var binRuntimePath = path.join(constants_1.BIN_OUTPUT, name + ".bin-runtime");
+        var binRuntimePath = path.join(constants_1.BIN_OUTPUT_PATH, name + ".bin-runtime");
         var result = evm_1.run(binRuntimePath, constants_1.PERF_FUN_HASH);
         var gasUsed = parseData(result);
         results[name] = { gasUsed: gasUsed };

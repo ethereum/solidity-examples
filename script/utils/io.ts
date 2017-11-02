@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import Logger from "./logger";
-import {PERF_LOGS, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, TEST_LOGS} from "../constants";
+import {PERF_LOGS_PATH, RESULTS_NAME_OPTIMIZED, RESULTS_NAME_UNOPTIMIZED, TEST_LOGS_PATH} from "../constants";
 
 export const print = (text: string) => {
     process.stdout.write(text);
@@ -14,6 +14,10 @@ export const println = (text: string) => {
 
 export const readText = (filePath: string): string => {
     return fs.readFileSync(filePath).toString();
+};
+
+export const readJSON = (filePath: string): object => {
+    return JSON.parse(readText(filePath));
 };
 
 export const rmrf = (pth: string): void => {
@@ -64,13 +68,10 @@ export const writeLog = (log: object, dir: string, name: string): void => {
     Logger.info(`Logs written to: ${optResultsPath}`);
 };
 
-export const readLog = (dir: string, name: string): object => {
-    const optStr = fs.readFileSync(path.join(dir, name)).toString();
-    return JSON.parse(optStr);
-};
+export const readLog = (dir: string, name: string): object => readJSON(path.join(dir, name));
 
 export const latestPerfLog = (optimized: boolean = true): object => {
-    const latest = readLatest(PERF_LOGS);
+    const latest = readLatest(PERF_LOGS_PATH);
     if (latest === '') {
         throw new Error(`No perf-logs found.`);
     }
@@ -79,7 +80,7 @@ export const latestPerfLog = (optimized: boolean = true): object => {
 };
 
 export const latestTestLog = (optimized: boolean = true): object => {
-    const latest = readLatest(TEST_LOGS);
+    const latest = readLatest(TEST_LOGS_PATH);
     if (latest === '') {
         throw new Error(`No test-logs found.`);
     }

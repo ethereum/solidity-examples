@@ -40,6 +40,7 @@ var path = require("path");
 var child = require("child_process");
 var constants_1 = require("../constants");
 var logger_1 = require("../utils/logger");
+var data_reader_1 = require("../utils/data_reader");
 var exec = child.exec;
 var execSync = child.execSync;
 exports.compileTests = function (extended, optimize) { return __awaiter(_this, void 0, void 0, function () {
@@ -47,7 +48,7 @@ exports.compileTests = function (extended, optimize) { return __awaiter(_this, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
+                units = data_reader_1.getAllTestFiles(extended);
                 _i = 0, units_1 = units;
                 _a.label = 1;
             case 1:
@@ -72,8 +73,8 @@ exports.compileTest = function (subdir, test, optimize) {
             switch (_a.label) {
                 case 0:
                     logger_1.default.info("Compiling unit: " + subdir + "/" + test);
-                    filePath = path.join(constants_1.TEST_CONTRACT_PATH, subdir, test + '_tests.sol');
-                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT, optimize)];
+                    filePath = path.join(constants_1.TEST_CONTRACT_PATH, subdir, test);
+                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT_PATH, optimize)];
                 case 1:
                     _a.sent();
                     logger_1.default.info("Done");
@@ -87,7 +88,7 @@ exports.compilePerfs = function (extended, optimize) { return __awaiter(_this, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
+                units = data_reader_1.getAllPerfFiles(extended);
                 _i = 0, units_2 = units;
                 _a.label = 1;
             case 1:
@@ -112,8 +113,8 @@ exports.compilePerf = function (subdir, perf, optimize) {
             switch (_a.label) {
                 case 0:
                     logger_1.default.info("Compiling unit: " + subdir + "/" + perf);
-                    filePath = path.join(constants_1.PERF_CONTRACT_PATH, subdir, perf + '_perfs.sol');
-                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT, optimize)];
+                    filePath = path.join(constants_1.PERF_CONTRACT_PATH, subdir, perf);
+                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT_PATH, optimize)];
                 case 1:
                     _a.sent();
                     logger_1.default.info("Done");
@@ -122,28 +123,31 @@ exports.compilePerf = function (subdir, perf, optimize) {
         });
     });
 };
-exports.compileUnits = function (extended, optimize) { return __awaiter(_this, void 0, void 0, function () {
-    var units, _i, units_3, test_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
-                _i = 0, units_3 = units;
-                _a.label = 1;
-            case 1:
-                if (!(_i < units_3.length)) return [3 /*break*/, 4];
-                test_3 = units_3[_i];
-                return [4 /*yield*/, exports.compileUnit(test_3[0], test_3[1], optimize)];
-            case 2:
-                _a.sent();
-                _a.label = 3;
-            case 3:
-                _i++;
-                return [3 /*break*/, 1];
-            case 4: return [2 /*return*/];
-        }
+exports.compileUnits = function (optimize) {
+    if (optimize === void 0) { optimize = true; }
+    return __awaiter(_this, void 0, void 0, function () {
+        var units, _i, units_3, test_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    units = data_reader_1.getAllContractFiles();
+                    _i = 0, units_3 = units;
+                    _a.label = 1;
+                case 1:
+                    if (!(_i < units_3.length)) return [3 /*break*/, 4];
+                    test_3 = units_3[_i];
+                    return [4 /*yield*/, exports.compileUnit(test_3[0], test_3[1], optimize)];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3:
+                    _i++;
+                    return [3 /*break*/, 1];
+                case 4: return [2 /*return*/];
+            }
+        });
     });
-}); };
+};
 exports.compileUnit = function (subdir, contract, optimize) {
     if (optimize === void 0) { optimize = true; }
     return __awaiter(_this, void 0, void 0, function () {
@@ -152,8 +156,8 @@ exports.compileUnit = function (subdir, contract, optimize) {
             switch (_a.label) {
                 case 0:
                     logger_1.default.info("Compiling unit: " + subdir + "/" + contract);
-                    filePath = path.join(constants_1.SRC_PATH, subdir, contract + '.sol');
-                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT, optimize)];
+                    filePath = path.join(constants_1.SRC_PATH, subdir, contract);
+                    return [4 /*yield*/, exports.compile(filePath, constants_1.BIN_OUTPUT_PATH, optimize)];
                 case 1:
                     _a.sent();
                     logger_1.default.info("Done");

@@ -47,10 +47,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var command_1 = require("./command");
 var perf_1 = require("../../script/perf");
-var constants_1 = require("../../script/constants");
 var io_1 = require("../../script/utils/io");
 var logs_1 = require("../../script/utils/logs");
 var logger_1 = require("../../script/utils/logger");
+var data_reader_1 = require("../../script/utils/data_reader");
 var PerfCommand = /** @class */ (function (_super) {
     __extends(PerfCommand, _super);
     function PerfCommand() {
@@ -91,7 +91,7 @@ var PerfCommand = /** @class */ (function (_super) {
                                     break;
                             }
                         }
-                        units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
+                        units = data_reader_1.getAllPerfFiles(extended);
                         return [4 /*yield*/, perf_1.perf(units, optAndUnopt)];
                     case 1:
                         _a.sent();

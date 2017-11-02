@@ -14,6 +14,9 @@ exports.println = function (text) {
 exports.readText = function (filePath) {
     return fs.readFileSync(filePath).toString();
 };
+exports.readJSON = function (filePath) {
+    return JSON.parse(exports.readText(filePath));
+};
 exports.rmrf = function (pth) {
     if (fs.existsSync(pth)) {
         fs.readdirSync(pth).forEach(function (file) {
@@ -57,13 +60,10 @@ exports.writeLog = function (log, dir, name) {
     fs.writeFileSync(optResultsPath, JSON.stringify(log, null, '\t'));
     logger_1.default.info("Logs written to: " + optResultsPath);
 };
-exports.readLog = function (dir, name) {
-    var optStr = fs.readFileSync(path.join(dir, name)).toString();
-    return JSON.parse(optStr);
-};
+exports.readLog = function (dir, name) { return exports.readJSON(path.join(dir, name)); };
 exports.latestPerfLog = function (optimized) {
     if (optimized === void 0) { optimized = true; }
-    var latest = exports.readLatest(constants_1.PERF_LOGS);
+    var latest = exports.readLatest(constants_1.PERF_LOGS_PATH);
     if (latest === '') {
         throw new Error("No perf-logs found.");
     }
@@ -72,7 +72,7 @@ exports.latestPerfLog = function (optimized) {
 };
 exports.latestTestLog = function (optimized) {
     if (optimized === void 0) { optimized = true; }
-    var latest = exports.readLatest(constants_1.TEST_LOGS);
+    var latest = exports.readLatest(constants_1.TEST_LOGS_PATH);
     if (latest === '') {
         throw new Error("No test-logs found.");
     }

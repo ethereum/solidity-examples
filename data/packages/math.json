@@ -1,0 +1,25 @@
+{
+  "name": "math",
+  "contracts": [
+    {
+      "name": "ExactMath.sol",
+      "tests": [
+        {
+          "name": "exact_math.sol"
+        }
+      ],
+      "perf": [
+        {
+          "name": "exact_math.sol"
+        }
+      ]
+    }
+  ],
+  "extra": {
+    "tests": [
+      {
+        "name": "math_consistency.sol"
+      }
+    ]
+  }
+}

@@ -43,14 +43,12 @@
     "solhint": "^1.1.7",
     "ts-jest": "^21.1.4",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.6.1"
   },
   "dependencies": {
     "chalk": "^2.3.0",
     "inquirer": "^3.3.0",
     "jsondiffpatch": "^0.2.5",
-    "marked": "^0.3.6",
-    "marked-terminal": "^2.0.0",
     "mkdirp": "^0.5.1"
   }
 }

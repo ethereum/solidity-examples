@@ -1,9 +1,9 @@
 import {Command} from "./command";
 import {perf} from "../../script/perf";
-import {UNITS, UNITS_EXTENDED} from "../../script/constants";
 import {latestPerfLog} from "../../script/utils/io";
 import {printLatestDiff, printPerfLog} from "../../script/utils/logs";
 import Logger from "../../script/utils/logger";
+import {getAllPerfFiles} from "../../script/utils/data_reader";
 
 export class PerfCommand extends Command {
 
@@ -36,7 +36,7 @@ export class PerfCommand extends Command {
                     break;
             }
         }
-        const units = extended ? UNITS_EXTENDED : UNITS;
+        const units = getAllPerfFiles(extended);
         await perf(units, optAndUnopt);
         if (!silent) {
             printPerfLog(latestPerfLog());

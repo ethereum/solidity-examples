@@ -39,49 +39,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var io_1 = require("./utils/io");
 var constants_1 = require("./constants");
 var solc_1 = require("./exec/solc");
-exports.compileAll = function (extended) {
-    if (extended === void 0) { extended = false; }
-    return __awaiter(_this, void 0, void 0, function () {
-        var units, _i, units_1, unit;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    io_1.ensureAndClear(constants_1.BIN_OUTPUT);
-                    units = extended ? constants_1.UNITS_EXTENDED : constants_1.UNITS;
-                    _i = 0, units_1 = units;
-                    _a.label = 1;
-                case 1:
-                    if (!(_i < units_1.length)) return [3 /*break*/, 4];
-                    unit = units_1[_i];
-                    if (unit[1] === '') {
-                        return [3 /*break*/, 3];
-                    }
-                    return [4 /*yield*/, solc_1.compileUnit(unit[0], unit[1], true)];
-                case 2:
-                    _a.sent();
-                    _a.label = 3;
-                case 3:
-                    _i++;
-                    return [3 /*break*/, 1];
-                case 4: return [2 /*return*/];
-            }
-        });
+var data_reader_1 = require("./utils/data_reader");
+exports.compileAll = function () { return __awaiter(_this, void 0, void 0, function () {
+    var units, _i, units_1, unit;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
+                units = data_reader_1.getAllContractFiles();
+                _i = 0, units_1 = units;
+                _a.label = 1;
+            case 1:
+                if (!(_i < units_1.length)) return [3 /*break*/, 4];
+                unit = units_1[_i];
+                return [4 /*yield*/, solc_1.compileUnit(unit[0], unit[1], true)];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3:
+                _i++;
+                return [3 /*break*/, 1];
+            case 4: return [2 /*return*/];
+        }
     });
-};
+}); };
 exports.compile = function (units) { return __awaiter(_this, void 0, void 0, function () {
     var _i, units_2, unit;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                io_1.ensureAndClear(constants_1.BIN_OUTPUT);
+                io_1.ensureAndClear(constants_1.BIN_OUTPUT_PATH);
                 _i = 0, units_2 = units;
                 _a.label = 1;
             case 1:
                 if (!(_i < units_2.length)) return [3 /*break*/, 4];
                 unit = units_2[_i];
-                if (unit[1] === '') {
-                    return [3 /*break*/, 3];
-                }
                 return [4 /*yield*/, solc_1.compileUnit(unit[0], unit[1], true)];
             case 2:
                 _a.sent();

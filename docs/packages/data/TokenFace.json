@@ -1,7 +1,0 @@
-{
-  "name": "Token",
-  "package": "token",
-  "type": "Interface",
-  "intro": "TokenFace_description.md",
-  "source": "TokenFace"
-}
