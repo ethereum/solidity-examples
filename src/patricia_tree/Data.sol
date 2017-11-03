@@ -78,7 +78,7 @@ library Data {
     }
 
     // Returns the result of removing a prefix of length `prefix` bits from the
-    // given label (i.e. shifting its data to the left).
+    // given label (shifting its data to the left).
     function removePrefix(Label memory self, uint prefix) internal pure returns (Label memory r) {
         require(prefix <= self.length);
         r.length = self.length - prefix;

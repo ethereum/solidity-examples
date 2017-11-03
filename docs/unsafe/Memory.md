@@ -1,21 +1,16 @@
 # Memory
 
-
-
 **Package:** unsafe
 
 **Contract type:** Static library
 
 **Source file:** [Memory.sol](../../src/unsafe/Memory.sol)
 
-
 **Example usage:** [MemoryExamples.sol](../../examples/unsafe/MemoryExamples.sol)
 
+**Tests source file:** [memory.sol](../../test/unsafe/memory.sol)
 
-**Tests source file:** [memory_tests.sol](../../test/unsafe/memory_tests.sol)
-
-
-**Perf (gas usage) source file:** [memory_perfs.sol](../../perf/unsafe/memory_perfs.sol)
+**Perf (gas usage) source file:** [memory.sol](../../perf/unsafe/memory.sol)
 
 
 ## description

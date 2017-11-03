@@ -7,6 +7,8 @@ import {Memory} from "../unsafe/Memory.sol";
 
 library Bytes {
 
+    uint internal constant BYTES_HEADER_SIZE = 32;
+
     // Checks if two `bytes memory` variables are equal. This is done using hashing,
     // which is much more gas efficient then comparing each byte individually.
     // Equality means that:
@@ -19,8 +21,8 @@ library Bytes {
         uint addr;
         uint addr2;
         assembly {
-            addr := add(self, 0x20)
-            addr2 := add(other, 0x20)
+            addr := add(self, BYTES_HEADER_SIZE)
+            addr2 := add(other, BYTES_HEADER_SIZE)
         }
         equal = Memory.equals(addr, addr2, self.length);
     }
@@ -111,7 +113,7 @@ library Bytes {
     function toBytes(bytes32 self) internal pure returns (bytes memory bts) {
         bts = new bytes(32);
         assembly {
-            mstore(add(bts, 0x20), self)
+            mstore(add(bts, BYTES_HEADER_SIZE), self)
         }
     }
 
@@ -125,7 +127,7 @@ library Bytes {
         // any potential garbage bytes in there.
         uint data = uint(self) & ~uint(0) << (32 - len)*8;
         assembly {
-            mstore(add(bts, 0x20), data)
+            mstore(add(bts, BYTES_HEADER_SIZE), data)
         }
     }
 

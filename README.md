@@ -32,7 +32,7 @@ The `bits` package is used to work with bitfields (uints).
 
 #### contracts
 
-- [Bits](./docs/packages/Bits.md)
+- [Bits](./docs/bits/Bits.md)
 
 ### bytes
 
@@ -40,39 +40,40 @@ The `bytes` package is used to work with `bytes` in memory, and to convert betwe
 
 #### contracts
 
-- [Bytes](./docs/packages/Bytes.md)
+- [Bytes](./docs/bytes/Bytes.md)
 
 ### math
 
-The `math` package is used for doing math with signed and unsigned numbers.
+The `math` package is used for doing exact math with signed and unsigned numbers.
 
 #### contracts
 
-- [ExactMath](./docs/packages/ExactMath.md)
+- [ExactMath](./docs/math/ExactMath.md)
 
 ### patricia_tree
 
-The `patricia_tree` package is used to work with the standard Solidity Patricia tree implementation, by @chriseth.
+The `patricia_tree` package is used to work with the standard Solidity Patricia tree implementation by @chriseth.
 
 #### contracts
 
-- [PatriciaTree](./docs/packages/PatriciaTree.md)
+- [PatriciaTree](./docs/patricia_tree/PatriciaTree.md)
+- [Data](./docs/patricia_tree/Data.md)
 
 ### strings
 
-The `strings` package is used to work with `string` data.
+The `strings` package is used to work Solidity `string`s. It only supports UTF-8 validation.
 
 #### contracts
 
-- [Strings](./docs/packages/Strings.md)
+- [Strings](./docs/strings/Strings.md)
 
-### token
+### tokens
 
-The `token` package is used to work with Token contracts.
+The `tokens` package is used to work with Token contracts.
 
 #### contracts
 
-- [Token](./docs/packages/Token.md)
+- [Token](./docs/tokens/Token.md)
 
 ### unsafe
 
@@ -80,7 +81,7 @@ The `unsafe` package is used to do unsafe operations, like working with memory d
 
 #### contracts
 
-- [Memory](./docs/packages/Memory.md)
+- [Memory](./docs/unsafe/Memory.md)
 
 ## Quality Assurance
 

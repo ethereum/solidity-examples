@@ -12,4 +12,4 @@
 
 ## Description
 
-`Data.sol` contains a number of data structures and utility functions for those data structures. It are meant to be used by the patricia tree.
+`Data.sol` contains a number of data structures and utility functions for those data structures. It is meant to be used by Patricia trees.

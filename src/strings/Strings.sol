@@ -57,6 +57,8 @@ library Strings {
     uint constant internal B92L = 0x80;
     uint constant internal B92H = 0x8F;
 
+    // Checks whether a string is valid UTF-8.
+    // If the string is not valid, the function will throw.
     function validate(string memory self) internal pure {
         uint addr;
         uint len;
@@ -74,6 +76,9 @@ library Strings {
         require(bytePos == len);
     }
 
+    // Parses a single character, or "rune" stored at address 'bytePos'
+    // in memory.
+    // Returns the length of the character in bytes.
     // solhint-disable-next-line code-complexity
     function parseRune(uint bytePos) internal pure returns (uint len) {
         uint val;
