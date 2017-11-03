@@ -23,11 +23,6 @@ contract PatriciaTreeDataTest is STLTest {
     bytes32 internal constant B32_ONES = bytes32(UINT256_ONES);
 }
 
-
-/* solhint-disable no-empty-blocks */
-contract PatriciaTreeTest is STLTest, PatriciaTree {}
-/* solhint-enable no-empty-blocks */
-
 /*******************************************************/
 
 contract TestPatriciaTreeDataChopFirstBitThrowsLengthIsZero is PatriciaTreeDataTest {

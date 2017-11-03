@@ -157,7 +157,7 @@ contract TestBitsBitNot is BitsTest {
     function testImpl() internal {
         for (uint8 i = 0; i < 12; i++) {
             uint v = (ONE << i*20) * (i % 2);
-            assert(v.bit(i*20) == 1 - i % 2);
+            assert(v.bitNot(i*20) == 1 - i % 2);
         }
     }
 }

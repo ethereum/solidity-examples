@@ -21,8 +21,8 @@ library Bytes {
         uint addr;
         uint addr2;
         assembly {
-            addr := add(self, BYTES_HEADER_SIZE)
-            addr2 := add(other, BYTES_HEADER_SIZE)
+            addr := add(self, /*BYTES_HEADER_SIZE*/32)
+            addr2 := add(other, /*BYTES_HEADER_SIZE*/32)
         }
         equal = Memory.equals(addr, addr2, self.length);
     }
@@ -113,7 +113,7 @@ library Bytes {
     function toBytes(bytes32 self) internal pure returns (bytes memory bts) {
         bts = new bytes(32);
         assembly {
-            mstore(add(bts, BYTES_HEADER_SIZE), self)
+            mstore(add(bts, /*BYTES_HEADER_SIZE*/32), self)
         }
     }
 
@@ -127,7 +127,7 @@ library Bytes {
         // any potential garbage bytes in there.
         uint data = uint(self) & ~uint(0) << (32 - len)*8;
         assembly {
-            mstore(add(bts, BYTES_HEADER_SIZE), data)
+            mstore(add(bts, /*BYTES_HEADER_SIZE*/32), data)
         }
     }
 

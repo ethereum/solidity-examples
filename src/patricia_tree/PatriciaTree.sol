@@ -4,7 +4,6 @@ pragma experimental "ABIEncoderV2";
 
 import {Data} from "./Data.sol";
 import {Bits} from "../bits/Bits.sol";
-// import {Memory} from "../unsafe/Memory.sol";
 import {PatriciaTreeFace} from "./PatriciaTreeFace.sol";
 
 
@@ -106,14 +105,6 @@ contract PatriciaTree is PatriciaTreeFace {
         rootEdge = e;
     }
 
-    function insertAtNode(bytes32 nodeHash, Data.Label key, bytes32 value) internal returns (bytes32) {
-        require(key.length > 1);
-        Data.Node memory n = nodes[nodeHash];
-        var (head, tail) = key.chopFirstBit();
-        n.children[head] = insertAtEdge(n.children[head], tail, value);
-        return replaceNode(nodeHash, n);
-    }
-
     function insertAtEdge(Data.Edge e, Data.Label key, bytes32 value) internal returns (Data.Edge) {
         require(key.length >= e.label.length);
         var (prefix, suffix) = key.splitCommonPrefix(e.label);
@@ -123,10 +114,14 @@ contract PatriciaTree is PatriciaTreeFace {
             newNodeHash = value;
         } else if (prefix.length >= e.label.length) {
             // Partial match, just follow the path
-            newNodeHash = insertAtNode(e.node, suffix, value);
+            require(suffix.length > 1);
+            Data.Node memory n = nodes[e.node];
+            var (head, tail) = suffix.chopFirstBit();
+            n.children[head] = insertAtEdge(n.children[head], tail, value);
+            newNodeHash = replaceNode(e.node, n);
         } else {
             // Mismatch, so let us create a new branch node.
-            var (head, tail) = suffix.chopFirstBit();
+            (head, tail) = suffix.chopFirstBit();
             Data.Node memory branchNode;
             branchNode.children[head] = Data.Edge(value, tail);
             branchNode.children[1 - head] = Data.Edge(e.node, e.label.removePrefix(prefix.length + 1));

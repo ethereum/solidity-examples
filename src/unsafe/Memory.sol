@@ -30,7 +30,7 @@ library Memory {
         require(bts.length >= len);
         uint addr2;
         assembly {
-            addr2 := add(bts, BYTES_HEADER_SIZE)
+            addr2 := add(bts, /*BYTES_HEADER_SIZE*/32)
         }
         return equals(addr, addr2, len);
     }
@@ -41,13 +41,13 @@ library Memory {
     function allocate(uint numBytes) internal pure returns (uint addr) {
         // Take the current value of the free memory pointer, and update.
         assembly {
-            addr := mload(FREE_MEM_PTR)
-            mstore(FREE_MEM_PTR, add(addr, numBytes))
+            addr := mload(/*FREE_MEM_PTR*/0x40)
+            mstore(/*FREE_MEM_PTR*/0x40, add(addr, numBytes))
         }
         uint words = (numBytes + WORD_SIZE - 1) / WORD_SIZE;
         for (uint i = 0; i < words; i++) {
             assembly {
-                mstore(add(addr, mul(i, WORD_SIZE)), 0)
+                mstore(add(addr, mul(i, /*WORD_SIZE*/32)), 0)
             }
         }
     }
@@ -84,7 +84,7 @@ library Memory {
     // Returns a memory pointer to the data portion of the provided bytes array.
     function dataPtr(bytes memory bts) internal pure returns (uint addr) {
         assembly {
-            addr := add(bts, BYTES_HEADER_SIZE)
+            addr := add(bts, /*BYTES_HEADER_SIZE*/32)
         }
     }
 
@@ -93,7 +93,7 @@ library Memory {
     function fromBytes(bytes memory bts) internal pure returns (uint addr, uint len) {
         len = bts.length;
         assembly {
-            addr := add(bts, BYTES_HEADER_SIZE)
+            addr := add(bts, /*BYTES_HEADER_SIZE*/32)
         }
     }
 
@@ -104,7 +104,7 @@ library Memory {
         bts = new bytes(len);
         uint btsptr;
         assembly {
-            btsptr := add(bts, BYTES_HEADER_SIZE)
+            btsptr := add(bts, /*BYTES_HEADER_SIZE*/32)
         }
         copy(addr, btsptr, len);
     }

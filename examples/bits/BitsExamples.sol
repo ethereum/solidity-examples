@@ -20,6 +20,10 @@ contract BitsExamples {
         assert(n == 7);  // 111
         n = n.setBit(3); // Set the 3rd bit.
         assert(n == 15); // 1111
+
+        // x.bit(y) == 1 => x.setBit(y) == x
+        n = 1;
+        assert(n.setBit(0) == n);
     }
 
     // Clear bits
@@ -33,6 +37,10 @@ contract BitsExamples {
         assert(n == 8);    // 1000
         n = n.clearBit(3); // Clear the 3rd bit.
         assert(n == 0);    // 0
+
+        // x.bit(y) == 0 => x.clearBit(y) == x
+        n = 0;
+        assert(n.clearBit(0) == n);
     }
 
     // Toggle bits
@@ -47,7 +55,7 @@ contract BitsExamples {
         n = n.toggleBit(3); // Toggle the 3rd bit.
         assert(n == 6);     // 0110
 
-        // Invertible
+        // x.toggleBit(y).toggleBit(y) == x (invertible)
         n = 55;
         assert(n.toggleBit(5).toggleBit(5) == n);
     }
@@ -78,6 +86,21 @@ contract BitsExamples {
         assert(n.bitEqual(m, 1) == false);
         assert(n.bitEqual(m, 2) == true);
         assert(n.bitEqual(m, 3) == false);
+    }
+
+    // Bit 'not'
+    function bitNotExample() public pure {
+        uint n = 9; // 1001
+        assert(n.bitNot(0) == 0);
+        assert(n.bitNot(1) == 1);
+        assert(n.bitNot(2) == 1);
+        assert(n.bitNot(3) == 0);
+
+        // x.bit(y) = 1 - x.bitNot(y);
+        assert(n.bitNot(0) == 1 - n.bit(0));
+        assert(n.bitNot(1) == 1 - n.bit(1));
+        assert(n.bitNot(2) == 1 - n.bit(2));
+        assert(n.bitNot(3) == 1 - n.bit(3));
     }
 
     // Bits 'and'
