@@ -71,9 +71,7 @@ export const runTests = () => {
         const name = sigfile.substr(0, sigfile.length - 11);
         const binRuntimePath = path.join(BIN_OUTPUT_PATH, name + ".bin-runtime");
         const result = parseData(run(binRuntimePath, TEST_FUN_HASH));
-
         const throws = /Throws/.test(name);
-
         let passed = true;
         tests++;
         if (throws && result) {

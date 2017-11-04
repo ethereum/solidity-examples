@@ -53,7 +53,7 @@ export const compileUnit = async (subdir: string, contract: string, optimize: bo
 
 export const compile = async (filePath: string, outDir: string, optimize: boolean) => {
     return new Promise((resolve, reject) => {
-        const cmd = `solc .= --bin-runtime --hashes --metadata --devdoc --overwrite ${optimize ? "--optimize" : ""} -o ${outDir} ${filePath}`;
+        const cmd = `solc .= --bin-runtime --hashes --metadata --overwrite ${optimize ? "--optimize" : ""} -o ${outDir} ${filePath}`;
         exec(cmd, {cwd: ROOT_PATH}, (err, stdoud, stderr) => {
             const ret = stderr.toString();
             Logger.debug(ret);

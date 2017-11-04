@@ -44,7 +44,7 @@ The `bytes` package is used to work with `bytes` in memory, and to convert betwe
 
 ### math
 
-The `math` package is used for doing exact math with signed and unsigned numbers.
+The `math` package is used to do math with signed and unsigned integers.
 
 #### contracts
 
@@ -73,7 +73,7 @@ The `tokens` package is used to work with Token contracts.
 
 #### contracts
 
-- [Token](./docs/tokens/Token.md)
+- [ERC20TokenFace](./docs/tokens/ERC20TokenFace.md)
 
 ### unsafe
 
@@ -87,7 +87,7 @@ The `unsafe` package is used to do unsafe operations, like working with memory d
 
 The standard library has well-documented routines for making sure that code meets the required standards when it comes to:
 
-1. Integrity
+1. Security
 2. Performance
 3. Style
 4. Documentation
@@ -110,9 +110,9 @@ For running tests with the command-line tool, check the [CLI documentation](./do
 
 ### Performance
 
-`npm contracts-perf` will
+`npm contracts-perf` will run the entire perf suite.
 
-For more information about the tests, such as the test file format, read the full [test documentation](./docs/testing.md).
+For more information about perf read the full [perf documentation](./docs/perf.md).
 
 For running perf with the command-line tool, check the [CLI documentation](./docs/cli.md).
 
