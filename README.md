@@ -2,7 +2,7 @@
 
 Temporary storage for a standard library of Solidity contracts.
 
-This is a draft document.
+The code in this library will only run in metropolis compliant networks, and it will only compile using Solidity version `0.5.0` and later.
 
 ## TOC
 
