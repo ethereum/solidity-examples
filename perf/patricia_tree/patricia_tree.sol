@@ -8,6 +8,7 @@ import {STLPerf} from "../STLPerf.sol";
 
 
 contract PatriciaTreeDataPerf is STLPerf {
+    using Data for Data.Tree;
     using Data for Data.Node;
     using Data for Data.Edge;
     using Data for Data.Label;
@@ -99,7 +100,7 @@ contract PerfPatriciaTreeValidateProofRootOnlyNode is PatriciaTreeDataPerf, Patr
         insert("val", "VAL");
         var (mask, siblings) = getProof("val");
         uint gasPre = msg.gas;
-        verifyProof(root, "val", "VAL", mask, siblings);
+        verifyProof(tree.root, "val", "VAL", mask, siblings);
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }
@@ -110,7 +111,7 @@ contract PerfPatriciaTreeEdgeHash is PatriciaTreeDataPerf, PatriciaTree {
     function perf() public payable returns (uint) {
         var e = Data.Edge(0, Data.Label(0, 1));
         uint gasPre = msg.gas;
-        edgeHash(e);
+        e.edgeHash();
         uint gasPost = msg.gas;
         return gasPre - gasPost;
     }

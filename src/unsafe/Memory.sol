@@ -12,7 +12,6 @@ library Memory {
     // Address of the free memory pointer.
     uint internal constant FREE_MEM_PTR = 0x40;
 
-
     // Compares the 'len' bytes starting at address 'addr' in memory with the 'len'
     // bytes starting at 'addr2'.
     // Returns 'true' if the bytes are the same, otherwise 'false'.

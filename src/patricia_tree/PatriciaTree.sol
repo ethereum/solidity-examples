@@ -14,25 +14,28 @@ import {PatriciaTreeFace} from "./PatriciaTreeFace.sol";
  */
 contract PatriciaTree is PatriciaTreeFace {
 
+    using Data for Data.Tree;
     using Data for Data.Node;
     using Data for Data.Edge;
     using Data for Data.Label;
     using Bits for uint;
 
-    // The current root hash, keccak256(node(path_M('')), path_M(''))
-    bytes32 public root;
+    Data.Tree internal tree;
 
-    Data.Edge internal rootEdge;
-
-    // Particia tree nodes (hash to decoded contents)
-    mapping(bytes32 => Data.Node) internal nodes;
-
-    function getNode(bytes32 hash) public view returns (Data.Node n) {
-        n = nodes[hash];
+    // Get the root hash.
+    function getRootHash() public view returns (bytes32) {
+        return tree.root;
     }
 
+    // Get the root edge.
     function getRootEdge() public view returns (Data.Edge e) {
-        e = rootEdge;
+        e = tree.rootEdge;
+    }
+
+    // Get the node with the given key. The key needs to be
+    // the keccak256 hash of the actual key.
+    function getNode(bytes32 hash) public view returns (Data.Node n) {
+        n = tree.nodes[hash];
     }
 
     // Returns the Merkle-proof for the given key
@@ -41,15 +44,15 @@ contract PatriciaTree is PatriciaTreeFace {
     //                    where we have branch nodes (bit in key denotes direction)
     //  - bytes32[] _siblings - hashes of sibling edges
     function getProof(bytes key) public view returns (uint branchMask, bytes32[] _siblings) {
-        require(root != 0);
+        require(tree.root != 0);
         Data.Label memory k = Data.Label(keccak256(key), 256);
-        Data.Edge memory e = rootEdge;
+        Data.Edge memory e = tree.rootEdge;
         bytes32[256] memory siblings;
         uint length;
         uint numSiblings;
         while (true) {
             var (prefix, suffix) = k.splitCommonPrefix(e.label);
-            require(prefix.length == e.label.length);
+            assert(prefix.length == e.label.length);
             if (suffix.length == 0) {
                 // Found it
                 break;
@@ -58,8 +61,8 @@ contract PatriciaTree is PatriciaTreeFace {
             branchMask |= uint(1) << 255 - length;
             length += 1;
             var (head, tail) = suffix.chopFirstBit();
-            siblings[numSiblings++] = edgeHash(nodes[e.node].children[1 - head]);
-            e = nodes[e.node].children[head];
+            siblings[numSiblings++] = tree.nodes[e.node].children[1 - head].edgeHash();
+            e = tree.nodes[e.node].children[head];
             k = tail;
         }
         if (numSiblings > 0) {
@@ -81,73 +84,17 @@ contract PatriciaTree is PatriciaTreeFace {
             uint bit;
             (bit, e.label) = e.label.chopFirstBit();
             bytes32[2] memory edgeHashes;
-            edgeHashes[bit] = edgeHash(e);
+            edgeHashes[bit] = e.edgeHash();
             edgeHashes[1 - bit] = siblings[siblings.length - i - 1];
             e.node = keccak256(edgeHashes);
         }
         e.label = k;
-        require(rootHash == edgeHash(e));
+        require(rootHash == e.edgeHash());
         return true;
     }
 
     function insert(bytes key, bytes value) public {
-        Data.Label memory k = Data.Label(keccak256(key), 256);
-        bytes32 valueHash = keccak256(value);
-        Data.Edge memory e;
-        if (root == 0) {
-            // Empty Trie
-            e.label = k;
-            e.node = valueHash;
-        } else {
-            e = insertAtEdge(rootEdge, k, valueHash);
-        }
-        root = edgeHash(e);
-        rootEdge = e;
+        tree.insert(key, value);
     }
 
-    function insertAtEdge(Data.Edge e, Data.Label key, bytes32 value) internal returns (Data.Edge) {
-        require(key.length >= e.label.length);
-        var (prefix, suffix) = key.splitCommonPrefix(e.label);
-        bytes32 newNodeHash;
-        if (suffix.length == 0) {
-            // Full match with the key, update operation
-            newNodeHash = value;
-        } else if (prefix.length >= e.label.length) {
-            // Partial match, just follow the path
-            require(suffix.length > 1);
-            Data.Node memory n = nodes[e.node];
-            var (head, tail) = suffix.chopFirstBit();
-            n.children[head] = insertAtEdge(n.children[head], tail, value);
-            newNodeHash = replaceNode(e.node, n);
-        } else {
-            // Mismatch, so let us create a new branch node.
-            (head, tail) = suffix.chopFirstBit();
-            Data.Node memory branchNode;
-            branchNode.children[head] = Data.Edge(value, tail);
-            branchNode.children[1 - head] = Data.Edge(e.node, e.label.removePrefix(prefix.length + 1));
-            newNodeHash = insertNode(branchNode);
-        }
-        return Data.Edge(newNodeHash, prefix);
-    }
-
-    function insertNode(Data.Node memory n) internal returns (bytes32 newHash) {
-        bytes32 h = hash(n);
-        nodes[h].children[0] = n.children[0];
-        nodes[h].children[1] = n.children[1];
-        return h;
-    }
-
-    function replaceNode(bytes32 oldHash, Data.Node memory n) internal returns (bytes32 newHash) {
-        delete nodes[oldHash];
-        return insertNode(n);
-    }
-
-    function edgeHash(Data.Edge memory e) internal pure returns (bytes32) {
-        return keccak256(e.node, e.label.length, e.label.data);
-    }
-
-    // Returns the hash of the encoding of a node.
-    function hash(Data.Node memory n) internal pure returns (bytes32) {
-        return keccak256(edgeHash(n.children[0]), edgeHash(n.children[1]));
-    }
 }

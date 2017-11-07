@@ -175,8 +175,14 @@ contract TestPatriciaTreeDataCommonPrefixOfNonZeroAndZeroLabelIsZero is Patricia
 
 contract TestPatriciaTreeDataCommonPrefixOfLabelWithItselfIsLabelLength is PatriciaTreeDataTest {
     function testImpl() internal {
-        Data.Label memory a = Data.Label(B32_ONES, 164);
+        Data.Label memory a = Data.Label(B32_ONES, 0);
+        require(a.commonPrefix(a) == 0);
+
+        a = Data.Label(B32_ONES, 164);
         require(a.commonPrefix(a) == 164);
+
+        a = Data.Label(B32_ONES, 256);
+        require(a.commonPrefix(a) == 256);
     }
 }
 

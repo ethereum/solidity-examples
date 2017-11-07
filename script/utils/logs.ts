@@ -16,7 +16,7 @@ export const printTestLog = (jsonObj) => {
     println(chalk["bold"]["white"]('Context'));
     println(chalk`\t{white Compiler version}: {magentaBright ${jsonObj.solcVersion}}`);
     println(chalk`\t{white EVM version}: {magentaBright ${jsonObj.evmVersion}}`);
-    println(chalk["bold"]["white"]('Gas usage'));
+    println(chalk["bold"]["white"]('Test results'));
     const results = jsonObj.results;
     for (const objName in results) {
         if (results.hasOwnProperty(objName)) {

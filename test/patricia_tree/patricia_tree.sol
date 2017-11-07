@@ -22,9 +22,9 @@ contract TestPatriciaTreeInsert is PatriciaTreeTest {
 
         insert("val", "VAL");
 
-        assert(rootEdge.node == valHash);
-        assert(rootEdge.label.data == keyHash);
-        assert(rootEdge.label.length == 256);
+        assert(tree.rootEdge.node == valHash);
+        assert(tree.rootEdge.label.data == keyHash);
+        assert(tree.rootEdge.label.length == 256);
     }
 }
 
@@ -40,11 +40,11 @@ contract TestPatriciaTreeInsertTwo is PatriciaTreeTest {
         insert("val", "VAL");
         insert("val2", "VAL2");
 
-        var node = nodes[rootEdge.node];
+        var node = tree.nodes[tree.rootEdge.node];
         var c0 = node.children[0];
         var c1 = node.children[1];
 
-        assert(rootEdge.label.length == 1);
+        assert(tree.rootEdge.label.length == 1);
         assert(c0.node == val2Hash);
         assert(c0.label.length == 254);
         assert(c1.node == valHash);
@@ -69,6 +69,6 @@ contract TestPatriciaTreeInsertOrderDoesNotMatter is STLTest {
         pt2.insert("testkey3", "testval3");
         pt2.insert("testkey4", "testval4");
 
-        assert(pt1.root() == pt2.root());
+        assert(pt1.getRootHash() == pt2.getRootHash());
     }
 }

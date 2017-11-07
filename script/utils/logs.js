@@ -18,7 +18,7 @@ exports.printTestLog = function (jsonObj) {
     io_1.println(chalk["bold"]["white"]('Context'));
     io_1.println(chalk(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\t{white Compiler version}: {magentaBright ", "}"], ["\\t{white Compiler version}: {magentaBright ", "}"])), jsonObj.solcVersion));
     io_1.println(chalk(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\t{white EVM version}: {magentaBright ", "}"], ["\\t{white EVM version}: {magentaBright ", "}"])), jsonObj.evmVersion));
-    io_1.println(chalk["bold"]["white"]('Gas usage'));
+    io_1.println(chalk["bold"]["white"]('Test results'));
     var results = jsonObj.results;
     for (var objName in results) {
         if (results.hasOwnProperty(objName)) {
