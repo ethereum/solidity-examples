@@ -19,7 +19,7 @@ jobs:
             - ./node_modules
       - run:
           name: test
-          command: npm contracts-test
+          command: npm run contracts-test
       - store_artifacts:
           path: test-results.xml
           prefix: tests

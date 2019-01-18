@@ -99,9 +99,9 @@ Additionally, the tools used to guarantee this should be simple and easy to repl
 
 `npm test` - runs the contract test-suite, as well as the tests for the typescript code.
 
-`npm ts-test` - runs the typescript tests.
+`npm run ts-test` - runs the typescript tests.
 
-`npm contracts-test` - runs the contract test-suite.
+`npm run contracts-test` - runs the contract test-suite.
 
 The contract tests requires `solc` and `evm` ([go ethereum](https://github.com/ethereum/go-ethereum)) to be installed and added to the $PATH. Test code is written in Solidity, and is executed directly in the evm.
 
@@ -111,7 +111,7 @@ For running tests with the command-line tool, check the [CLI documentation](./do
 
 ### Performance
 
-`npm contracts-perf` will run the entire perf suite.
+`npm run contracts-perf` will run the entire perf suite.
 
 For more information about perf read the full [perf documentation](./docs/perf.md).
 
@@ -119,9 +119,9 @@ For running perf with the command-line tool, check the [CLI documentation](./doc
 
 ### Style
 
-`npm ts-lint` - will run TS-lint on the entire library.
+`npm run ts-lint` - will run TS-lint on the entire library.
 
-`npm contracts-lint` - will run [solhint](https://github.com/protofire/solhint) on all contracts.
+`npm run contracts-lint` - will run [solhint](https://github.com/protofire/solhint) on all contracts.
 
 The standard library should serve as an (or perhaps *the*) example of strict, idiomatic Solidity. This means all code should follow the style guide and the practices and patterns laid out at https://solidity.readthedocs.org.
 
