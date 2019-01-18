@@ -1,4 +1,4 @@
-# Standard library (draft)
+# Standard library (draft) [![CircleCI](https://circleci.com/gh/ethereum/solidity-examples.svg?style=svg)](https://circleci.com/gh/ethereum/solidity-examples)
 
 Temporary storage for a standard library of Solidity contracts.
 
