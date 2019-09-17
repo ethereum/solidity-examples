@@ -83,7 +83,7 @@ library Bytes {
         var (src, srcLen) = Memory.fromBytes(self);
         var (src2, src2Len) = Memory.fromBytes(other);
         var (dest,) = Memory.fromBytes(ret);
-        var dest2 = dest + src2Len;
+        var dest2 = dest + srcLen;
         Memory.copy(src, dest, srcLen);
         Memory.copy(src2, dest2, src2Len);
         return ret;
