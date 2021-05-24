@@ -16,9 +16,9 @@
 
 The `Bytes` library has functions for working with bytes.
 
-#### Bytes, strings, numbers and endianness in Ethereum
+#### Bytes, strings, numbers and padding in Ethereum
 
-Ethereum uses the big endian format when working with strings/bytes, and little endian when working with other types (such as numbers and addresses). As an example, this is how we would store the string "abcd" in one full word (32 bytes):
+In Ethereum, strings and bytes are padded on the lower-order (right) side with zero-bytes, while other types (such as numbers and addresses) are padded on the higher-order side. As an example, this is how we would store the string "abcd" in one full word (32 bytes):
 
 `0x6162636400000000000000000000000000000000000000000000000000000000`
 
