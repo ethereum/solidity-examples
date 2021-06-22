@@ -16,9 +16,9 @@
 
 The `Bytes` library has functions for working with bytes.
 
-#### Bytes, strings, numbers and endianness in Ethereum
+#### Bytes, strings, numbers and padding in Ethereum
 
-Ethereum uses the big endian format when working with strings/bytes, and little endian when working with other types (such as numbers and addresses). As an example, this is how we would store the string "abcd" in one full word (32 bytes):
+In Ethereum, strings and bytes are padded on the lower-order (right) side with zero-bytes, while other types (such as numbers and addresses) are padded on the higher-order side. As an example, this is how we would store the string "abcd" in one full word (32 bytes):
 
 `0x6162636400000000000000000000000000000000000000000000000000000000`
 
@@ -26,11 +26,11 @@ This is how the number `0x61626364` would be stored:
 
 `0x0000000000000000000000000000000000000000000000000000000061626364`
 
-Solidity has built-in support for this, and will automatically use the correct byte order depending on the type. The `web3.js` javascript API has built in support for this as well, and padding is normally done automatically when javascript values are being encoded and decoded.
+Solidity has built-in support for this, and will automatically use the correct padding rule depending on the type. The `web3.js` javascript API has built-in support for this as well, and padding is normally done automatically when javascript values are being encoded and decoded.
 
 ##### Using strings and hex-literals with fixed size bytes
 
-Byte order is important when working with literals. `bytesN` will use different internal representations for different types of literals.
+Padding rule is important when working with literals. `bytesN` will use different internal representations for different types of literals.
 
 1. Number literals assigned to `bytesN` variables are padded to the left.
 2. String literals assigned to `bytesN` variables are padded to the right.
