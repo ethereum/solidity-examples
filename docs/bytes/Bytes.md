@@ -26,11 +26,11 @@ This is how the number `0x61626364` would be stored:
 
 `0x0000000000000000000000000000000000000000000000000000000061626364`
 
-Solidity has built-in support for this, and will automatically use the correct byte order depending on the type. The `web3.js` javascript API has built in support for this as well, and padding is normally done automatically when javascript values are being encoded and decoded.
+Solidity has built-in support for this, and will automatically use the correct padding rule depending on the type. The `web3.js` javascript API has built-in support for this as well, and padding is normally done automatically when javascript values are being encoded and decoded.
 
 ##### Using strings and hex-literals with fixed size bytes
 
-Byte order is important when working with literals. `bytesN` will use different internal representations for different types of literals.
+Padding rule is important when working with literals. `bytesN` will use different internal representations for different types of literals.
 
 1. Number literals assigned to `bytesN` variables are padded to the left.
 2. String literals assigned to `bytesN` variables are padded to the right.
