@@ -53,7 +53,7 @@ The `math` package is used to do math with signed and unsigned integers.
 
 ### patricia_tree
 
-The `patricia_tree` package is used to work with the standard Solidity Patricia tree implementation by @chriseth.
+The `patricia_tree` package is used to work with the standard Solidity Patricia tree implementation by [@chriseth](https://github.com/chriseth).
 
 #### contracts
 
