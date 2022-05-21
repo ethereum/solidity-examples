@@ -75,6 +75,7 @@ The `tokens` package is used to work with Token contracts.
 #### contracts
 
 - [ERC20TokenFace](./docs/tokens/ERC20TokenFace.md)
+- [ERC721TokenFace](./docs/tokens/ERC721TokenFace.md)
 
 ### unsafe
 
