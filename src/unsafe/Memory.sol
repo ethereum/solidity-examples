@@ -64,6 +64,8 @@ library Memory {
             src += WORD_SIZE;
         }
 
+        if (len == 0) return;
+
         // Copy remaining bytes
         uint mask = 256 ** (WORD_SIZE - len) - 1;
         assembly {
