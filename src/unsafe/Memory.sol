@@ -56,22 +56,29 @@ library Memory {
     // the bytes.
     function copy(uint src, uint dest, uint len) internal pure {
         // Copy word-length chunks while possible
+        // Reverse copy to prevent out of memory bound error
+        src = src + len;
+        dest = dest + len;
         for (; len >= WORD_SIZE; len -= WORD_SIZE) {
+            dest -= WORD_SIZE;
+            src -= WORD_SIZE;
+
             assembly {
                 mstore(dest, mload(src))
             }
-            dest += WORD_SIZE;
-            src += WORD_SIZE;
+        }
+
+        if (len == 0) {
+            return;
         }
 
         if (len == 0) return;
 
         // Copy remaining bytes
-        uint mask = 256 ** (WORD_SIZE - len) - 1;
+        src = src - len;
+        dest = dest - len;
         assembly {
-            let srcpart := and(mload(src), not(mask))
-            let destpart := and(mload(dest), mask)
-            mstore(dest, or(destpart, srcpart))
+            mstore(dest, mload(src))
         }
     }
 
